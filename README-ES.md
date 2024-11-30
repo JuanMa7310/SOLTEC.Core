@@ -1,9 +1,6 @@
 # SOLTEC.Core
 
-![image](https://img.shields.io/badge/license-GPL-3.svg) 
 ![image](https://img.shields.io/badge/license-LGPL-3.svg)
-
-
 
 # Instalación
 
