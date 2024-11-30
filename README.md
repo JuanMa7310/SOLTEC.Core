@@ -1,9 +1,6 @@
 # SOLTEC.Core
 
-[![License](https://img.shields.io/badge/llicense-GPL-3.svg)](LICENSE)
 [![License](https://img.shields.io/badge/llicense-LGPL-3.svg)](LICENSE)
-
-
 
 # Installing
 
