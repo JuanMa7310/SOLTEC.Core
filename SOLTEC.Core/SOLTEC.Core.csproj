@@ -6,4 +6,33 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Adapters\CSV\" />
+      <Folder Include="Adapters\Excel\" />
+      <Folder Include="Adapters\Exceptions\" />
+      <Folder Include="Connections\Commands\" />
+      <Folder Include="Connections\Exceptions\" />
+      <Folder Include="Converters\" />
+      <Folder Include="DataSources\Exceptions\" />
+      <Folder Include="DataSources\Interfaces\" />
+      <Folder Include="DTOS\" />
+      <Folder Include="Enums\" />
+      <Folder Include="Exceptions\" />
+      <Folder Include="Extensions\" />
+      <Folder Include="MessageMQ\Commands\" />
+      <Folder Include="MessageMQ\Exceptions\" />
+      <Folder Include="MessageMQ\Model\" />
+      <Folder Include="MessageMQ\Repositories\" />
+      <Folder Include="MessageMQ\Responses\" />
+      <Folder Include="NotificationMessage\DTOS\" />
+      <Folder Include="NotificationMessage\Interfaces\" />
+      <Folder Include="Reports\Actions\" />
+      <Folder Include="Reports\Clases\" />
+      <Folder Include="Reports\Data\" />
+      <Folder Include="Reports\Exceptions\" />
+      <Folder Include="Reports\Helpers\" />
+      <Folder Include="Reports\Interfaces\" />
+      <Folder Include="Validators\" />
+    </ItemGroup>
+
 </Project>
