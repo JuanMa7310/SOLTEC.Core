@@ -12,8 +12,8 @@ public class Encryptions
     /// <returns></returns>
     public virtual string GenerateUniqueKey(int maxSize = 10)
     {
-        const string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        var chars = a.ToCharArray();
+        const string dictionay = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        var chars = dictionay.ToCharArray();
         var size = maxSize;
         var data = new byte[1];
 
@@ -62,7 +62,7 @@ public class Encryptions
 
         foreach (var objByte in stream)
         {
-            sb.AppendFormat("{0:x2}", objByte);
+            sb.Append($"{objByte:x2}");
         }
 
         return sb.ToString();
@@ -197,6 +197,7 @@ public class Encryptions
     /// Decrypt a string.
     /// </summary>
     /// <param name="encryptedData">String to be decrypted</param>
+    /// <param name="password">String to password</param>
     /// <exception cref="FormatException"></exception>
     public virtual string? Decrypt(string encryptedData, string password)
     {
@@ -260,7 +261,7 @@ public class Encryptions
         aesAlg.IV = IV;
 
         // Create a decryptor to perform the stream transform.
-        ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+        var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
         // Create the streams used for decryption.
         using MemoryStream msDecrypt = new();
