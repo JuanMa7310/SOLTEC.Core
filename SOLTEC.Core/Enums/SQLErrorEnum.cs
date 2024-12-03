@@ -1,6 +1,6 @@
 namespace SOLTEC.Core.Enums;
 
-public enum SqlErrorEnum
+public enum SQLErrorEnum
 {
     Conexion,
     ExecutionSql,

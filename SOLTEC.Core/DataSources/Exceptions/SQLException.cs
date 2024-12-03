@@ -3,9 +3,9 @@ using SOLTEC.Core.Exceptions;
 
 namespace SOLTEC.Core.DataSources.Exceptions;
 
-public class SqlException : ResultException
+public class SQLException : ResultException
 {
-    public SqlException(SqlErrorEnum reason)
+    public SQLException(SQLErrorEnum reason)
     {
         Key = "SQLException";
         Reason = reason.ToString();

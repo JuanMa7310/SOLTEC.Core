@@ -3,7 +3,7 @@ namespace SOLTEC.Core.Enums;
 /// <summary>
 /// Defines the mapping between a column in a SqliteBulkCopy instance's data source and a column in the instance's destination table.
 /// </summary>
-public enum FbColumnTypesExtended
+public enum FBColumnTypesExtended
 {
     // Summary:
     //     A signed integer.

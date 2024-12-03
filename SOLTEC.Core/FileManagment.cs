@@ -1,5 +1,5 @@
-﻿using SOLTEC.Core.Enums;
-using System.Text;
+﻿using System.Text;
+using SOLTEC.Core.Enums;
 
 namespace SOLTEC.Core;
 
