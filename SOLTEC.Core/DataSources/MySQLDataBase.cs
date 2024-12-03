@@ -1,6 +1,6 @@
-﻿using System.Data;
+using System.Data;
 using Dapper;
-using Npgsql;
+using MySql.Data.MySqlClient;
 using SOLTEC.Core.DataSources.Exceptions;
 using SOLTEC.Core.DataSources.Interfaces;
 using SOLTEC.Core.Enums;
@@ -8,21 +8,21 @@ using static Dapper.SqlMapper;
 
 namespace SOLTEC.Core.DataSources;
 
-public class PostgreSQLDataBase : IDataSource
+public class MySQLDataBase : IDataSource
 {
     private const int _maxTimeOut = 300;
 
-    private NpgsqlCommand _command;
-    private NpgsqlConnection _sqlConnection;
+    private MySqlCommand _command;
+    private MySqlConnection _sqlConnection;
     private bool _useTransaction;
-    private NpgsqlTransaction? _transaction;
+    private MySqlTransaction? _transaction;
 
     public string ConnectionConfig { get; set; }
 
-    public PostgreSQLDataBase()
+    public MySQLDataBase()
     {
-        _command = new NpgsqlCommand();
-        _sqlConnection = new NpgsqlConnection();
+        _command = new MySqlCommand();
+        _sqlConnection = new MySqlConnection();
         ConnectionConfig = string.Empty;
     }
 
@@ -30,7 +30,7 @@ public class PostgreSQLDataBase : IDataSource
     {
         try
         {
-            _sqlConnection = new NpgsqlConnection(connectionConfig);
+            _sqlConnection = new MySqlConnection(connectionConfig);
             if (_sqlConnection?.State == ConnectionState.Closed)
                 _sqlConnection.Open();
             _command = _sqlConnection!.CreateCommand();
@@ -50,12 +50,12 @@ public class PostgreSQLDataBase : IDataSource
         {
             if (_sqlConnection.State != ConnectionState.Closed)
                 _sqlConnection.Close();
-            NpgsqlConnection.ClearPool(_sqlConnection);
+            MySqlConnection.ClearPool(_sqlConnection);
             _sqlConnection.Dispose();
         }
     }
 
-    public void Dispose(NpgsqlConnection connection, NpgsqlCommand? command, NpgsqlTransaction? transaction = null)
+    public void Dispose(MySqlConnection connection, MySqlCommand? command, MySqlTransaction? transaction = null)
     {
         command?.Dispose();
         transaction?.Dispose();
@@ -178,7 +178,7 @@ public class PostgreSQLDataBase : IDataSource
 
     public IList<T> Select<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
+        using MySqlConnection connection = new(ConnectionConfig);
         connection.Open();
         var command = connection.CreateCommand();
         var result = (IList<T>)SqlMapper.Query<T>(connection, query, parameters, _transaction, true, timeOut);
@@ -188,7 +188,7 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task<IList<T>> SelectAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
+        using MySqlConnection connection = new(ConnectionConfig);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
         var result = (IList<T>)await SqlMapper.QueryAsync<T>(connection, query, parameters, null, timeOut);
@@ -199,7 +199,7 @@ public class PostgreSQLDataBase : IDataSource
 
     public T? SelectScalar<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
+        using MySqlConnection connection = new(ConnectionConfig);
         connection.Open();
         var command = connection.CreateCommand();
         var result = SqlMapper.Query<T>(connection, query, parameters, null, commandTimeout: timeOut);
@@ -209,7 +209,7 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task<T?> SelectScalarAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
+        using MySqlConnection connection = new(ConnectionConfig);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
         var result = await SqlMapper.QueryAsync<T>(connection, query, parameters, null, commandTimeout: timeOut);
@@ -220,7 +220,7 @@ public class PostgreSQLDataBase : IDataSource
     public GridReader SelectMultipleQuery(string query, object? parameters = null, int? timeOut = null)
     {
         GridReader result;
-        using (NpgsqlConnection connection = new(ConnectionConfig))
+        using (MySqlConnection connection = new(ConnectionConfig))
         {
             connection.Open();
             var command = connection.CreateCommand();
@@ -233,7 +233,7 @@ public class PostgreSQLDataBase : IDataSource
     public async Task<GridReader> SelectMultipleQueryAsync(string query, object? parameters = null, int? timeOut = null)
     {
         GridReader result;
-        using (NpgsqlConnection connection = new(ConnectionConfig))
+        using (MySqlConnection connection = new(ConnectionConfig))
         {
             await connection.OpenAsync();
             var command = connection.CreateCommand();
@@ -246,9 +246,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public T TransactionalQuery<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             connection.Open();
@@ -270,9 +270,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public T? TransactionalQueryScalar<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             connection.Open();
@@ -294,9 +294,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task<T> TransactionalQueryAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             await connection.OpenAsync();
@@ -318,9 +318,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task<T?> TransactionalQueryScalarAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             await connection.OpenAsync();
@@ -343,10 +343,10 @@ public class PostgreSQLDataBase : IDataSource
     public GridReader TransactionalMultipleQuery(string query, object? parameters = null, int? timeOut = null)
     {
         GridReader result;
-        using (NpgsqlConnection connection = new(ConnectionConfig))
+        using (MySqlConnection connection = new(ConnectionConfig))
         {
-            NpgsqlCommand? command = null;
-            NpgsqlTransaction? transaction = null;
+            MySqlCommand? command = null;
+            MySqlTransaction? transaction = null;
             try
             {
                 connection.Open();
@@ -370,10 +370,10 @@ public class PostgreSQLDataBase : IDataSource
     public async Task<GridReader> TransactionalMultipleQueryAsync(string query, object? parameters = null, int? timeOut = null)
     {
         GridReader result;
-        using (NpgsqlConnection connection = new(ConnectionConfig))
+        using (MySqlConnection connection = new(ConnectionConfig))
         {
-            NpgsqlCommand? command = null;
-            NpgsqlTransaction? transaction = null;
+            MySqlCommand? command = null;
+            MySqlTransaction? transaction = null;
             try
             {
                 await connection.OpenAsync();
@@ -396,8 +396,8 @@ public class PostgreSQLDataBase : IDataSource
 
     public void Execute(string query, object? parameters = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
         try
         {
             connection.Open();
@@ -414,8 +414,8 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task ExecuteAsync(string query, object? parameters = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
         try
         {
             await connection.OpenAsync();
@@ -432,9 +432,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public void TransactionalExecute(string query, object? parameters = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             connection.Open();
@@ -455,9 +455,9 @@ public class PostgreSQLDataBase : IDataSource
 
     public async Task TransactionalExecuteAsync(string query, object? parameters = null)
     {
-        using NpgsqlConnection connection = new(ConnectionConfig);
-        NpgsqlCommand? command = null;
-        NpgsqlTransaction? transaction = null;
+        using MySqlConnection connection = new(ConnectionConfig);
+        MySqlCommand? command = null;
+        MySqlTransaction? transaction = null;
         try
         {
             await connection.OpenAsync();
