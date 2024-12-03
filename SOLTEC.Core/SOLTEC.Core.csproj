@@ -39,6 +39,7 @@
       <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
       <PackageReference Include="ExcelMapper" Version="5.2.593" />
       <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.11" />
+      <PackageReference Include="morelinq" Version="4.3.0" />
       <PackageReference Include="MySql.Data" Version="9.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
