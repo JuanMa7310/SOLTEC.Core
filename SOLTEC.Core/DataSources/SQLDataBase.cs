@@ -4,6 +4,7 @@ using Dapper;
 using SOLTEC.Core.DataSources.Exceptions;
 using SOLTEC.Core.DataSources.Interfaces;
 using SOLTEC.Core.Enums;
+using SOLTEC.Core.Extensions;
 using static Dapper.SqlMapper;
 
 namespace SOLTEC.Core.DataSources;
