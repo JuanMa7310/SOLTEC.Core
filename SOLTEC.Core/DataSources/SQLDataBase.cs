@@ -1,7 +1,7 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
 using Dapper;
-using SOLTEC.Core.DataSources.Exceptions;
+using Microsoft.Data.SqlClient;
+using SOLTEC.Core.Exceptions;
 using SOLTEC.Core.DataSources.Interfaces;
 using SOLTEC.Core.Enums;
 using SOLTEC.Core.Extensions;
@@ -105,19 +105,22 @@ public class SQLDataBase : IDataSource
 
     public T ExecuteDapperScalar<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        var result = SqlMapper.Query<T>(_sqlConnection, query, parameters, _transaction, commandTimeout: timeOut);
+        var result = SqlMapper.Query<T>(_sqlConnection, query, parameters, _transaction, 
+            commandTimeout: timeOut);
         return result != null ? result.FirstOrDefault() : default;
     }
 
     public async Task<T> ExecuteDapperScalarAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        var result = await SqlMapper.QueryAsync<T>(_sqlConnection, query, parameters, _transaction, timeOut);
+        var result = await SqlMapper.QueryAsync<T>(_sqlConnection, query, parameters, _transaction, 
+            timeOut);
         return result != null ? result.FirstOrDefault() : default;
     }
 
     public async Task<T?> ExecuteDapperScalarNullableAsync<T>(string query, object? parameters = null, int? timeOut = null)
     {
-        var result = await SqlMapper.QueryAsync<T>(_sqlConnection, query, parameters, _transaction, timeOut);
+        var result = await SqlMapper.QueryAsync<T>(_sqlConnection, query, parameters, _transaction, 
+            timeOut);
         return result.FirstOrDefault();
     }
 
@@ -136,7 +139,8 @@ public class SQLDataBase : IDataSource
         return _sqlConnection.QueryMultiple(query, parameters, _transaction, timeOut);
     }
 
-    public async Task<GridReader> ExecuteDapperMultipleQueryAsync(string query, object? parameters = null, int? timeOut = null)
+    public async Task<GridReader> ExecuteDapperMultipleQueryAsync(string query, object? parameters = null, 
+        int? timeOut = null)
     {
         return await _sqlConnection.QueryMultipleAsync(query, parameters, _transaction, timeOut);
     }
@@ -203,7 +207,8 @@ public class SQLDataBase : IDataSource
         using SqlConnection connection = new(ConnectionConfig);
         connection.Open();
         var command = connection.CreateCommand();
-        var result = SqlMapper.Query<T>(connection, query, parameters, null, commandTimeout: timeOut);
+        var result = SqlMapper.Query<T>(connection, query, parameters, null, 
+            commandTimeout: timeOut);
         Dispose(connection, command);
         return result != null ? result.FirstOrDefault() : default;
     }
@@ -213,7 +218,8 @@ public class SQLDataBase : IDataSource
         using SqlConnection connection = new(ConnectionConfig);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
-        var result = await SqlMapper.QueryAsync<T>(connection, query, parameters, null, commandTimeout: timeOut);
+        var result = await SqlMapper.QueryAsync<T>(connection, query, parameters, null, 
+            commandTimeout: timeOut);
         Dispose(connection, command);
         return result != null ? result.FirstOrDefault() : default;
     }
@@ -231,7 +237,8 @@ public class SQLDataBase : IDataSource
         return result;
     }
 
-    public async Task<GridReader> SelectMultipleQueryAsync(string query, object? parameters = null, int? timeOut = null)
+    public async Task<GridReader> SelectMultipleQueryAsync(string query, object? parameters = null, 
+        int? timeOut = null)
     {
         GridReader result;
         using (SqlConnection connection = new(ConnectionConfig))
@@ -280,7 +287,8 @@ public class SQLDataBase : IDataSource
             command = connection.CreateCommand();
             transaction = connection.BeginTransaction();
             command.Transaction = transaction;
-            var result = SqlMapper.Query<T>(connection, query, parameters, transaction, commandTimeout: timeOut);
+            var result = SqlMapper.Query<T>(connection, query, parameters, transaction, 
+                commandTimeout: timeOut);
             transaction.Commit();
             Dispose(connection, command, transaction);
             return result != null ? result.FirstOrDefault() : default;
@@ -317,7 +325,8 @@ public class SQLDataBase : IDataSource
         }
     }
 
-    public async Task<T?> TransactionalQueryScalarAsync<T>(string query, object? parameters = null, int? timeOut = null)
+    public async Task<T?> TransactionalQueryScalarAsync<T>(string query, object? parameters = null, 
+        int? timeOut = null)
     {
         using SqlConnection connection = new(ConnectionConfig);
         SqlCommand? command = null;
@@ -328,7 +337,8 @@ public class SQLDataBase : IDataSource
             command = connection.CreateCommand();
             transaction = connection.BeginTransaction();
             command.Transaction = transaction;
-            var result = await SqlMapper.QueryAsync<T>(connection, query, parameters, transaction, timeOut);
+            var result = await SqlMapper.QueryAsync<T>(connection, query, parameters, transaction, 
+                timeOut);
             transaction.Commit();
             Dispose(connection, command, transaction);
             return result != null ? result.FirstOrDefault() : default;
@@ -368,7 +378,8 @@ public class SQLDataBase : IDataSource
         return result;
     }
 
-    public async Task<GridReader> TransactionalMultipleQueryAsync(string query, object? parameters = null, int? timeOut = null)
+    public async Task<GridReader> TransactionalMultipleQueryAsync(string query, object? parameters = null, 
+        int? timeOut = null)
     {
         GridReader result;
         using (SqlConnection connection = new(ConnectionConfig))

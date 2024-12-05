@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
-using SOLTEC.Core.DataSources.Exceptions;
+using SOLTEC.Core.Exceptions;
 using SOLTEC.Core.DataSources.Interfaces;
 using SOLTEC.Core.Enums;
 using SOLTEC.Core.Extensions;

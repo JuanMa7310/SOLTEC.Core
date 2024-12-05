@@ -2,7 +2,7 @@
 using System.Security.Authentication;
 using System.Text;
 using Newtonsoft.Json;
-using SOLTEC.Core.Connections.Exceptions;
+using SOLTEC.Core.Exceptions;
 using SOLTEC.CoreDTOS;
 
 namespace SOLTEC.Core.Connections

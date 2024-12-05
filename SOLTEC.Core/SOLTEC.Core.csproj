@@ -8,26 +8,21 @@
 
     <ItemGroup>
       <Folder Include="Adapters\Excel\" />
-      <Folder Include="Adapters\Exceptions\" />
       <Folder Include="Connections\Commands\" />
-      <Folder Include="Connections\Exceptions\" />
       <Folder Include="Converters\" />
-      <Folder Include="DataSources\Exceptions\" />
       <Folder Include="DataSources\Interfaces\" />
       <Folder Include="DTOS\" />
-      <Folder Include="Exceptions\" />
-      <Folder Include="Extensions\" />
+      <Folder Include="MessageMQ\" />
       <Folder Include="MessageMQ\Commands\" />
-      <Folder Include="MessageMQ\Exceptions\" />
       <Folder Include="MessageMQ\Model\" />
       <Folder Include="MessageMQ\Repositories\" />
       <Folder Include="MessageMQ\Responses\" />
-      <Folder Include="NotificationMessage\DTOS\" />
+      <Folder Include="NotificationMessage\" />
       <Folder Include="NotificationMessage\Interfaces\" />
+      <Folder Include="Reports\" />
       <Folder Include="Reports\Actions\" />
       <Folder Include="Reports\Clases\" />
       <Folder Include="Reports\Data\" />
-      <Folder Include="Reports\Exceptions\" />
       <Folder Include="Reports\Helpers\" />
       <Folder Include="Reports\Interfaces\" />
       <Folder Include="Validators\" />
@@ -38,15 +33,16 @@
       <PackageReference Include="ExcelDataReader" Version="3.7.0" />
       <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
       <PackageReference Include="ExcelMapper" Version="5.2.593" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
       <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.11" />
       <PackageReference Include="morelinq" Version="4.3.0" />
       <PackageReference Include="MySql.Data" Version="9.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
-      <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
+      <PackageReference Include="OpenXmlPowerTools.NetStandard" Version="4.6.0" />
       <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.6.1" />
       <PackageReference Include="PugPDF.Core" Version="1.0.9" />
-      <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
       <PackageReference Include="System.Drawing.Common" Version="8.0.11" />
     </ItemGroup>
 

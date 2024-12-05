@@ -130,7 +130,7 @@ public class DefCSVFile
                     if (ficheroConSeparador)
                         value = fila[c.Posicion - posicionInicial];
                     else
-                        value = fila[0].Substring(c.Posicion, c.Longitud.Value).Trim();                        
+                        value = fila[0].Substring(c.Posicion, c.Longitud!.Value).Trim();                        
 
                     if (value == "NeuN")
                         value = "";

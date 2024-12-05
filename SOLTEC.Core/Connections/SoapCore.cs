@@ -1,5 +1,5 @@
 ﻿using SOLTEC.Core.Connections.Commands;
-using SOLTEC.Core.Connections.Exceptions;
+using SOLTEC.Core.Exceptions;
 using MoreLinq;
 using System.Net;
 using System.Net.Http.Headers;

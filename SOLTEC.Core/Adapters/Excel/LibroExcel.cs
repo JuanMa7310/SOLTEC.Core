@@ -80,7 +80,7 @@ public class LibroExcel
     {
         int nCol = Columna(columna);
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
         {
             return Convert.ToDecimal(Datos.Tables[Hoja].Rows[fila][nCol]);
         }
@@ -93,7 +93,7 @@ public class LibroExcel
     {
         int nCol = Columna(columna);
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
         {
             return Convert.ToSingle(Datos.Tables[Hoja].Rows[fila][nCol]);
         }
@@ -106,7 +106,7 @@ public class LibroExcel
     {
         int nCol = Columna(columna);
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
         {
             return Convert.ToInt32(Datos.Tables[Hoja].Rows[fila][nCol]);
         }
@@ -119,7 +119,7 @@ public class LibroExcel
     {
         int nCol = Columna(columna);
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
         {
             return Convert.ToInt64(Datos.Tables[Hoja].Rows[fila][nCol]);
         }
@@ -135,9 +135,9 @@ public class LibroExcel
 
         try
         {
-            if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+            if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
             {
-                string fecha = Datos.Tables[Hoja].Rows[fila][nCol].ToString();
+                string fecha = Datos.Tables[Hoja].Rows[fila][nCol].ToString()!;
                 DateTime datFecha = new DateTime();
                 if (DateTime.TryParse(fecha, out datFecha))
                 {
@@ -167,9 +167,9 @@ public class LibroExcel
     {
         int nCol = Columna(columna);
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][nCol].ToString()!.Length > 0)
         {
-            return Datos.Tables[Hoja].Rows[fila][nCol].ToString();
+            return Datos.Tables[Hoja].Rows[fila][nCol].ToString()!;
         }
         else
         {
@@ -180,9 +180,9 @@ public class LibroExcel
     {
         columna--;
         fila--;
-        if (Datos.Tables[Hoja].Rows[fila][columna].ToString().Length > 0)
+        if (Datos.Tables[Hoja].Rows[fila][columna].ToString()!.Length > 0)
         {
-            return Datos.Tables[Hoja].Rows[fila][columna].ToString();
+            return Datos.Tables[Hoja].Rows[fila][columna].ToString()!;
         }
         else
         {

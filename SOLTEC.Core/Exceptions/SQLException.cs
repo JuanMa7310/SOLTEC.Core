@@ -1,7 +1,6 @@
 ﻿using SOLTEC.Core.Enums;
-using SOLTEC.Core.Exceptions;
 
-namespace SOLTEC.Core.DataSources.Exceptions;
+namespace SOLTEC.Core.Exceptions;
 
 public class SQLException : ResultException
 {

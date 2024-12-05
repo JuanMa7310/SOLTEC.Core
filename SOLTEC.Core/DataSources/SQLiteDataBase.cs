@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using SOLTEC.Core.DataSources.Exceptions;
+using SOLTEC.Core.Exceptions;
 using SOLTEC.Core.DataSources.Interfaces;
 using SOLTEC.Core.Enums;
 using static Dapper.SqlMapper;
@@ -218,10 +218,10 @@ public class SQLiteDataBase : IDataSource
     {
         using SqliteConnection sqlConnection = new(ConnectionConfig);
         sqlConnection.Open();
-        SqliteCommand command = sqlConnection.CreateCommand();
-        IEnumerable<T> enumerable = sqlConnection.Query<T>(query, parameters, null, buffered: true, timeOut);
+        var command = sqlConnection.CreateCommand();
+        var enumerable = sqlConnection.Query<T>(query, parameters, null, buffered: true, timeOut);
         Dispose(sqlConnection, command);
-        return (T?)((enumerable != null) ? enumerable.FirstOrDefault() : ((object)default(T)));
+        return (T?)((enumerable != null) ? enumerable.FirstOrDefault() : ((object)default(T)!));
     }
 
     public async Task<T?> SelectScalarAsync<T>(string query, object? parameters = null, int? timeOut = null)

@@ -63,7 +63,7 @@ public class DefCSVFileDateTimeConverter
                 fecha = fecha.AddMilliseconds(Convert.ToInt32(strValue.Substring(MilisecondPosition.X,
                     MilisecondPosition.Y - MilisecondPosition.X + 1)));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw;
         }

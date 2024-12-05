@@ -1,7 +1,6 @@
-﻿using SOLTEC.Core.Exceptions;
-using System.Net;
+﻿using System.Net;
 
-namespace SOLTEC.Core.Connections.Exceptions;
+namespace SOLTEC.Core.Exceptions;
 
 public class SoapCoreException : ResultException 
 {
