@@ -21,4 +21,14 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Converters\" />
+    <Folder Include="DTOS\" />
+    <Folder Include="Factory\" />
+    <Folder Include="MessageMQ\Actions\" />
+    <Folder Include="MessageMQ\Builders\" />
+    <Folder Include="MessageMQ\Repositories\" />
+    <Folder Include="Validators\actions\" />
+  </ItemGroup>
+
 </Project>
