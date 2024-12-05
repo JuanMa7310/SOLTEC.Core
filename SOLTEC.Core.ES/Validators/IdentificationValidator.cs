@@ -4,22 +4,26 @@ namespace SOLTEC.Core.Validators;
 
 public class IdentificationValidator 
 {
-    public static bool IsValidIdentification(string identificacionNumber, IdentificationTypeEnum identificationType) 
+    public bool IsValidIdentification(string? identificacionNumber, IdentificationTypeEnum identificationType) 
     {
-        identificacionNumber = identificacionNumber.ToUpper();
-        switch (identificationType) 
+        if (identificacionNumber != null)
         {
-            case IdentificationTypeEnum.DNI:
-                return ValidateDNI(identificacionNumber);
-            case IdentificationTypeEnum.NIE:
-                return ValidateNIE(identificacionNumber);
-            case IdentificationTypeEnum.CIF:
-                return ValidateCIF(identificacionNumber);
+            identificacionNumber = identificacionNumber.ToUpper();
+            switch (identificationType)
+            {
+                case IdentificationTypeEnum.DNI:
+                    return ValidateDNI(identificacionNumber);
+                case IdentificationTypeEnum.NIE:
+                    return ValidateNIE(identificacionNumber);
+                case IdentificationTypeEnum.CIF:
+                    return ValidateCIF(identificacionNumber);
+            }
         }
+
         return true;
     }
 
-    private static bool ValidateCIF(string identification) 
+    private bool ValidateCIF(string identification) 
     {
         var lastLetter = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "0" };
         var pairNumbers = 0;
@@ -53,7 +57,7 @@ public class IdentificationValidator
         return (lastCharacter == number.ToString()) || (lastCharacter == lastLetter[number - 1]);
     }
 
-    private static string CalculateDNILeter(int dniNumbers) 
+    private string CalculateDNILeter(int dniNumbers) 
     {
         string[] controlLetters = { "T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E" };
         var mod = dniNumbers % 23;
@@ -61,7 +65,7 @@ public class IdentificationValidator
         return controlLetters[mod];
     }
 
-    private static bool ValidateNIE(string identification) 
+    private bool ValidateNIE(string identification) 
     {
         if (string.IsNullOrWhiteSpace(identification) || (identification.Length != 9 && identification.Length != 11)) 
             return false;
@@ -78,7 +82,7 @@ public class IdentificationValidator
         return CalculateDNILeter(identificacionNumberInteger) == lastLetter;
     }
 
-    private static bool ValidateDNI(string identification) 
+    private bool ValidateDNI(string identification) 
     {
         if (string.IsNullOrWhiteSpace(identification) || identification.Length != 9) 
             return false;
