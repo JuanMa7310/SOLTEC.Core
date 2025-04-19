@@ -4,7 +4,7 @@
         <name>SOLTEC.Core</name>
     </assembly>
     <members>
-        <member name="T:SOLTEC.Core.Encryptions.Encryptions">
+        <member name="T:SOLTEC.Core.Encryptions.Encryption">
             <summary>
             Provides utility methods for various encryption, hashing, and encoding operations.
             </summary>
@@ -15,74 +15,74 @@
             </code>
             </example>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateUniqueKey(System.Int32)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.GenerateUniqueKey(System.Int32)">
             <summary>
             Generates a random alphanumeric string of specified length.
             </summary>
             <param name="maxSize">The length of the generated key.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.CreateTokenHMACSHA256(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.CreateTokenHMACSHA256(System.String,System.String)">
             <summary>
             Creates an HMAC SHA256 token using the given message and secret.
             </summary>
             <param name="message">The message to encode.</param>
             <param name="secret">The secret key used for encryption.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.CreateMD5(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.CreateMD5(System.String)">
             <summary>
             Generates an MD5 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Token">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.Token">
             <summary>
             Generates a unique MD5 token from a new GUID.
             </summary>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Base64Decode(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.Base64Decode(System.String)">
             <summary>
             Decodes a base64 string.
             </summary>
             <param name="input">The encoded string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Base64Encode(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.Base64Encode(System.String)">
             <summary>
             Encodes a string into base64.
             </summary>
             <param name="input">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA1(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.GenerateSHA1(System.String)">
             <summary>
             Generates an SHA1 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA256(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.GenerateSHA256(System.String)">
             <summary>
             Generates an SHA256 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA384(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.GenerateSHA384(System.String)">
             <summary>
             Generates an SHA384 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA512(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.GenerateSHA512(System.String)">
             <summary>
             Generates an SHA512 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Encrypt(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.Encrypt(System.String,System.String)">
             <summary>
             Encrypts a string using a password.
             </summary>
             <param name="data">The string to encrypt.</param>
             <param name="password">The password for encryption.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Decrypt(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryption.Decrypt(System.String,System.String)">
             <summary>
             Decrypts a base64 encoded string using a password.
             </summary>
@@ -423,7 +423,25 @@
             <param name="warningMessages">An array of warning messages.</param>
             <returns>A new error <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:SOLTEC.Core.ServiceResponse`1" -->
+        <member name="T:SOLTEC.Core.ServiceResponse`1">
+            <summary>
+            Represents a generic version of <see cref="T:SOLTEC.Core.ServiceResponse"/>, allowing the response to include data of any type.
+            </summary>
+            <typeparam name="T">The type of data to be included in the response.</typeparam>
+            <example>
+            Example of creating a successful response with data:
+            <code>
+            var data = new User { Id = 1, Name = "John" };
+            var response = ServiceResponse&lt;User&gt;.CreateSuccess(data, 200);
+            </code>
+            </example>
+            <example>
+            Example of creating an error response:
+            <code>
+            var response = ServiceResponse&lt;string&gt;.CreateError(400, "Invalid request");
+            </code>
+            </example>
+        </member>
         <member name="P:SOLTEC.Core.ServiceResponse`1.Data">
             <summary>
             The data returned in the response.

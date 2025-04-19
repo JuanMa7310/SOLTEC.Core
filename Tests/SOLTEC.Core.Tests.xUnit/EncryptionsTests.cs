@@ -7,7 +7,7 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// </summary>
 public class EncryptionsXUnitTests
 {
-    private readonly Encryption _encryptionç = new();
+    private readonly Encryption _encryption = new();
 
     /// <summary>
     /// Tests GenerateUniqueKey returns a string of specified length.
