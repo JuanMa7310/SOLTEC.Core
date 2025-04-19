@@ -66,7 +66,7 @@ public class FileManagement
     /// </example>
     public virtual void CreateFile(string filePath, byte[] content)
     {
-        File.WriteAllBytes(filePath, content ?? Array.Empty<byte>());
+        File.WriteAllBytes(filePath, content ?? []);
     }
 
     /// <summary>
@@ -157,7 +157,7 @@ public class FileManagement
     /// </example>
     public virtual async Task WriteAllLinesAsync(string filePath, IEnumerable<string> rows)
     {
-        await File.WriteAllLinesAsync(filePath, rows ?? Array.Empty<string>());
+        await File.WriteAllLinesAsync(filePath, rows ?? []);
     }
 
     /// <summary>
@@ -170,7 +170,7 @@ public class FileManagement
     /// </example>
     public virtual async Task<string> ConvertFileToBase64Async(string filePath)
     {
-        if (!File.Exists(filePath)) 
+        if (!File.Exists(filePath))
             return string.Empty;
         byte[] bytes = await File.ReadAllBytesAsync(filePath);
 
