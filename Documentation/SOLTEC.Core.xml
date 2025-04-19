@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SOLTEC.Core</name>
+    </assembly>
+    <members>
+        <member name="T:SOLTEC.Core.Enums.FileTypeEnum">
+            <summary>
+            Specifies supported file types used for file operations.
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Txt">
+            <summary>
+            Plain text file (.txt).
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Csv">
+            <summary>
+            Comma-separated values file (.csv).
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Json">
+            <summary>
+            JavaScript Object Notation file (.json).
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Xlsx">
+            <summary>
+            Microsoft Excel file (.xlsx).
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Pdf">
+            <summary>
+            Portable Document Format file (.pdf).
+            </summary>
+        </member>
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Xml">
+            <summary>
+            XML file (.xml).
+            </summary>
+        </member>
+        <member name="T:SOLTEC.Core.FileManagement">
+            <summary>
+            Provides common file operations such as reading, writing, copying, moving, deleting,
+            and base64 encoding/decoding of files.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.ExtractFileNameFromPath(System.String)">
+            <summary>
+            Extracts the file name without its extension from a given file path.
+            </summary>
+            <param name="filePath">The full path of the file.</param>
+            <returns>The file name without extension. Returns an empty string if the path is invalid.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.ExtractExtensionFileFromPath(System.String)">
+            <summary>
+            Extracts the extension of a file (without the dot) from a given file path.
+            </summary>
+            <param name="filePath">The full path of the file.</param>
+            <returns>The file extension without the dot. Returns an empty string if the path is invalid.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.CreateFile(System.String,System.String)">
+            <summary>
+            Creates a new file and writes the specified text content encoded in UTF-8.
+            </summary>
+            <param name="filePath">The path where the file will be created.</param>
+            <param name="content">The text content to write into the file.</param>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.CreateFile(System.String,System.Byte[])">
+            <summary>
+            Creates a new file and writes the specified byte array as binary content.
+            </summary>
+            <param name="filePath">The path where the file will be created.</param>
+            <param name="content">The byte array to write into the file.</param>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.GetAllFilesByTypeFromPath(System.String,SOLTEC.Core.Enums.FileTypeEnum)">
+            <summary>
+            Retrieves all files with the specified extension from the given directory.
+            </summary>
+            <param name="directoryPath">The path of the directory to search.</param>
+            <param name="fileTypeEnum">The file type (extension) to filter by.</param>
+            <returns>An enumerable of file paths matching the given extension. Returns an empty list if the directory does not exist.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.CopyFile(System.String,System.String)">
+            <summary>
+            Copies a file from the source path to the target path, overwriting if the target already exists.
+            </summary>
+            <param name="sourcePath">The full path of the source file.</param>
+            <param name="targetPath">The full path where the file will be copied.</param>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.MoveFile(System.String,System.String)">
+            <summary>
+            Moves a file from the source path to the target path.
+            </summary>
+            <param name="sourcePath">The full path of the source file.</param>
+            <param name="targetPath">The full path where the file will be moved.</param>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.DeleteFile(System.String)">
+            <summary>
+            Deletes the specified file if it exists.
+            </summary>
+            <param name="filePath">The full path of the file to delete.</param>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.ReadFileAsync(System.String)">
+            <summary>
+            Asynchronously reads the entire content of a file as text.
+            </summary>
+            <param name="filePath">The full path of the file to read.</param>
+            <returns>A task that represents the asynchronous operation. The task result contains the file content as a string, or an empty string if the file does not exist.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.WriteAllLinesAsync(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Asynchronously writes all lines of text to a file.
+            </summary>
+            <param name="filePath">The full path of the file to write.</param>
+            <param name="rows">The lines of text to write to the file.</param>
+            <returns>A task that represents the asynchronous write operation.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.ConvertFileToBase64Async(System.String)">
+            <summary>
+            Asynchronously converts a file's content into a Base64-encoded string.
+            </summary>
+            <param name="filePath">The full path of the file to convert.</param>
+            <returns>A task that represents the asynchronous operation. The task result contains the Base64-encoded content, or an empty string if the file does not exist.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.FileManagement.DecodeBase64ToStream(System.String)">
+            <summary>
+            Decodes a Base64 string into a memory stream.
+            </summary>
+            <param name="base64EncodedData">The Base64 string to decode.</param>
+            <returns>A memory stream containing the decoded byte array. Returns an empty stream if the input is null or empty.</returns>
+        </member>
+    </members>
+</doc>
