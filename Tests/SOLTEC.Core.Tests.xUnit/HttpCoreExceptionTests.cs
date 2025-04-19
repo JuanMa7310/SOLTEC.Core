@@ -1,37 +1,75 @@
 ﻿using SOLTEC.Core.Connections.Exceptions;
+using SOLTEC.Core.Enums;
+using SOLTEC.Core.Exceptions;
 using System.Net;
 
-namespace SOLTEC.Core.Tests.xUnit;
+namespace SOLTEC.Core.Tests.NuNit;
 
 /// <summary>
 /// Unit tests for the HttpCoreException class using xUnit.
 /// </summary>
 public class HttpCoreExceptionTests
 {
-    /// <summary>
-    /// Tests constructor assigns all properties correctly.
-    /// Sends values for key, reason, status code, and message. Expects properties to match.
-    /// </summary>
     [Fact]
-    public void Constructor_AssignsAllProperties_Correctly()
+    /// <summary>
+    /// Verifies that all properties are correctly set when all parameters are provided.
+    /// </summary>
+    public void Constructor_WithAllParameters_AssignsCorrectValues()
     {
-        var _exception = new HttpCoreException("InvalidInput", "Missing fields", HttpStatusCode.BadRequest, "Fields are required");
+        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.BadRequest, "Details", HttpCoreErrorEnum.BadRequest);
 
-        Assert.Equal("InvalidInput", _exception.Key);
-        Assert.Equal("Missing fields", _exception.Reason);
-        Assert.Equal("Fields are required", _exception.ErrorMessage);
-        Assert.Equal(HttpStatusCode.BadRequest, _exception.HttpStatusCode);
+        Assert.Equal("Key", exception.Key);
+        Assert.Equal("Reason", exception.Reason);
+        Assert.Equal("Details", exception.ErrorMessage);
+        Assert.Equal(HttpStatusCode.BadRequest, exception.HttpStatusCode);
+        Assert.Equal(HttpCoreErrorEnum.BadRequest, exception.ErrorType);
     }
 
-    /// <summary>
-    /// Tests default value of errorMessage when not provided.
-    /// Sends key, reason, and status code. Expects empty ErrorMessage.
-    /// </summary>
     [Fact]
-    public void Constructor_WithoutErrorMessage_SetsEmptyString()
+    /// <summary>
+    /// Verifies that default values are assigned when parameters are null.
+    /// </summary>
+    public void Constructor_WithNulls_AssignsDefaultValues()
     {
-        var _exception = new HttpCoreException("InvalidInput", "Missing fields", HttpStatusCode.BadRequest);
+        var exception = new HttpCoreException(null, null, HttpStatusCode.NotFound, null, null);
 
-        Assert.Equal(string.Empty, _exception.ErrorMessage);
+        Assert.Equal("Unknown Key", exception.Key);
+        Assert.Equal("Unknown Reason", exception.Reason);
+        Assert.Equal("", exception.ErrorMessage);
+        Assert.Equal(HttpStatusCode.NotFound, exception.HttpStatusCode);
+        Assert.Null(exception.ErrorType);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Verifies that ErrorType reflects the correct enum when HttpStatusCode is known.
+    /// </summary>
+    public void Constructor_SetsCorrectErrorType()
+    {
+        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.Unauthorized, "Unauthorized access", HttpCoreErrorEnum.Unauthorized);
+
+        Assert.Equal(HttpCoreErrorEnum.Unauthorized, exception.ErrorType);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Verifies that ErrorMessage can be an empty string and is respected.
+    /// </summary>
+    public void Constructor_AllowsEmptyErrorMessage()
+    {
+        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.InternalServerError, "", HttpCoreErrorEnum.InternalServerError);
+
+        Assert.Equal("", exception.ErrorMessage);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Verifies that HttpCoreException inherits from ResultException.
+    /// </summary>
+    public void HttpCoreException_Is_ResultException()
+    {
+        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.Conflict, "Conflict error", HttpCoreErrorEnum.Conflict);
+
+        Assert.IsAssignableFrom<ResultException>(exception);
     }
 }

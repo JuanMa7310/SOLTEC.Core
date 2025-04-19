@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md
+		Documentation\SOLTEC_UnitTest_UseCases_EN.md = Documentation\SOLTEC_UnitTest_UseCases_EN.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F9F2555-B997-4547-8C25-5A7CB6BA58A3}"
 EndProject

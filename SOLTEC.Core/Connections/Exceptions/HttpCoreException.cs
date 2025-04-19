@@ -1,4 +1,5 @@
-﻿using SOLTEC.Core.Exceptions;
+﻿using SOLTEC.Core.Enums;
+using SOLTEC.Core.Exceptions;
 using System.Net;
 
 namespace SOLTEC.Core.Connections.Exceptions;
@@ -15,17 +16,24 @@ namespace SOLTEC.Core.Connections.Exceptions;
 public class HttpCoreException : ResultException
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HttpCoreException"/> class with specified details.
+    /// Indicates the categorized HTTP error type as an enum value.
     /// </summary>
-    /// <param name="key">The key identifying the error source.</param>
-    /// <param name="reason">A short description of the reason.</param>
-    /// <param name="httpStatusCode">The HTTP status code associated with the error.</param>
-    /// <param name="errorMessage">The detailed error message (optional).</param>
-    public HttpCoreException(string key, string reason, HttpStatusCode httpStatusCode, string errorMessage = "")
+    public HttpCoreErrorEnum? ErrorType { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of HttpCoreException with details.
+    /// </summary>
+    /// <param name="key">Key name for the error context.</param>
+    /// <param name="reason">Technical reason for the error.</param>
+    /// <param name="httpStatusCode">HTTP status code returned by the response.</param>
+    /// <param name="errorMessage">Detailed error message (optional).</param>
+    /// <param name="errorType">Mapped enum value from the status code (optional).</param>
+    public HttpCoreException(string? key, string? reason, HttpStatusCode httpStatusCode, string? errorMessage = "", HttpCoreErrorEnum? errorType = null)
     {
-        Key = key;
-        Reason = reason;
-        ErrorMessage = errorMessage;
+        Key = key ?? "Unknown Key";
+        Reason = reason ?? "Unknown Reason";
+        ErrorMessage = errorMessage ?? "";
         HttpStatusCode = httpStatusCode;
+        ErrorType = errorType;
     }
 }

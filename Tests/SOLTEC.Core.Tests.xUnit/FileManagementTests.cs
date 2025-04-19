@@ -1,7 +1,7 @@
 ﻿using SOLTEC.Core.Enums;
 using System.Text;
 
-namespace SOLTEC.Core.Tests.xUnit;
+namespace SOLTEC.Core.Tests.NuNit;
 
 public class FileManagementTests : IDisposable
 {
