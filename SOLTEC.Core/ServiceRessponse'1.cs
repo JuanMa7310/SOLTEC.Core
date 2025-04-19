@@ -10,12 +10,13 @@ namespace SOLTEC.Core;
 /// Example of creating a successful response with data:
 /// <code>
 /// var data = new User { Id = 1, Name = "John" };
-/// var response = ServiceResponse<User>.CreateSuccess(data, 200);
+/// var response = ServiceResponse&lt;User&gt;.CreateSuccess(data, 200);
 /// </code>
-/// 
+/// </example>
+/// <example>
 /// Example of creating an error response:
 /// <code>
-/// var response = ServiceResponse<string>.CreateError(400, "Invalid request");
+/// var response = ServiceResponse&lt;string&gt;.CreateError(400, "Invalid request");
 /// </code>
 /// </example>
 public class ServiceResponse<T> : ServiceResponse
