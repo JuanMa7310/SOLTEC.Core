@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace SOLTEC.Core;
+namespace SOLTEC.Core.Encryptions;
 
 /// <summary>
 /// Provides utility methods for various encryption, hashing, and encoding operations.
@@ -25,10 +25,12 @@ public class Encryptions
         using var _rng = RandomNumberGenerator.Create();
         _rng.GetBytes(_data);
         var _result = new StringBuilder(maxSize);
+
         foreach (var _b in _data)
         {
             _result.Append(chars[_b % chars.Length]);
         }
+
         return _result.ToString();
     }
 
@@ -43,6 +45,7 @@ public class Encryptions
         var _messageBytes = Encoding.ASCII.GetBytes(message);
         using var _hmac = new HMACSHA256(_key);
         var _hash = _hmac.ComputeHash(_messageBytes);
+
         return Convert.ToBase64String(_hash);
     }
 
@@ -54,6 +57,7 @@ public class Encryptions
     {
         var _inputBytes = Encoding.ASCII.GetBytes(message);
         var _hashBytes = MD5.HashData(_inputBytes);
+
         return Convert.ToHexString(_hashBytes).ToLower();
     }
 
@@ -63,10 +67,13 @@ public class Encryptions
     public virtual string Token()
     {
         long _i = 1;
+
+
         foreach (byte _b in Guid.NewGuid().ToByteArray())
         {
-            _i *= (_b + 1);
+            _i *= _b + 1;
         }
+
         return CreateMD5((_i - DateTime.Now.Ticks).ToString("x"));
     }
 
@@ -77,6 +84,7 @@ public class Encryptions
     public virtual string Base64Decode(string input)
     {
         var _output = Convert.FromBase64String(input);
+
         return Encoding.UTF8.GetString(_output);
     }
 
@@ -87,6 +95,7 @@ public class Encryptions
     public virtual string Base64Encode(string input)
     {
         var _bytes = Encoding.UTF8.GetBytes(input);
+
         return Convert.ToBase64String(_bytes);
     }
 
@@ -97,6 +106,7 @@ public class Encryptions
     public virtual string GenerateSHA1(string message)
     {
         var _bytes = SHA1.HashData(Encoding.ASCII.GetBytes(message));
+
         return Convert.ToHexString(_bytes).ToLower();
     }
 
@@ -107,6 +117,7 @@ public class Encryptions
     public virtual string GenerateSHA256(string message)
     {
         var _bytes = SHA256.HashData(Encoding.ASCII.GetBytes(message));
+
         return Convert.ToHexString(_bytes).ToLower();
     }
 
@@ -117,6 +128,7 @@ public class Encryptions
     public virtual string GenerateSHA384(string message)
     {
         var _bytes = SHA384.HashData(Encoding.ASCII.GetBytes(message));
+
         return Convert.ToHexString(_bytes).ToLower();
     }
 
@@ -127,6 +139,7 @@ public class Encryptions
     public virtual string GenerateSHA512(string message)
     {
         var _bytes = SHA512.HashData(Encoding.ASCII.GetBytes(message));
+
         return Convert.ToHexString(_bytes).ToLower();
     }
 
@@ -141,6 +154,7 @@ public class Encryptions
         var _toEncrypt = Encoding.UTF8.GetBytes(data);
         var _password = SHA512.HashData(Encoding.UTF8.GetBytes(password));
         var _encrypted = Encrypt(_toEncrypt, _password);
+
         return Convert.ToBase64String(_encrypted);
     }
 
@@ -155,6 +169,7 @@ public class Encryptions
         var _toDecrypt = Convert.FromBase64String(encryptedData);
         var _password = SHA512.HashData(Encoding.UTF8.GetBytes(password));
         var _decrypted = Decrypt(_toDecrypt, _password);
+
         return Encoding.UTF8.GetString(_decrypted);
     }
 
@@ -178,6 +193,7 @@ public class Encryptions
             _cs.Write(bytesToBeEncrypted, 0, bytesToBeEncrypted.Length);
         }
         _encrypted = _ms.ToArray();
+
         return _encrypted;
     }
 
@@ -201,6 +217,7 @@ public class Encryptions
             _cs.Write(bytesToBeDecrypted, 0, bytesToBeDecrypted.Length);
         }
         _decrypted = _ms.ToArray();
+
         return _decrypted;
     }
 }
