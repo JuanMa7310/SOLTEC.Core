@@ -6,7 +6,7 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// <summary>
 /// Unit tests for the ResultException class using xUnit.
 /// </summary>
-public class ResultExceptionXUnitTests
+public class ResultExceptionTests
 {
     /// <summary>
     /// Tests default constructor initializes an instance of ResultException.

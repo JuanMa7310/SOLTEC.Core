@@ -7,7 +7,7 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// Unit tests for the ResultException class using NUnit.
 /// </summary>
 [TestFixture]
-public class ResultExceptionNUnitTests
+public class ResultExceptionTests
 {
     /// <summary>
     /// Tests default constructor initializes an instance of ResultException.

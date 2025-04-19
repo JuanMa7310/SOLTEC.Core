@@ -6,7 +6,7 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// Unit tests for the generic ServiceResponse&lt;T&gt; class using NUnit.
 /// </summary>
 [TestFixture]
-public class ServiceResponseGenericNUnitTests
+public class ServiceResponseGenericTests
 {
     /// <summary>
     /// Tests CreateSuccess with data and response code.

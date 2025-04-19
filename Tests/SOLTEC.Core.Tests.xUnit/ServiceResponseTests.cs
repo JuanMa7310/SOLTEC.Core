@@ -5,7 +5,7 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// <summary>
 /// Unit tests for the ServiceResponse class using xUnit.
 /// </summary>
-public class ServiceResponseXUnitTests
+public class ServiceResponseTests
 {
     /// <summary>
     /// Tests that CreateSuccess with status code returns a successful response.

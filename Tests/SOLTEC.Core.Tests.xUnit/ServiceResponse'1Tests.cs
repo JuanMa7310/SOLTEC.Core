@@ -5,7 +5,7 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// <summary>
 /// Unit tests for the generic ServiceResponse&lt;T&gt; class using xUnit.
 /// </summary>
-public class ServiceResponseGenericXUnitTests
+public class ServiceResponseGenericTests
 {
     /// <summary>
     /// Tests CreateSuccess with data and response code.
