@@ -1,37 +1,45 @@
 ﻿namespace SOLTEC.Core.Enums;
 
 /// <summary>
-/// Specifies supported file types used for file operations.
+/// Specifies the supported file types used for file operations, such as reading, writing or exporting.
 /// </summary>
+/// <remarks>
+/// This enumeration is typically used to determine the format of a file being handled.
+/// </remarks>
+/// <example>
+/// Example usage:
+/// <code>
+/// FileTypeEnum type = FileTypeEnum.Json;
+/// if (type == FileTypeEnum.Xlsx)
+/// {
+///     Console.WriteLine("Exporting to Excel format.");
+/// }
+/// </code>
+/// </example>
 public enum FileTypeEnum
 {
     /// <summary>
-    /// Plain text file (.txt).
-    /// </summary>
-    Txt,
-
-    /// <summary>
-    /// Comma-separated values file (.csv).
-    /// </summary>
-    Csv,
-
-    /// <summary>
     /// JavaScript Object Notation file (.json).
+    /// Commonly used for configuration or data exchange formats.
     /// </summary>
+    /// <example>
+    /// FileTypeEnum fileType = FileTypeEnum.Json;
+    /// </example>
     Json,
-
     /// <summary>
     /// Microsoft Excel file (.xlsx).
+    /// Often used for spreadsheets and tabular data exports.
     /// </summary>
+    /// <example>
+    /// FileTypeEnum fileType = FileTypeEnum.Xlsx;
+    /// </example>
     Xlsx,
-
     /// <summary>
-    /// Portable Document Format file (.pdf).
+    /// Microsoft Word document file (.docx).
+    /// Used for generating textual reports or formal documents.
     /// </summary>
-    Pdf,
-
-    /// <summary>
-    /// XML file (.xml).
-    /// </summary>
-    Xml
+    /// <example>
+    /// FileTypeEnum fileType = FileTypeEnum.Docx;
+    /// </example>
+    Docx
 }
