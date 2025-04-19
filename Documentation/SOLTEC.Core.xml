@@ -4,131 +4,460 @@
         <name>SOLTEC.Core</name>
     </assembly>
     <members>
+        <member name="T:SOLTEC.Core.Encryptions">
+            <summary>
+            Provides utility methods for various encryption, hashing, and encoding operations.
+            </summary>
+            <example>
+            Example of generating a SHA256 hash:
+            <code>
+            var hash = new Encryptions().GenerateSHA256("hello world");
+            </code>
+            </example>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.GenerateUniqueKey(System.Int32)">
+            <summary>
+            Generates a random alphanumeric string of specified length.
+            </summary>
+            <param name="maxSize">The length of the generated key.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.CreateTokenHMACSHA256(System.String,System.String)">
+            <summary>
+            Creates an HMAC SHA256 token using the given message and secret.
+            </summary>
+            <param name="message">The message to encode.</param>
+            <param name="secret">The secret key used for encryption.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.CreateMD5(System.String)">
+            <summary>
+            Generates an MD5 hash from a given message.
+            </summary>
+            <param name="message">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.Token">
+            <summary>
+            Generates a unique MD5 token from a new GUID.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.Base64Decode(System.String)">
+            <summary>
+            Decodes a base64 string.
+            </summary>
+            <param name="input">The encoded string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.Base64Encode(System.String)">
+            <summary>
+            Encodes a string into base64.
+            </summary>
+            <param name="input">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA1(System.String)">
+            <summary>
+            Generates an SHA1 hash from a given message.
+            </summary>
+            <param name="message">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA256(System.String)">
+            <summary>
+            Generates an SHA256 hash from a given message.
+            </summary>
+            <param name="message">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA384(System.String)">
+            <summary>
+            Generates an SHA384 hash from a given message.
+            </summary>
+            <param name="message">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA512(System.String)">
+            <summary>
+            Generates an SHA512 hash from a given message.
+            </summary>
+            <param name="message">The input string.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.Encrypt(System.String,System.String)">
+            <summary>
+            Encrypts a string using a password.
+            </summary>
+            <param name="data">The string to encrypt.</param>
+            <param name="password">The password for encryption.</param>
+        </member>
+        <member name="M:SOLTEC.Core.Encryptions.Decrypt(System.String,System.String)">
+            <summary>
+            Decrypts a base64 encoded string using a password.
+            </summary>
+            <param name="encryptedData">The encrypted base64 string.</param>
+            <param name="password">The password used for encryption.</param>
+        </member>
         <member name="T:SOLTEC.Core.Enums.FileTypeEnum">
             <summary>
-            Specifies supported file types used for file operations.
+            Specifies the supported file types used for file operations, such as reading, writing or exporting.
             </summary>
-        </member>
-        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Txt">
-            <summary>
-            Plain text file (.txt).
-            </summary>
-        </member>
-        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Csv">
-            <summary>
-            Comma-separated values file (.csv).
-            </summary>
+            <remarks>
+            This enumeration is typically used to determine the format of a file being handled.
+            </remarks>
+            <example>
+            Example usage:
+            <code>
+            FileTypeEnum type = FileTypeEnum.Json;
+            if (type == FileTypeEnum.Xlsx)
+            {
+                Console.WriteLine("Exporting to Excel format.");
+            }
+            </code>
+            </example>
         </member>
         <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Json">
             <summary>
             JavaScript Object Notation file (.json).
+            Commonly used for configuration or data exchange formats.
             </summary>
+            <example>
+            FileTypeEnum fileType = FileTypeEnum.Json;
+            </example>
         </member>
         <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Xlsx">
             <summary>
             Microsoft Excel file (.xlsx).
+            Often used for spreadsheets and tabular data exports.
             </summary>
+            <example>
+            FileTypeEnum fileType = FileTypeEnum.Xlsx;
+            </example>
         </member>
-        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Pdf">
+        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Docx">
             <summary>
-            Portable Document Format file (.pdf).
+            Microsoft Word document file (.docx).
+            Used for generating textual reports or formal documents.
             </summary>
-        </member>
-        <member name="F:SOLTEC.Core.Enums.FileTypeEnum.Xml">
-            <summary>
-            XML file (.xml).
-            </summary>
+            <example>
+            FileTypeEnum fileType = FileTypeEnum.Docx;
+            </example>
         </member>
         <member name="T:SOLTEC.Core.FileManagement">
             <summary>
             Provides common file operations such as reading, writing, copying, moving, deleting,
-            and base64 encoding/decoding of files.
+            and Base64 encoding/decoding of files.
             </summary>
+            <example>
+            var fileManager = new FileManagement();
+            string name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.ExtractFileNameFromPath(System.String)">
             <summary>
             Extracts the file name without its extension from a given file path.
             </summary>
             <param name="filePath">The full path of the file.</param>
-            <returns>The file name without extension. Returns an empty string if the path is invalid.</returns>
+            <returns>The file name without extension, or an empty string if the path is invalid.</returns>
+            <example>
+            var name = ExtractFileNameFromPath(@"C:\files\report.pdf"); // "report"
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.ExtractExtensionFileFromPath(System.String)">
             <summary>
-            Extracts the extension of a file (without the dot) from a given file path.
+            Extracts the file extension (without the dot) from a given file path.
             </summary>
             <param name="filePath">The full path of the file.</param>
-            <returns>The file extension without the dot. Returns an empty string if the path is invalid.</returns>
+            <returns>The extension without the dot, or an empty string if the path is invalid.</returns>
+            <example>
+            var ext = ExtractExtensionFileFromPath(@"file.json"); // "json"
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.CreateFile(System.String,System.String)">
             <summary>
-            Creates a new file and writes the specified text content encoded in UTF-8.
+            Creates a text file and writes the given content using UTF-8 encoding.
             </summary>
-            <param name="filePath">The path where the file will be created.</param>
-            <param name="content">The text content to write into the file.</param>
+            <param name="filePath">The file path to create.</param>
+            <param name="content">The string content to write.</param>
+            <example>
+            CreateFile(@"C:\temp\data.txt", "Hello World");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.CreateFile(System.String,System.Byte[])">
             <summary>
-            Creates a new file and writes the specified byte array as binary content.
+            Creates a file and writes the given binary content.
             </summary>
-            <param name="filePath">The path where the file will be created.</param>
-            <param name="content">The byte array to write into the file.</param>
+            <param name="filePath">The file path to create.</param>
+            <param name="content">Byte array to write.</param>
+            <example>
+            CreateFile(@"C:\temp\image.bin", imageBytes);
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.GetAllFilesByTypeFromPath(System.String,SOLTEC.Core.Enums.FileTypeEnum)">
             <summary>
-            Retrieves all files with the specified extension from the given directory.
+            Returns all files in a directory that match the specified file type.
             </summary>
-            <param name="directoryPath">The path of the directory to search.</param>
-            <param name="fileTypeEnum">The file type (extension) to filter by.</param>
-            <returns>An enumerable of file paths matching the given extension. Returns an empty list if the directory does not exist.</returns>
+            <param name="directoryPath">Directory to search in.</param>
+            <param name="fileTypeEnum">File extension to filter (e.g., Json, Xlsx).</param>
+            <returns>Enumerable of matching file paths, or empty list if path not found.</returns>
+            <example>
+            var jsonFiles = GetAllFilesByTypeFromPath(@"C:\configs", FileTypeEnum.Json);
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.CopyFile(System.String,System.String)">
             <summary>
-            Copies a file from the source path to the target path, overwriting if the target already exists.
+            Copies a file from source to destination, overwriting if exists.
             </summary>
-            <param name="sourcePath">The full path of the source file.</param>
-            <param name="targetPath">The full path where the file will be copied.</param>
+            <param name="sourcePath">Original file path.</param>
+            <param name="targetPath">Destination path.</param>
+            <example>
+            CopyFile(@"C:\old\file.txt", @"D:\new\file.txt");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.MoveFile(System.String,System.String)">
             <summary>
-            Moves a file from the source path to the target path.
+            Moves a file from source to destination.
             </summary>
-            <param name="sourcePath">The full path of the source file.</param>
-            <param name="targetPath">The full path where the file will be moved.</param>
+            <param name="sourcePath">Original file path.</param>
+            <param name="targetPath">Destination path.</param>
+            <example>
+            MoveFile(@"C:\docs\temp.txt", @"C:\docs\final.txt");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.DeleteFile(System.String)">
             <summary>
-            Deletes the specified file if it exists.
+            Deletes a file if it exists.
             </summary>
-            <param name="filePath">The full path of the file to delete.</param>
+            <param name="filePath">Path of the file to delete.</param>
+            <example>
+            DeleteFile(@"C:\temp\old.log");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.ReadFileAsync(System.String)">
             <summary>
-            Asynchronously reads the entire content of a file as text.
+            Reads all text from a file asynchronously.
             </summary>
-            <param name="filePath">The full path of the file to read.</param>
-            <returns>A task that represents the asynchronous operation. The task result contains the file content as a string, or an empty string if the file does not exist.</returns>
+            <param name="filePath">File path to read from.</param>
+            <returns>File content or empty string if file doesn't exist.</returns>
+            <example>
+            string content = await ReadFileAsync(@"notes.txt");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.WriteAllLinesAsync(System.String,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Asynchronously writes all lines of text to a file.
+            Writes all lines to a file asynchronously.
             </summary>
-            <param name="filePath">The full path of the file to write.</param>
-            <param name="rows">The lines of text to write to the file.</param>
-            <returns>A task that represents the asynchronous write operation.</returns>
+            <param name="filePath">File path to write to.</param>
+            <param name="rows">Lines of text to write.</param>
+            <example>
+            await WriteAllLinesAsync("log.txt", new[] { "Start", "End" });
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.ConvertFileToBase64Async(System.String)">
             <summary>
-            Asynchronously converts a file's content into a Base64-encoded string.
+            Converts a file's binary content to a Base64 string asynchronously.
             </summary>
-            <param name="filePath">The full path of the file to convert.</param>
-            <returns>A task that represents the asynchronous operation. The task result contains the Base64-encoded content, or an empty string if the file does not exist.</returns>
+            <param name="filePath">File path to encode.</param>
+            <returns>Base64 string or empty string if file not found.</returns>
+            <example>
+            string base64 = await ConvertFileToBase64Async("image.png");
+            </example>
         </member>
         <member name="M:SOLTEC.Core.FileManagement.DecodeBase64ToStream(System.String)">
             <summary>
-            Decodes a Base64 string into a memory stream.
+            Converts a Base64 string to a memory stream.
             </summary>
-            <param name="base64EncodedData">The Base64 string to decode.</param>
-            <returns>A memory stream containing the decoded byte array. Returns an empty stream if the input is null or empty.</returns>
+            <param name="base64EncodedData">The Base64 encoded string.</param>
+            <returns>MemoryStream with decoded content, or empty stream if input is invalid.</returns>
+            <example>
+            using var stream = DecodeBase64ToStream(encodedText);
+            </example>
+        </member>
+        <member name="T:SOLTEC.Core.ServiceResponse">
+            <summary>
+            Represents a standardized structure for service responses, including success or error information.
+            </summary>
+            <example>
+            Example of creating a successful response:
+            <code>
+            var response = ServiceResponse.CreateSuccess(200);
+            </code>
+            
+            Example of creating an error response:
+            <code>
+            var response = ServiceResponse.CreateError(500, "Internal server error");
+            </code>
+            </example>
+        </member>
+        <member name="P:SOLTEC.Core.ServiceResponse.Success">
+            <summary>
+            Indicates whether the operation was successful.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.ServiceResponse.Message">
+            <summary>
+            Optional success message.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.ServiceResponse.ErrorMessage">
+            <summary>
+            Optional error message in case of failure.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.ServiceResponse.WarningMessages">
+            <summary>
+            Optional warning messages.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.ServiceResponse.ResponseCode">
+            <summary>
+            HTTP response code or custom response code.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SOLTEC.Core.ServiceResponse"/> class with default values.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateSuccess(System.Int32)">
+            <summary>
+            Creates a successful response.
+            </summary>
+            <param name="responseCode">The HTTP status or custom code.</param>
+            <returns>A new successful <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateSuccess(System.Net.HttpStatusCode)">
+            <summary>
+            Creates a successful response from an HTTP status code.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <returns>A new successful <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateSuccess(System.Int32,System.String[])">
+            <summary>
+            Creates a successful response with optional warning messages.
+            </summary>
+            <param name="responseCode">The HTTP status or custom code.</param>
+            <param name="warningMessages">An array of warning messages.</param>
+            <returns>A new successful <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateSuccess(System.Net.HttpStatusCode,System.String[])">
+            <summary>
+            Creates a successful response from an HTTP status code with warning messages.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="warningMessages">An array of warning messages.</param>
+            <returns>A new successful <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateError(System.Int32,System.String)">
+            <summary>
+            Creates an error response.
+            </summary>
+            <param name="responseCode">The HTTP status or custom code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <returns>A new error <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateError(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Creates an error response from an HTTP status code.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <returns>A new error <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateError(System.Int32,System.String,System.String[])">
+            <summary>
+            Creates an error response with optional warning messages.
+            </summary>
+            <param name="responseCode">The HTTP status or custom code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <param name="warningMessages">An array of warning messages.</param>
+            <returns>A new error <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse.CreateError(System.Net.HttpStatusCode,System.String,System.String[])">
+            <summary>
+            Creates an error response from an HTTP status code with optional warning messages.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <param name="warningMessages">An array of warning messages.</param>
+            <returns>A new error <see cref="T:SOLTEC.Core.ServiceResponse"/>.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:SOLTEC.Core.ServiceResponse`1" -->
+        <member name="P:SOLTEC.Core.ServiceResponse`1.Data">
+            <summary>
+            The data returned in the response.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SOLTEC.Core.ServiceResponse`1"/> class.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SOLTEC.Core.ServiceResponse`1"/> class with specified data.
+            </summary>
+            <param name="data">The data to include in the response.</param>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateSuccess(`0,System.Int32)">
+            <summary>
+            Creates a successful response with data and response code.
+            </summary>
+            <param name="data">The data to include.</param>
+            <param name="responseCode">The response code.</param>
+            <returns>A new successful response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateSuccess(`0,System.Net.HttpStatusCode)">
+            <summary>
+            Creates a successful response with data and HTTP status code.
+            </summary>
+            <param name="data">The data to include.</param>
+            <param name="responseCode">The HTTP status code.</param>
+            <returns>A new successful response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateSuccess(`0,System.Int32,System.String[])">
+            <summary>
+            Creates a successful response with data, code and warnings.
+            </summary>
+            <param name="data">The data to include.</param>
+            <param name="responseCode">The response code.</param>
+            <param name="warningMessages">Optional warning messages.</param>
+            <returns>A new successful response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateSuccess(`0,System.Net.HttpStatusCode,System.String[])">
+            <summary>
+            Creates a successful response with data, HTTP code and warnings.
+            </summary>
+            <param name="data">The data to include.</param>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="warningMessages">Optional warning messages.</param>
+            <returns>A new successful response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateError(System.Int32,System.String)">
+            <summary>
+            Creates an error response with code and error message.
+            </summary>
+            <param name="responseCode">The response code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <returns>A new error response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateError(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Creates an error response with HTTP code and error message.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="errorMessage">The error message to include.</param>
+            <returns>A new error response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateError(System.Int32,System.String,System.String[])">
+            <summary>
+            Creates an error response with code, message and warnings.
+            </summary>
+            <param name="responseCode">The response code.</param>
+            <param name="errorMessage">The error message.</param>
+            <param name="warningMessages">Optional warning messages.</param>
+            <returns>A new error response.</returns>
+        </member>
+        <member name="M:SOLTEC.Core.ServiceResponse`1.CreateError(System.Net.HttpStatusCode,System.String,System.String[])">
+            <summary>
+            Creates an error response with HTTP code, message and warnings.
+            </summary>
+            <param name="responseCode">The HTTP status code.</param>
+            <param name="errorMessage">The error message.</param>
+            <param name="warningMessages">Optional warning messages.</param>
+            <returns>A new error response.</returns>
         </member>
     </members>
 </doc>

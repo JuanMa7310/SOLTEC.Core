@@ -145,3 +145,4 @@ public class ServiceResponse<T> : ServiceResponse
             Data = default,
         };
     }
+}
