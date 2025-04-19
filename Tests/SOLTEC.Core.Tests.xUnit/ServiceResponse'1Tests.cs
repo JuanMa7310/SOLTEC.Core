@@ -49,7 +49,7 @@ public class ServiceResponseGenericXUnitTests
         var _response = ServiceResponse<string>.CreateSuccess("Ok", 200, _warnings);
 
         Assert.True(_response.Success);
-        Assert.Contains("Deprecated endpoint", _response.WarningMessages);
+        Assert.Contains("Deprecated endpoint", _response.WarningMessages!);
     }
 
     /// <summary>
@@ -63,6 +63,6 @@ public class ServiceResponseGenericXUnitTests
 
         Assert.False(_response.Success);
         Assert.Equal((int)HttpStatusCode.BadRequest, _response.ResponseCode);
-        Assert.Contains("Check input", _response.WarningMessages);
+        Assert.Contains("Check input", _response.WarningMessages!);
     }
 }
