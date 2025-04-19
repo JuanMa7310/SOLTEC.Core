@@ -1,4 +1,6 @@
-﻿namespace SOLTEC.Core.Tests.NuNit;
+﻿using SOLTEC.Core.Encryptions;
+
+namespace SOLTEC.Core.Tests.NuNit;
 
 /// <summary>
 /// Unit tests for the Encryptions class using NUnit.
@@ -6,7 +8,7 @@
 [TestFixture]
 public class EncryptionsNUnitTests
 {
-    private readonly Encryptions _encryptions = new();
+    private readonly Encryption _encryption = new();
 
     /// <summary>
     /// Tests GenerateUniqueKey returns a string of specified length.
@@ -15,7 +17,7 @@ public class EncryptionsNUnitTests
     [Test]
     public void GenerateUniqueKey_ReturnsCorrectLength()
     {
-        var _result = _encryptions.GenerateUniqueKey(12);
+        var _result = _encryption.GenerateUniqueKey(12);
 
         Assert.That(_result.Length, Is.EqualTo(12));
     }
@@ -27,7 +29,7 @@ public class EncryptionsNUnitTests
     [Test]
     public void CreateTokenHMACSHA256_ReturnsBase64()
     {
-        var _token = _encryptions.CreateTokenHMACSHA256("test", "secret");
+        var _token = _encryption.CreateTokenHMACSHA256("test", "secret");
 
         Assert.That(_token, Is.Not.Empty);
     }
@@ -39,8 +41,8 @@ public class EncryptionsNUnitTests
     public void Base64EncodeDecode_RoundTrip_Success()
     {
         var _original = "hello world";
-        var _encoded = _encryptions.Base64Encode(_original);
-        var _decoded = _encryptions.Base64Decode(_encoded);
+        var _encoded = _encryption.Base64Encode(_original);
+        var _decoded = _encryption.Base64Decode(_encoded);
 
         Assert.That(_decoded, Is.EqualTo(_original));
     }
@@ -51,7 +53,7 @@ public class EncryptionsNUnitTests
     [Test]
     public void CreateMD5_ReturnsHexHash()
     {
-        var _hash = _encryptions.CreateMD5("input");
+        var _hash = _encryption.CreateMD5("input");
 
         Assert.That(_hash.Length, Is.EqualTo(32));
     }
@@ -64,8 +66,8 @@ public class EncryptionsNUnitTests
     {
         var _text = "Sensitive Info";
         var _password = "P@ssw0rd!";
-        var _encrypted = _encryptions.Encrypt(_text, _password);
-        var _decrypted = _encryptions.Decrypt(_encrypted!, _password);
+        var _encrypted = _encryption.Encrypt(_text, _password);
+        var _decrypted = _encryption.Decrypt(_encrypted!, _password);
 
         Assert.That(_decrypted, Is.EqualTo(_text));
     }

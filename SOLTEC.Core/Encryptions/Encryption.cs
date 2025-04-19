@@ -12,7 +12,7 @@ namespace SOLTEC.Core.Encryptions;
 /// var hash = new Encryptions().GenerateSHA256("hello world");
 /// </code>
 /// </example>
-public class Encryptions
+public class Encryption
 {
     /// <summary>
     /// Generates a random alphanumeric string of specified length.

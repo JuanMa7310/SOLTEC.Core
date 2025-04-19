@@ -4,7 +4,7 @@
         <name>SOLTEC.Core</name>
     </assembly>
     <members>
-        <member name="T:SOLTEC.Core.Encryptions">
+        <member name="T:SOLTEC.Core.Encryptions.Encryptions">
             <summary>
             Provides utility methods for various encryption, hashing, and encoding operations.
             </summary>
@@ -15,74 +15,74 @@
             </code>
             </example>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.GenerateUniqueKey(System.Int32)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateUniqueKey(System.Int32)">
             <summary>
             Generates a random alphanumeric string of specified length.
             </summary>
             <param name="maxSize">The length of the generated key.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.CreateTokenHMACSHA256(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.CreateTokenHMACSHA256(System.String,System.String)">
             <summary>
             Creates an HMAC SHA256 token using the given message and secret.
             </summary>
             <param name="message">The message to encode.</param>
             <param name="secret">The secret key used for encryption.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.CreateMD5(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.CreateMD5(System.String)">
             <summary>
             Generates an MD5 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Token">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Token">
             <summary>
             Generates a unique MD5 token from a new GUID.
             </summary>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Base64Decode(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Base64Decode(System.String)">
             <summary>
             Decodes a base64 string.
             </summary>
             <param name="input">The encoded string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Base64Encode(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Base64Encode(System.String)">
             <summary>
             Encodes a string into base64.
             </summary>
             <param name="input">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA1(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA1(System.String)">
             <summary>
             Generates an SHA1 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA256(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA256(System.String)">
             <summary>
             Generates an SHA256 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA384(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA384(System.String)">
             <summary>
             Generates an SHA384 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.GenerateSHA512(System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.GenerateSHA512(System.String)">
             <summary>
             Generates an SHA512 hash from a given message.
             </summary>
             <param name="message">The input string.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Encrypt(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Encrypt(System.String,System.String)">
             <summary>
             Encrypts a string using a password.
             </summary>
             <param name="data">The string to encrypt.</param>
             <param name="password">The password for encryption.</param>
         </member>
-        <member name="M:SOLTEC.Core.Encryptions.Decrypt(System.String,System.String)">
+        <member name="M:SOLTEC.Core.Encryptions.Encryptions.Decrypt(System.String,System.String)">
             <summary>
             Decrypts a base64 encoded string using a password.
             </summary>
@@ -133,6 +133,55 @@
             <example>
             FileTypeEnum fileType = FileTypeEnum.Docx;
             </example>
+        </member>
+        <member name="T:SOLTEC.Core.Exceptions.ResultException">
+            <summary>
+            Represents a custom exception that includes additional context such as a key, reason, error message, and HTTP status code.
+            </summary>
+            <example>
+            Example of throwing a ResultException:
+            <code>
+            throw new ResultException("Resource not found", new KeyNotFoundException())
+            {
+                Key = "UserId",
+                Reason = "User does not exist",
+                ErrorMessage = "Unable to locate user by given ID.",
+                HttpStatusCode = HttpStatusCode.NotFound
+            };
+            </code>
+            </example>
+        </member>
+        <member name="P:SOLTEC.Core.Exceptions.ResultException.Key">
+            <summary>
+            Gets or sets a key that identifies the cause or context of the exception.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.Exceptions.ResultException.Reason">
+            <summary>
+            Gets or sets a short reason description.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.Exceptions.ResultException.ErrorMessage">
+            <summary>
+            Gets or sets the detailed error message.
+            </summary>
+        </member>
+        <member name="P:SOLTEC.Core.Exceptions.ResultException.HttpStatusCode">
+            <summary>
+            Gets or sets the associated HTTP status code.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.Exceptions.ResultException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SOLTEC.Core.Exceptions.ResultException"/> class.
+            </summary>
+        </member>
+        <member name="M:SOLTEC.Core.Exceptions.ResultException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SOLTEC.Core.Exceptions.ResultException"/> class with a specified message and inner exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
         </member>
         <member name="T:SOLTEC.Core.FileManagement">
             <summary>
