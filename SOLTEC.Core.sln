@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.Tests.xUnit", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.Tests.NuNit", "Tests\SOLTEC.Core.Tests.NuNit\SOLTEC.Core.Tests.NuNit.csproj", "{C6B30726-2D87-4F0E-87E5-37662B037935}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A16F71B6-0F54-4734-B6BD-6E0CCD578E08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.PreBuildValidator", "Tools\SOLTEC.Core.PreBuildValidator\SOLTEC.Core.PreBuildValidator.csproj", "{D05D87A0-91AB-4237-BD8C-74C529CDB51E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +50,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D183D956-5F84-46A5-A108-0E92B6612E27} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
 		{C6B30726-2D87-4F0E-87E5-37662B037935} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
+		{D05D87A0-91AB-4237-BD8C-74C529CDB51E} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11301603-2537-4BFA-804D-A81E7F3C767A}
