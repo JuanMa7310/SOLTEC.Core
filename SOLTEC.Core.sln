@@ -25,6 +25,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.PreBuildValidat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.WikiDocGen", "Tools\SOLTEC.Core.WikiDocGen\SOLTEC.Core.WikiDocGen.csproj", "{85032D75-BF0B-4A0C-BF45-88EC598611EB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{544A3704-8645-41CF-91CD-B2636A7FEE1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BC0AA913-73B6-4B43-BD43-251EAC8FEB98}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\prebuild-validator.yml = .github\workflows\prebuild-validator.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +67,7 @@ Global
 		{C6B30726-2D87-4F0E-87E5-37662B037935} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
 		{D05D87A0-91AB-4237-BD8C-74C529CDB51E} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
 		{85032D75-BF0B-4A0C-BF45-88EC598611EB} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
+		{BC0AA913-73B6-4B43-BD43-251EAC8FEB98} = {544A3704-8645-41CF-91CD-B2636A7FEE1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11301603-2537-4BFA-804D-A81E7F3C767A}
