@@ -2,8 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+	<LangVersion>12.0</LangVersion>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>..\Documentation\SOLTEC.Core.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Adapters\Exceptions\" />
+    <Folder Include="Connections\Commands\" />
+    <Folder Include="Encryptions\Exceptions\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild">
+	<Exec Command="dotnet $(SolutionDir)Tools/SOLTEC.Core.PreBuildValidator/bin/Debug/net8.0/SOLTEC.Core.PreBuildValidator.dll" />
+  </Target>
 
 </Project>
