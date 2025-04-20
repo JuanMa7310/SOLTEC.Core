@@ -3,19 +3,22 @@ using System.Text;
 
 namespace SOLTEC.Core.Tests.NuNit;
 
-public class FileManagementTests : IDisposable
+[TestFixture]
+public class FileManagmentTests
 {
-    private readonly FileManagement _fileManager;
-    private readonly string _testDir;
+    private FileManagement _fileManager;
+    private string _testDir;
 
-    public FileManagementTests()
+    [SetUp]
+    public void SetUp()
     {
         _fileManager = new FileManagement();
-        _testDir = Path.Combine(Path.GetTempPath(), "FileManagementTests");
+        _testDir = Path.Combine(Path.GetTempPath(), "FileManagementTests_NUnit");
         Directory.CreateDirectory(_testDir);
     }
 
-    public void Dispose()
+    [TearDown]
+    public void TearDown()
     {
         if (Directory.Exists(_testDir))
             Directory.Delete(_testDir, true);
@@ -23,56 +26,57 @@ public class FileManagementTests : IDisposable
 
     private string GetTempFilePath(string name = "test.txt") => Path.Combine(_testDir, name);
 
-    [Fact]
+    [Test]
     public void ExtractFileNameFromPath_ShouldReturnCorrectName()
     {
-        string path = @"C:\folder\example.txt";
-        string result = _fileManager.ExtractFileNameFromPath(path);
+        var result = _fileManager.ExtractFileNameFromPath(@"C:\folder\example.txt");
 
-        Assert.Equal("example", result);
+        Assert.That(result, Is.EqualTo("example"));
     }
 
-    [Fact]
+    [Test]
     public void ExtractExtensionFileFromPath_ShouldReturnCorrectExtension()
     {
-        string path = @"C:\folder\example.json";
-        string result = _fileManager.ExtractExtensionFileFromPath(path);
+        var result = _fileManager.ExtractExtensionFileFromPath(@"C:\folder\example.json");
 
-        Assert.Equal("json", result);
+        Assert.That(result, Is.EqualTo("json"));
     }
 
-    [Fact]
+    [Test]
     public void CreateFile_WithText_ShouldCreateFileAndWriteContent()
     {
         string path = GetTempFilePath();
-        string content = "Hello xUnit!";
+        string content = "Hello NUnit!";
         _fileManager.CreateFile(path, content);
 
-        Assert.True(File.Exists(path));
-        Assert.Equal(content, File.ReadAllText(path));
+        Assert.Multiple(() =>
+        {
+            Assert.That(File.Exists(path));
+            Assert.That(File.ReadAllText(path), Is.EqualTo(content));
+        });
     }
 
-    [Fact]
+    [Test]
     public void CreateFile_WithBytes_ShouldCreateBinaryFile()
     {
         string path = GetTempFilePath("binary.dat");
         byte[] data = Encoding.UTF8.GetBytes("Binary data");
         _fileManager.CreateFile(path, data);
 
-        Assert.True(File.Exists(path));
+        Assert.That(File.Exists(path));
     }
 
-    [Fact]
+    [Test]
     public void GetAllFilesByTypeFromPath_ShouldReturnJsonFiles()
     {
         string filePath = GetTempFilePath("data.json");
         File.WriteAllText(filePath, "{}");
         var files = _fileManager.GetAllFilesByTypeFromPath(_testDir, FileTypeEnum.Json);
 
-        Assert.Contains(filePath, files);
+        Assert.That(files, Does.Contain(filePath));
     }
 
-    [Fact]
+    [Test]
     public void CopyFile_ShouldDuplicateFile()
     {
         string source = GetTempFilePath("source.txt");
@@ -80,10 +84,10 @@ public class FileManagementTests : IDisposable
         File.WriteAllText(source, "Copy me");
         _fileManager.CopyFile(source, target);
 
-        Assert.True(File.Exists(target));
+        Assert.That(File.Exists(target));
     }
 
-    [Fact]
+    [Test]
     public void MoveFile_ShouldRelocateFile()
     {
         string source = GetTempFilePath("to_move.txt");
@@ -91,32 +95,35 @@ public class FileManagementTests : IDisposable
         File.WriteAllText(source, "Move me");
         _fileManager.MoveFile(source, target);
 
-        Assert.False(File.Exists(source));
-        Assert.True(File.Exists(target));
+        Assert.Multiple(() =>
+        {
+            Assert.That(File.Exists(target));
+            Assert.That(File.Exists(source), Is.False);
+        });
     }
 
-    [Fact]
+    [Test]
     public void DeleteFile_ShouldRemoveFile()
     {
         string path = GetTempFilePath("to_delete.txt");
         File.WriteAllText(path, "Remove me");
         _fileManager.DeleteFile(path);
 
-        Assert.False(File.Exists(path));
+        Assert.That(File.Exists(path), Is.False);
     }
 
-    [Fact]
+    [Test]
     public async Task ReadFileAsync_ShouldReadTextContent()
     {
         string path = GetTempFilePath("read.txt");
         string content = "Read me async";
         await File.WriteAllTextAsync(path, content);
-        string result = await _fileManager.ReadFileAsync(path);
+        var result = await _fileManager.ReadFileAsync(path);
 
-        Assert.Equal(content, result);
+        Assert.That(result, Is.EqualTo(content));
     }
 
-    [Fact]
+    [Test]
     public async Task WriteAllLinesAsync_ShouldWriteMultipleLines()
     {
         string path = GetTempFilePath("lines.txt");
@@ -124,10 +131,10 @@ public class FileManagementTests : IDisposable
         await _fileManager.WriteAllLinesAsync(path, lines);
         var readLines = await File.ReadAllLinesAsync(path);
 
-        Assert.Equal(lines, readLines);
+        Assert.That(readLines, Is.EqualTo(lines));
     }
 
-    [Fact]
+    [Test]
     public async Task ConvertFileToBase64Async_ShouldEncodeContent()
     {
         string path = GetTempFilePath("base64.txt");
@@ -136,10 +143,10 @@ public class FileManagementTests : IDisposable
         string base64 = await _fileManager.ConvertFileToBase64Async(path);
         string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
 
-        Assert.Equal(content, decoded);
+        Assert.That(decoded, Is.EqualTo(content));
     }
 
-    [Fact]
+    [Test]
     public void DecodeBase64ToStream_ShouldReturnOriginalStream()
     {
         string original = "Stream this";
@@ -148,23 +155,23 @@ public class FileManagementTests : IDisposable
         using var reader = new StreamReader(stream);
         string result = reader.ReadToEnd();
 
-        Assert.Equal(original, result);
+        Assert.That(result, Is.EqualTo(original));
     }
 
-    [Fact]
+    [Test]
     public async Task ReadFileAsync_NonExistent_ShouldReturnEmpty()
     {
         string path = GetTempFilePath("notfound.txt");
         string result = await _fileManager.ReadFileAsync(path);
 
-        Assert.Equal(string.Empty, result);
+        Assert.That(result, Is.EqualTo(string.Empty));
     }
 
-    [Fact]
+    [Test]
     public void DecodeBase64ToStream_InvalidInput_ShouldReturnEmptyStream()
     {
-        var stream = _fileManager.DecodeBase64ToStream("???");
+        var stream = _fileManager.DecodeBase64ToStream("Invalid base64!");
 
-        Assert.Equal(0, stream.Length);
+        Assert.That(stream.Length, Is.EqualTo(0));
     }
 }

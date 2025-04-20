@@ -5,7 +5,7 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// <summary>
 /// Unit tests for the Encryptions class using xUnit.
 /// </summary>
-public class EncryptionsTests
+public class EncryptionTests
 {
     private readonly Encryption _encryption = new();
 
