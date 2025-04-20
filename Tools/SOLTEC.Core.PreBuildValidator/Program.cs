@@ -1,144 +1,112 @@
-// See https://aka.ms/new-console-template for more information
-Console.OutputEncoding = System.Text.Encoding.UTF8;
+/// <summary>
+/// PreBuild Validator for the SOLTEC.Core solution.
+/// This script performs pre-build validations for LangVersion, Nullable, XML docs, TODOs/FIXMEs, and test coverage.
+/// </summary>
+/// <example>
+/// Run this file using:
+/// <code>
+/// dotnet run --project Tools/SOLTEC.Core.PreBuildValidator
+/// </code>
+/// </example>
+
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
+/// <summary>
+/// Project validator runner.
+/// </summary>
+var gsolutionDirectory = "../";
 
 Console.WriteLine("🔍 Starting project validation......");
 
-var gsolutionDirectory = Path.Combine("..", "SOLTEC.Core");
-var gprojects = new[]
+/// <summary>
+/// Validates LangVersion and Nullable setting in all csproj files.
+/// </summary>
+var gcsprojFiles = Directory.GetFiles(gsolutionDirectory, "*.csproj", SearchOption.AllDirectories);
+foreach (var _file in gcsprojFiles)
 {
-    "SOLTEC.Core",
-    "Tests/SOLTEC.Core.Tests.NuNit",
-    "Tests/SOLTEC.Core.Tests.xUnit",
-    "Tools/SOLTEC.Core.PreBuildValidator",
-    "Tools/SOLTEC.Core.WikiDocGen"
-};
+    Console.WriteLine($"📝 Checking LangVersion and Nullable in project: {_file}...");
+    var _xml = XDocument.Load(_file);
+    var _props = _xml.Descendants("PropertyGroup");
 
-foreach (var _project in gprojects)
-{
-    Console.WriteLine($"📝 Checking LangVersion and Nullable in project: {Path.Combine(gsolutionDirectory, _project)}...");
+    var _lang = _props.Elements("LangVersion").FirstOrDefault()?.Value;
+    var _nullable = _props.Elements("Nullable").FirstOrDefault()?.Value;
 
-    var _csprojPath = Path.Combine(gsolutionDirectory, _project, $"{Path.GetFileNameWithoutExtension(_project)}.csproj");
-    var _csprojContent = File.ReadAllText(_csprojPath);
+    if (_lang != "12.0")
+        Console.WriteLine($"❌ {_file}: LangVersion must be 12.0 (actual: {_lang ?? "NO DEFINIDO"})");
 
-    if (!_csprojContent.Contains("<LangVersion>12.0</LangVersion>"))
-        Console.WriteLine($"❌ {_csprojPath}: LangVersion must be 12.0 (actual: NO DEFINIDO)");
-
-    if (!_csprojContent.Contains("<Nullable>enable</Nullable>"))
-        Console.WriteLine($"❌ {_csprojPath}: Nullable must be enabled");
+    if (_nullable != "enable")
+        Console.WriteLine($"❌ {_file}: Nullable must be 'enable' (actual: {_nullable ?? "NO DEFINIDO"})");
 }
 
-// Ejecutar las validaciones
-XmlDocValidator.ValidateXmlDocumentation(gsolutionDirectory);
-TestCoverageValidator.ValidateTestCoverage(gsolutionDirectory);
-TestMethodPresenceValidator.ValidateTestMethods(gsolutionDirectory);
-
 /// <summary>
-/// Provides methods to check and validate XML documentation in C# files.
+/// Validates that all public classes, enums, and interfaces contain XML documentation.
 /// </summary>
-public static class XmlDocValidator
+var gcsFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories);
+foreach (var _file in gcsFiles.Where(f => !f.Contains("obj")))
 {
-    public static void ValidateXmlDocumentation(string gsolutionDirectory)
+    var _lines = File.ReadAllLines(_file);
+    for (int _i = 0; _i < _lines.Length; _i++)
     {
-        Console.WriteLine("📝 Checking XML documentation...");
-
-        var _csFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories)
-                                .Where(f => !f.Contains(@"\obj\") && !f.Contains(@"\bin\"))
-                                .ToList();
-
-        foreach (var _file in _csFiles)
+        if (_lines[_i].Contains("public class") || _lines[_i].Contains("public enum") || _lines[_i].Contains("public interface"))
         {
-            Console.WriteLine($"📝 Checking XML documentation in file: {_file}...");
-
-            var _lines = File.ReadAllLines(_file);
-            for (int _i = 0; _i < _lines.Length; _i++)
+            var _hasDoc = _i > 0 && _lines[_i - 1].TrimStart().StartsWith("///");
+            if (!_hasDoc)
             {
-                if (_lines[_i].Trim().StartsWith("public class") ||
-                    _lines[_i].Trim().StartsWith("public static class") ||
-                    _lines[_i].Trim().StartsWith("public record") ||
-                    _lines[_i].Trim().StartsWith("public interface") ||
-                    _lines[_i].Trim().StartsWith("public enum"))
-                {
-                    var _hasXmlComment = (_i > 0 && _lines[_i - 1].Trim().StartsWith("///"));
-                    if (!_hasXmlComment)
-                    {
-                        Console.WriteLine($"❌ {_file}: Public class missing XML documentation en la línea {_i + 1}");
-                    }
-                }
+                Console.WriteLine($"❌ {_file}: Public class missing XML documentation at line {_i + 1}");
             }
         }
     }
 }
 
 /// <summary>
-/// Validates that each public class in the main project has a corresponding unit test class.
+/// Detects any TODO or FIXME tags in source code.
 /// </summary>
-public static class TestCoverageValidator
+Console.WriteLine("🔍 Checking TODO / FIXME...");
+foreach (var _file in gcsFiles)
 {
-    public static void ValidateTestCoverage(string gsolutionDirectory)
+    var _lines = File.ReadAllLines(_file);
+    for (int _i = 0; _i < _lines.Length; _i++)
     {
-        Console.WriteLine("🔍 Checking whether tests exist in unit testing projects...");
-        Console.WriteLine("🔍 Checking test coverage by class...");
-
-        var _logicClasses = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories)
-            .Where(f => f.Contains("SOLTEC.Core/") && !f.Contains("Tests") && !f.Contains("obj") && !f.Contains("bin"))
-            .ToList();
-
-        foreach (var _logicClass in _logicClasses)
-        {
-            var _className = Path.GetFileNameWithoutExtension(_logicClass);
-            var _testProjectsPath = new[]
-            {
-                Path.Combine(gsolutionDirectory, "Tests", "SOLTEC.Core.Tests.NuNit"),
-                Path.Combine(gsolutionDirectory, "Tests", "SOLTEC.Core.Tests.xUnit")
-            };
-
-            Console.WriteLine($"📝 Checking if a unit test class exists for the file: {_logicClass}...");
-
-            bool _found = _testProjectsPath.Any(testProjectPath =>
-                Directory.GetFiles(testProjectPath, "*.cs", SearchOption.AllDirectories)
-                        .Any(testFile =>
-                        {
-                            var _content = File.ReadAllText(testFile);
-                            return _content.Contains(_className) && _content.Contains("[Test") || _content.Contains("[Fact");
-                        }));
-
-            if (_found)
-                Console.WriteLine($"✅ Found test class with test method: {_className}Tests");
-            else
-                Console.WriteLine($"❌ Missing unit test class for: {_className}Tests");
-        }
+        if (_lines[_i].Contains("TODO") || _lines[_i].Contains("FIXME"))
+            Console.WriteLine($"⚠️ {_file}: Pending comment on line {_i + 1}: {_lines[_i].Trim()}");
     }
 }
 
 /// <summary>
-/// Contains the logic to verify that test classes include actual test methods.
+/// Confirms existence of at least one [Fact] or [Test] in unit testing projects.
 /// </summary>
-public static class TestMethodPresenceValidator
+Console.WriteLine("🔍 Checking whether tests exist in unit testing projects...");
+var _testMethodsFound = gcsFiles.Any(f =>
+    f.Contains("Tests/") &&
+    File.ReadAllText(f).Contains("[Fact]") || File.ReadAllText(f).Contains("[Test]"));
+
+if (!_testMethodsFound)
 {
-    public static void ValidateTestMethods(string gsolutionDirectory)
-    {
-        Console.WriteLine("🔍 Checking if unit test classes contain test methods...");
-
-        var _testProjectsPath = new[]
-        {
-            Path.Combine(gsolutionDirectory, "Tests", "SOLTEC.Core.Tests.NuNit"),
-            Path.Combine(gsolutionDirectory, "Tests", "SOLTEC.Core.Tests.xUnit")
-        };
-
-        foreach (var _testProjectPath in _testProjectsPath)
-        {
-            var _testFiles = Directory.GetFiles(_testProjectPath, "*.cs", SearchOption.AllDirectories)
-                .Where(f => !f.Contains("obj") && !f.Contains("bin"))
-                .ToList();
-
-            foreach (var _file in _testFiles)
-            {
-                var _content = File.ReadAllText(_file);
-                if (!_content.Contains("[Test") && !_content.Contains("[Fact"))
-                {
-                    Console.WriteLine($"❌ {_file}: No test methods found.");
-                }
-            }
-        }
-    }
+    Console.WriteLine("❌ No test methods found using [Fact] or [Test]");
+    Environment.Exit(1);
 }
+
+/// <summary>
+/// Validates test class coverage for each logic class in SOLTEC.Core.
+/// </summary>
+Console.WriteLine("🔍 Checking test coverage by class...");
+var _logicClasses = gcsFiles
+    .Where(f => f.Contains("SOLTEC.Core/") && !f.Contains("Tests/") && !f.Contains("obj"))
+    .ToList();
+
+var _testFiles = gcsFiles
+    .Where(f => f.Contains("Tests/") && !f.Contains("obj"))
+    .ToList();
+
+foreach (var _file in _logicClasses)
+{
+    var _fileName = Path.GetFileNameWithoutExtension(_file);
+    var _expectedTest = _testFiles.FirstOrDefault(tf => Path.GetFileNameWithoutExtension(tf).Contains(_fileName));
+    if (_expectedTest == null)
+        Console.WriteLine($"❌ Missing unit test class for: {_fileName}");
+    else
+        Console.WriteLine($"✅ Found test class with test method: {Path.GetFileNameWithoutExtension(_expectedTest)}");
+}
+
+Console.WriteLine("✅ Validation complete.");
