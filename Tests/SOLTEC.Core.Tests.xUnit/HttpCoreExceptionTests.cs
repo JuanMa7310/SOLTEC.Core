@@ -3,7 +3,7 @@ using SOLTEC.Core.Enums;
 using SOLTEC.Core.Exceptions;
 using System.Net;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// Unit tests for the HttpCoreException class using xUnit.

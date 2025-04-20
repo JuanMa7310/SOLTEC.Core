@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// Unit tests for the generic ServiceResponse&lt;T&gt; class using xUnit.

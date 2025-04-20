@@ -8,7 +8,7 @@ using SOLTEC.Core.Enums;
 using System.Net;
 using System.Text;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 public class HttpCoreTests
 {

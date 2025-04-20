@@ -1,6 +1,6 @@
 ﻿using SOLTEC.Core.Encryptions;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// Unit tests for the Encryptions class using xUnit.
