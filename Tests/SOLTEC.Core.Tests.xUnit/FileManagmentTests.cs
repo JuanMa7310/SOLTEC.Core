@@ -3,6 +3,9 @@ using System.Text;
 
 namespace SOLTEC.Core.Tests.xUnit;
 
+/// <summary>
+/// Unit tests for the FileManagement class using NUnit.
+/// </summary>
 public class FileManagmentTests : IDisposable
 {
     private readonly FileManagement _fileManager;

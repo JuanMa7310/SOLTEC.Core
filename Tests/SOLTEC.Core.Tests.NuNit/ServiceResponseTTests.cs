@@ -2,10 +2,10 @@
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+[TestFixture]
 /// <summary>
 /// Unit tests for the generic ServiceResponse&lt;T&gt; class using NUnit.
 /// </summary>
-[TestFixture]
 public class ServiceResponseGenericTests
 {
     /// <summary>

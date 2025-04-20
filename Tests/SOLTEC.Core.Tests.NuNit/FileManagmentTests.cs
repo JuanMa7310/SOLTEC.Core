@@ -4,6 +4,9 @@ using System.Text;
 namespace SOLTEC.Core.Tests.NuNit;
 
 [TestFixture]
+/// <summary>
+/// Unit tests for the FileManagement class using NUnit.
+/// </summary>
 public class FileManagmentTests
 {
     private FileManagement _fileManager;

@@ -2,10 +2,10 @@
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+[TestFixture]
 /// <summary>
 /// Unit tests for the Encryptions class using NUnit.
 /// </summary>
-[TestFixture]
 public class EncryptionTests
 {
     private readonly Encryption _encryption = new();
