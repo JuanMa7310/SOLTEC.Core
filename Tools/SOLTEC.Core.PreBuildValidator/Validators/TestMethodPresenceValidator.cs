@@ -31,6 +31,12 @@ public static class TestMethodPresenceValidator
         foreach (var _file in _testFiles)
         {
             var _content = File.ReadAllText(_file);
+            var _lines = _content.Split('\n');
+
+            // Skip enums from test validation
+            if (_lines.Any(c => c.TrimStart().StartsWith("public enum")))
+                continue;
+
             var _classMatch = Regex.Match(_content, @"public\s+class\s+(\w+)", RegexOptions.Multiline);
 
             if (_classMatch.Success)

@@ -3,6 +3,16 @@
 /// <summary>
 /// Enumerates common HTTP error codes for structured exception handling in HttpCore.
 /// </summary>
+/// <example>
+/// Example usage:
+/// <![CDATA[
+/// HttpCoreErrorEnum httpError = HttpCoreErrorEnum.Json;
+/// if (httpError == HttpCoreErrorEnum.BadRequest)
+/// {
+///     Console.WriteLine("Http protocol response with Error (BaddReques) EndPoint not found.");
+/// }
+/// ]]>
+/// </example>
 public enum HttpCoreErrorEnum
 {
     /// <summary>
