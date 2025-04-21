@@ -16,12 +16,16 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 /// <summary>
 /// Global variable: root directory of the solution.
 /// </summary>
-string gsolutionDirectory = Path.Combine("..", "..", "..", "..");
+// 🌐 Global solution directory
+var gsolutionDirectory = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE")
+                        ?? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
 
 /// <summary>
 /// Global flag indicating overall validation success.
 /// </summary>
 bool gsuccess = true;
+
+Console.WriteLine("🔍 Starting project validation......");
 
 try
 {
