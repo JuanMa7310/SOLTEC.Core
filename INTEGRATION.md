@@ -33,8 +33,8 @@ dotnet Tools/SOLTEC.Core.PreBuildValidator/bin/Debug/net8.0/SOLTEC.Core.PreBuild
 Add this to your main `.csproj` (e.g., `SOLTEC.Core.csproj`):
 
 ```xml
-<Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild">
-  <Exec Command="dotnet Tools/SOLTEC.Core.PreBuildValidator/bin/Debug/net8.0/SOLTEC.Core.PreBuildValidator.dll" />
+<Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild" Condition=" '$(GITHUB_ACTIONS)' != 'true' ">
+  <Exec Command="dotnet $(SolutionDir)Tools/SOLTEC.Core.PreBuildValidator/bin/Debug/net8.0/SOLTEC.Core.PreBuildValidator.dll" />
 </Target>
 ```
 

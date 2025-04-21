@@ -137,6 +137,7 @@ The output will be located in `DOCS/en/` and `DOCS/es/`.
 
 ## 📥 Contributing & Guidelines
 
+- [Integration Guide](INTEGRATION.md)
 - [Contributing Guide](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
