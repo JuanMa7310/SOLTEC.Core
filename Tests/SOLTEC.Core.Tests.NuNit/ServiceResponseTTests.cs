@@ -8,11 +8,11 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// </summary>
 public class ServiceResponseGenericTests
 {
+    [Test]
     /// <summary>
     /// Tests CreateSuccess with data and response code.
     /// Sends string data and 200, expects Success = true and correct Data.
     /// </summary>
-    [Test]
     public void CreateSuccess_WithData_ReturnsSuccessResponse()
     {
         var _data = "Test message";
@@ -26,11 +26,11 @@ public class ServiceResponseGenericTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests CreateError with code and message.
     /// Sends 400 and error text, expects Success = false and error message.
     /// </summary>
-    [Test]
     public void CreateError_WithMessage_ReturnsErrorResponse()
     {
         var _error = "Validation failed";
@@ -45,11 +45,11 @@ public class ServiceResponseGenericTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests CreateSuccess with warnings.
     /// Sends data, code and warnings, expects warning array returned.
     /// </summary>
-    [Test]
     public void CreateSuccess_WithWarnings_ReturnsWarningMessages()
     {
         var _warnings = new[] { "Deprecated endpoint" };
@@ -62,10 +62,10 @@ public class ServiceResponseGenericTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests CreateError with HTTP status code and warnings.
     /// </summary>
-    [Test]
     public void CreateError_WithHttpCodeAndWarnings_ReturnsWarningMessages()
     {
         var _warnings = new[] { "Check input" };

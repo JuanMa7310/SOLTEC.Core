@@ -9,10 +9,10 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// </summary>
 public class ResultExceptionTests
 {
+    [Test]
     /// <summary>
     /// Tests default constructor initializes an instance of ResultException.
     /// </summary>
-    [Test]
     public void Constructor_Default_InitializesInstance()
     {
         var _ex = new ResultException();
@@ -20,11 +20,11 @@ public class ResultExceptionTests
         Assert.That(_ex, Is.Not.Null);
     }
 
+    [Test]
     /// <summary>
     /// Tests constructor with message and inner exception assigns values correctly.
     /// Sends custom message and inner exception and expects properties to match.
     /// </summary>
-    [Test]
     public void Constructor_WithMessageAndInnerException_SetsProperties()
     {
         var _inner = new InvalidOperationException("inner");
@@ -37,10 +37,10 @@ public class ResultExceptionTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests setting all custom properties works as expected.
     /// </summary>
-    [Test]
     public void Properties_SetAndGet_WorkCorrectly()
     {
         var _ex = new ResultException

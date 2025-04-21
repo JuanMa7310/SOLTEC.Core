@@ -5,7 +5,8 @@ namespace SOLTEC.Core.Tests.NuNit;
 
 [TestFixture]
 /// <summary>
-/// Unit tests for the FileManagement class using NUnit.
+/// Unit tests for the <see cref="FileManagement"/> class using xUnit.
+/// Validates behavior for file creation, reading, deletion, and conversion.
 /// </summary>
 public class FileManagmentTests
 {
@@ -13,6 +14,9 @@ public class FileManagmentTests
     private string _testDir;
 
     [SetUp]
+    /// <summary>
+    /// Initializes a temporary directory and FileManagement instance before each test.
+    /// </summary>
     public void SetUp()
     {
         _fileManager = new FileManagement();
@@ -21,6 +25,9 @@ public class FileManagmentTests
     }
 
     [TearDown]
+    /// <summary>
+    /// Cleans up the temporary directory after each test.
+    /// </summary>
     public void TearDown()
     {
         if (Directory.Exists(_testDir))
@@ -30,6 +37,9 @@ public class FileManagmentTests
     private string GetTempFilePath(string name = "test.txt") => Path.Combine(_testDir, name);
 
     [Test]
+    /// <summary>
+    /// Verifies that the filename is extracted correctly from a full path.
+    /// </summary>
     public void ExtractFileNameFromPath_ShouldReturnCorrectName()
     {
         var result = _fileManager.ExtractFileNameFromPath(@"C:\folder\example.txt");
@@ -38,6 +48,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that the file extension is extracted correctly from a full path.
+    /// </summary>
     public void ExtractExtensionFileFromPath_ShouldReturnCorrectExtension()
     {
         var result = _fileManager.ExtractExtensionFileFromPath(@"C:\folder\example.json");
@@ -46,6 +59,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file is created and text content is written correctly.
+    /// </summary>
     public void CreateFile_WithText_ShouldCreateFileAndWriteContent()
     {
         string path = GetTempFilePath();
@@ -60,6 +76,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a binary file is created from byte array input.
+    /// </summary>
     public void CreateFile_WithBytes_ShouldCreateBinaryFile()
     {
         string path = GetTempFilePath("binary.dat");
@@ -70,6 +89,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that JSON files are correctly retrieved from a directory.
+    /// </summary>
     public void GetAllFilesByTypeFromPath_ShouldReturnJsonFiles()
     {
         string filePath = GetTempFilePath("data.json");
@@ -80,6 +102,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file is successfully copied to a new location.
+    /// </summary>
     public void CopyFile_ShouldDuplicateFile()
     {
         string source = GetTempFilePath("source.txt");
@@ -91,6 +116,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file is successfully moved to a new location.
+    /// </summary>
     public void MoveFile_ShouldRelocateFile()
     {
         string source = GetTempFilePath("to_move.txt");
@@ -106,6 +134,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file is deleted successfully.
+    /// </summary>
     public void DeleteFile_ShouldRemoveFile()
     {
         string path = GetTempFilePath("to_delete.txt");
@@ -116,6 +147,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file's text content is read asynchronously.
+    /// </summary>
     public async Task ReadFileAsync_ShouldReadTextContent()
     {
         string path = GetTempFilePath("read.txt");
@@ -127,6 +161,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that multiple lines are written and read correctly from a file.
+    /// </summary>
     public async Task WriteAllLinesAsync_ShouldWriteMultipleLines()
     {
         string path = GetTempFilePath("lines.txt");
@@ -138,6 +175,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a file is correctly encoded to Base64 string.
+    /// </summary>
     public async Task ConvertFileToBase64Async_ShouldEncodeContent()
     {
         string path = GetTempFilePath("base64.txt");
@@ -150,6 +190,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that a valid Base64 string is converted into its original stream.
+    /// </summary>
     public void DecodeBase64ToStream_ShouldReturnOriginalStream()
     {
         string original = "Stream this";
@@ -162,6 +205,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that reading a non-existent file returns an empty string.
+    /// </summary>
     public async Task ReadFileAsync_NonExistent_ShouldReturnEmpty()
     {
         string path = GetTempFilePath("notfound.txt");
@@ -171,6 +217,9 @@ public class FileManagmentTests
     }
 
     [Test]
+    /// <summary>
+    /// Verifies that an invalid Base64 string results in an empty stream.
+    /// </summary>
     public void DecodeBase64ToStream_InvalidInput_ShouldReturnEmptyStream()
     {
         var stream = _fileManager.DecodeBase64ToStream("Invalid base64!");
