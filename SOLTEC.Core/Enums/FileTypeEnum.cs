@@ -8,13 +8,13 @@
 /// </remarks>
 /// <example>
 /// Example usage:
-/// <code>
+/// <![CDATA[
 /// FileTypeEnum type = FileTypeEnum.Json;
 /// if (type == FileTypeEnum.Xlsx)
 /// {
 ///     Console.WriteLine("Exporting to Excel format.");
 /// }
-/// </code>
+/// ]]>
 /// </example>
 public enum FileTypeEnum
 {

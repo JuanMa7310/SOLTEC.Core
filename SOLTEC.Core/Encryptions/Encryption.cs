@@ -8,9 +8,9 @@ namespace SOLTEC.Core.Encryptions;
 /// </summary>
 /// <example>
 /// Example of generating a SHA256 hash:
-/// <code>
+/// <![CDATA[
 /// var hash = new Encryptions().GenerateSHA256("hello world");
-/// </code>
+/// ]]>
 /// </example>
 public class Encryption
 {

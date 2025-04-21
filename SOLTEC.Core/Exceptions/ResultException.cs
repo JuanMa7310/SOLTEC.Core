@@ -7,7 +7,7 @@ namespace SOLTEC.Core.Exceptions;
 /// </summary>
 /// <example>
 /// Example of throwing a ResultException:
-/// <code>
+/// <![CDATA[
 /// throw new ResultException("Resource not found", new KeyNotFoundException())
 /// {
 ///     Key = "UserId",
@@ -15,7 +15,7 @@ namespace SOLTEC.Core.Exceptions;
 ///     ErrorMessage = "Unable to locate user by given ID.",
 ///     HttpStatusCode = HttpStatusCode.NotFound
 /// };
-/// </code>
+/// ]]>
 /// </example>
 public class ResultException : Exception
 {

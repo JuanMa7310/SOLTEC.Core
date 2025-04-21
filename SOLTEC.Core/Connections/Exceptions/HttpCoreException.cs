@@ -9,9 +9,9 @@ namespace SOLTEC.Core.Connections.Exceptions;
 /// </summary>
 /// <example>
 /// Example of throwing an HttpCoreException:
-/// <code>
+/// <![CDATA[
 /// throw new HttpCoreException("InvalidInput", "Request body is not valid", HttpStatusCode.BadRequest, "Missing required fields");
-/// </code>
+/// ]]>
 /// </example>
 public class HttpCoreException : ResultException
 {
