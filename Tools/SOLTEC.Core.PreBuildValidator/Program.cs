@@ -1,112 +1,145 @@
-/// <summary>
-/// PreBuild Validator for the SOLTEC.Core solution.
-/// This script performs pre-build validations for LangVersion, Nullable, XML docs, TODOs/FIXMEs, and test coverage.
+﻿/// <summary>
+/// Entry point for the SOLTEC.Core.PreBuildValidator tool.
+/// This tool performs pre-build checks such as LangVersion, Nullable, XML documentation, TODO/FIXME comments,
+/// and unit test coverage validation for the SOLTEC.Core project.
 /// </summary>
 /// <example>
-/// Run this file using:
 /// <code>
+/// // Run from terminal
 /// dotnet run --project Tools/SOLTEC.Core.PreBuildValidator
 /// </code>
 /// </example>
+using SOLTEC.Core.PreBuildValidator;
 
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-
-/// <summary>
-/// Project validator runner.
-/// </summary>
-var gsolutionDirectory = "../";
-
-Console.WriteLine("🔍 Starting project validation......");
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 /// <summary>
-/// Validates LangVersion and Nullable setting in all csproj files.
+/// Global variable: root directory of the solution.
 /// </summary>
-var gcsprojFiles = Directory.GetFiles(gsolutionDirectory, "*.csproj", SearchOption.AllDirectories);
-foreach (var _file in gcsprojFiles)
+string gsolutionDirectory = Path.Combine("..", "..", "..", "..");
+
+/// <summary>
+/// Global flag indicating overall validation success.
+/// </summary>
+bool gsuccess = true;
+
+try
 {
-    Console.WriteLine($"📝 Checking LangVersion and Nullable in project: {_file}...");
-    var _xml = XDocument.Load(_file);
-    var _props = _xml.Descendants("PropertyGroup");
+    /// <summary>
+    /// Validates that all .csproj files have the correct LangVersion and nullable settings.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// LangVersionValidator.ValidateLangVersion(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📄 Checking LangVersion and Nullable in project...");
+    LangVersionValidator.ValidateLangVersion(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ LangVersion or Nullable validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
+try
+{
+    /// <summary>
+    /// Validates that all public classes and members have XML documentation.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// XmlDocValidator.ValidateXmlDocumentation(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📝 Checking XML documentation...");
+    XmlDocValidator.ValidateXmlDocumentation(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ XML documentation validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
 
-    var _lang = _props.Elements("LangVersion").FirstOrDefault()?.Value;
-    var _nullable = _props.Elements("Nullable").FirstOrDefault()?.Value;
+try
+{
+    /// <summary>
+    /// Validates the absence of TODO or FIXME comments in the source code.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TodoFixmeValidator.ValidateTodoFixme(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("🧠 Checking TODO / FIXME...");
+    TodoFixmeValidator.ValidateTodoFixme(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ TODO/FIXME validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
 
-    if (_lang != "12.0")
-        Console.WriteLine($"❌ {_file}: LangVersion must be 12.0 (actual: {_lang ?? "NO DEFINIDO"})");
+try
+{
+    /// <summary>
+    /// Validates that each logic-exposing class has a corresponding unit test class.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TestCoverageValidator.ValidateTestCoverage(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📊 Checking test coverage by class...");
+    TestCoverageValidator.ValidateTestCoverage(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ Test coverage validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
 
-    if (_nullable != "enable")
-        Console.WriteLine($"❌ {_file}: Nullable must be 'enable' (actual: {_nullable ?? "NO DEFINIDO"})");
+try
+{
+    /// <summary>
+    /// Validates that unit testing projects contain test classes and required test methods 
+    /// ([Fact] or [Test]) inside unit test classes.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TestMethodPresenceValidator.ValidateTestMethods("path/to/solution");
+    /// </code>
+    /// </example>
+    Console.WriteLine("🧪 Checking whether tests exist in unit testing projects...");
+    TestMethodPresenceValidator.ValidateTestMethods(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ Test coverage validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
 }
 
 /// <summary>
-/// Validates that all public classes, enums, and interfaces contain XML documentation.
+/// Final result of the validations.
 /// </summary>
-var gcsFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories);
-foreach (var _file in gcsFiles.Where(f => !f.Contains("obj")))
+if (gsuccess)
 {
-    var _lines = File.ReadAllLines(_file);
-    for (int _i = 0; _i < _lines.Length; _i++)
-    {
-        if (_lines[_i].Contains("public class") || _lines[_i].Contains("public enum") || _lines[_i].Contains("public interface"))
-        {
-            var _hasDoc = _i > 0 && _lines[_i - 1].TrimStart().StartsWith("///");
-            if (!_hasDoc)
-            {
-                Console.WriteLine($"❌ {_file}: Public class missing XML documentation at line {_i + 1}");
-            }
-        }
-    }
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("✅ All validations passed successfully.");
 }
-
-/// <summary>
-/// Detects any TODO or FIXME tags in source code.
-/// </summary>
-Console.WriteLine("🔍 Checking TODO / FIXME...");
-foreach (var _file in gcsFiles)
+else
 {
-    var _lines = File.ReadAllLines(_file);
-    for (int _i = 0; _i < _lines.Length; _i++)
-    {
-        if (_lines[_i].Contains("TODO") || _lines[_i].Contains("FIXME"))
-            Console.WriteLine($"⚠️ {_file}: Pending comment on line {_i + 1}: {_lines[_i].Trim()}");
-    }
-}
-
-/// <summary>
-/// Confirms existence of at least one [Fact] or [Test] in unit testing projects.
-/// </summary>
-Console.WriteLine("🔍 Checking whether tests exist in unit testing projects...");
-var _testMethodsFound = gcsFiles.Any(f =>
-    f.Contains("Tests/") &&
-    File.ReadAllText(f).Contains("[Fact]") || File.ReadAllText(f).Contains("[Test]"));
-
-if (!_testMethodsFound)
-{
-    Console.WriteLine("❌ No test methods found using [Fact] or [Test]");
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("❌ Validation failed. Please fix the issues above.");
     Environment.Exit(1);
 }
-
-/// <summary>
-/// Validates test class coverage for each logic class in SOLTEC.Core.
-/// </summary>
-Console.WriteLine("🔍 Checking test coverage by class...");
-var _logicClasses = gcsFiles
-    .Where(f => f.Contains("SOLTEC.Core/") && !f.Contains("Tests/") && !f.Contains("obj"))
-    .ToList();
-
-var _testFiles = gcsFiles
-    .Where(f => f.Contains("Tests/") && !f.Contains("obj"))
-    .ToList();
-
-foreach (var _file in _logicClasses)
-{
-    var _fileName = Path.GetFileNameWithoutExtension(_file);
-    var _expectedTest = _testFiles.FirstOrDefault(tf => Path.GetFileNameWithoutExtension(tf).Contains(_fileName));
-    if (_expectedTest == null)
-        Console.WriteLine($"❌ Missing unit test class for: {_fileName}");
-    else
-        Console.WriteLine($"✅ Found test class with test method: {Path.GetFileNameWithoutExtension(_expectedTest)}");
-}
-
-Console.WriteLine("✅ Validation complete.");
+Console.ResetColor();
