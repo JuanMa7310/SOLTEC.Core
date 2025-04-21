@@ -13,10 +13,10 @@ namespace SOLTEC.Core.Connections;
 /// </summary>
 /// <example>
 /// Example usage:
-/// <code>
+/// <![CDATA[
 /// var client = new HttpCore();
 /// var result = await client.GetAsync&lt;MyDto&gt;("https://api.example.com/data");
-/// </code>
+/// ]]>
 /// </example>
 public class HttpCore
 {
@@ -28,9 +28,9 @@ public class HttpCore
     /// <param name="headerParameters">Optional headers to include in the request.</param>
     /// <returns>Deserialized object of type <typeparamref name="T"/>.</returns>
     /// <example>
-    /// <code>
+    /// <![CDATA[
     /// var response = await new HttpCore().GetAsync&lt;User&gt;("https://api.example.com/users/1");
-    /// </code>
+    /// ]]>
     /// </example>
     public virtual async Task<T?> GetAsync<T>(string uri, Dictionary<string, string>? headerParameters = null)
     {
@@ -247,10 +247,10 @@ public class HttpCore
     /// if the status code is recognized.
     /// </exception>
     /// <example>
-    /// <code>
+    /// <![CDATA[
     /// var response = await httpClient.GetAsync("https://api.example.com/resource"); 
     /// await ValidateStatusResponse(response);
-    /// </code>
+    /// ]]>
     /// </example>
     protected static async Task ValidateStatusResponse(HttpResponseMessage response)
     {

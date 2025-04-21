@@ -7,17 +7,17 @@ namespace SOLTEC.Core;
 /// </summary>
 /// <typeparam name="T">The type of data to be included in the response.</typeparam>
 /// <example>
-/// Example of creating a successful response with data:
-/// <code>
+/// Example 1: Creating a successful response with data
+/// <![CDATA[
 /// var data = new User { Id = 1, Name = "John" };
 /// var response = ServiceResponse&lt;User&gt;.CreateSuccess(data, 200);
-/// </code>
+/// ]]>
 /// </example>
 /// <example>
-/// Example of creating an error response:
-/// <code>
+/// Example 2: Creating an error response.
+/// <![CDATA[
 /// var response = ServiceResponse&lt;string&gt;.CreateError(400, "Invalid request");
-/// </code>
+/// ]]>
 /// </example>
 public class ServiceResponse<T> : ServiceResponse
 {

@@ -8,8 +8,10 @@ namespace SOLTEC.Core;
 /// and Base64 encoding/decoding of files.
 /// </summary>
 /// <example>
+/// <![CDATA[
 /// var fileManager = new FileManagement();
 /// string name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
+/// ]]>
 /// </example>
 public class FileManagement
 {
@@ -19,7 +21,9 @@ public class FileManagement
     /// <param name="filePath">The full path of the file.</param>
     /// <returns>The file name without extension, or an empty string if the path is invalid.</returns>
     /// <example>
+    /// <![CDATA[
     /// var name = ExtractFileNameFromPath(@"C:\files\report.pdf"); // "report"
+    /// ]]>
     /// </example>
     public virtual string ExtractFileNameFromPath(string filePath)
     {
@@ -34,7 +38,9 @@ public class FileManagement
     /// <param name="filePath">The full path of the file.</param>
     /// <returns>The extension without the dot, or an empty string if the path is invalid.</returns>
     /// <example>
+    /// <![CDATA[
     /// var ext = ExtractExtensionFileFromPath(@"file.json"); // "json"
+    /// ]]>
     /// </example>
     public virtual string ExtractExtensionFileFromPath(string filePath)
     {
@@ -49,7 +55,9 @@ public class FileManagement
     /// <param name="filePath">The file path to create.</param>
     /// <param name="content">The string content to write.</param>
     /// <example>
+    /// <![CDATA[
     /// CreateFile(@"C:\temp\data.txt", "Hello World");
+    /// ]]>
     /// </example>
     public virtual void CreateFile(string filePath, string content)
     {
@@ -62,7 +70,9 @@ public class FileManagement
     /// <param name="filePath">The file path to create.</param>
     /// <param name="content">Byte array to write.</param>
     /// <example>
+    /// <![CDATA[
     /// CreateFile(@"C:\temp\image.bin", imageBytes);
+    /// ]]>
     /// </example>
     public virtual void CreateFile(string filePath, byte[] content)
     {
@@ -76,7 +86,9 @@ public class FileManagement
     /// <param name="fileTypeEnum">File extension to filter (e.g., Json, Xlsx).</param>
     /// <returns>Enumerable of matching file paths, or empty list if path not found.</returns>
     /// <example>
+    /// <![CDATA[
     /// var jsonFiles = GetAllFilesByTypeFromPath(@"C:\configs", FileTypeEnum.Json);
+    /// ]]>
     /// </example>
     public virtual IEnumerable<string> GetAllFilesByTypeFromPath(string directoryPath, FileTypeEnum fileTypeEnum)
     {
@@ -91,7 +103,9 @@ public class FileManagement
     /// <param name="sourcePath">Original file path.</param>
     /// <param name="targetPath">Destination path.</param>
     /// <example>
+    /// <![CDATA[
     /// CopyFile(@"C:\old\file.txt", @"D:\new\file.txt");
+    /// ]]>
     /// </example>
     public virtual void CopyFile(string sourcePath, string targetPath)
     {
@@ -107,7 +121,9 @@ public class FileManagement
     /// <param name="sourcePath">Original file path.</param>
     /// <param name="targetPath">Destination path.</param>
     /// <example>
+    /// <![CDATA[
     /// MoveFile(@"C:\docs\temp.txt", @"C:\docs\final.txt");
+    /// ]]>
     /// </example>
     public virtual void MoveFile(string sourcePath, string targetPath)
     {
@@ -122,7 +138,9 @@ public class FileManagement
     /// </summary>
     /// <param name="filePath">Path of the file to delete.</param>
     /// <example>
+    /// <![CDATA[
     /// DeleteFile(@"C:\temp\old.log");
+    /// ]]>
     /// </example>
     public virtual void DeleteFile(string filePath)
     {
@@ -138,7 +156,9 @@ public class FileManagement
     /// <param name="filePath">File path to read from.</param>
     /// <returns>File content or empty string if file doesn't exist.</returns>
     /// <example>
+    /// <![CDATA[
     /// string content = await ReadFileAsync(@"notes.txt");
+    /// ]]>
     /// </example>
     public virtual async Task<string> ReadFileAsync(string filePath)
     {
@@ -153,7 +173,9 @@ public class FileManagement
     /// <param name="filePath">File path to write to.</param>
     /// <param name="rows">Lines of text to write.</param>
     /// <example>
+    /// <![CDATA[
     /// await WriteAllLinesAsync("log.txt", new[] { "Start", "End" });
+    /// ]]>
     /// </example>
     public virtual async Task WriteAllLinesAsync(string filePath, IEnumerable<string> rows)
     {
@@ -166,7 +188,9 @@ public class FileManagement
     /// <param name="filePath">File path to encode.</param>
     /// <returns>Base64 string or empty string if file not found.</returns>
     /// <example>
+    /// <![CDATA[
     /// string base64 = await ConvertFileToBase64Async("image.png");
+    /// ]]>
     /// </example>
     public virtual async Task<string> ConvertFileToBase64Async(string filePath)
     {
@@ -183,7 +207,9 @@ public class FileManagement
     /// <param name="base64EncodedData">The Base64 encoded string.</param>
     /// <returns>MemoryStream with decoded content, or empty stream if input is invalid.</returns>
     /// <example>
+    /// <![CDATA[
     /// using var stream = DecodeBase64ToStream(encodedText);
+    /// ]]>
     /// </example>
     public virtual Stream DecodeBase64ToStream(string base64EncodedData)
     {

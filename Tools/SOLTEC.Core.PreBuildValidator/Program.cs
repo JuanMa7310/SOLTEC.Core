@@ -1,227 +1,149 @@
-﻿using System.Text.RegularExpressions;
-using System.Xml.Linq;
-
-var _csprojFiles = Directory.GetFiles("..", "*.csproj", SearchOption.AllDirectories);
-var _csFiles = Directory.GetFiles("..", "*.cs", SearchOption.AllDirectories);
-bool _hasError = false;
+﻿/// <summary>
+/// Entry point for the SOLTEC.Core.PreBuildValidator tool.
+/// This tool performs pre-build checks such as LangVersion, Nullable, XML documentation, TODO/FIXME comments,
+/// and unit test coverage validation for the SOLTEC.Core project.
+/// </summary>
+/// <example>
+/// <code>
+/// // Run from terminal
+/// dotnet run --project Tools/SOLTEC.Core.PreBuildValidator
+/// </code>
+/// </example>
+using SOLTEC.Core.PreBuildValidator.Validators;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
-Console.ForegroundColor = ConsoleColor.Green;
+
+/// <summary>
+/// Global variable: root directory of the solution.
+/// </summary>
+// 🌐 Global solution directory
+var gsolutionDirectory = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE")
+                        ?? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../.."));
+
+/// <summary>
+/// Global flag indicating overall validation success.
+/// </summary>
+bool gsuccess = true;
+
 Console.WriteLine("🔍 Starting project validation......");
-Console.ResetColor();
-// ✅ Validate csproj: LangVersion and Nullable
-foreach (var _file in _csprojFiles)
+
+try
 {
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine($"📝 Checking LangVersion and Nullable in project: {_file}...");
-    Console.ResetColor();
-
-    try
-    {
-        var _xml = XDocument.Load(_file);
-        var _langVersion = _xml.Descendants("LangVersion").FirstOrDefault()?.Value;
-        var _nullable = _xml.Descendants("Nullable").FirstOrDefault()?.Value;
-
-        if (_langVersion != "12.0")
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ {_file}: LangVersion must be 12.0 (actual: {_langVersion ?? "NO DEFINIDO"})");
-            _hasError = true;
-        }
-
-        if (_nullable?.ToLowerInvariant() != "enable")
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ {_file}: Nullable must be enabled (actual: {_nullable ?? "NO DEFINIDO"})");
-            _hasError = true;
-        }
-
-        Console.ResetColor();
-    }
-    catch (Exception ex)
-    {
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine($"🔥 Error reading {_file}: {ex.Message}");
-        Console.ResetColor();
-        _hasError = true;
-    }
+    /// <summary>
+    /// Validates that all .csproj files have the correct LangVersion and nullable settings.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// LangVersionValidator.ValidateLangVersion(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📄 Checking LangVersion and Nullable in project...");
+    LangVersionValidator.ValidateLangVersion(gsolutionDirectory);
 }
-
-// ✅ Validate public classes have XML documentation
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine($"📝 Checking XML documentation...");
-Console.ResetColor();
-foreach (var _file in _csFiles.Where(f => f.Replace('\\', '/').Contains("SOLTEC.Core/")))
-{
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine($"📝 Checking XML documentation in file: {_file}...");
-    Console.ResetColor();
-
-    var _lines = File.ReadAllLines(_file);
-    for (int i = 1; i < _lines.Length; i++)
-    {
-        if (_lines[i].Contains("public class") && !_lines[i - 1].Trim().StartsWith("///"))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ {_file}: Public class missing XML documentation en la línea {i + 1}");
-            Console.ResetColor();
-            _hasError = true;
-        }
-    }
-}
-
-// ✅ Check TODO / FIXME
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("🔍 Checking TODO / FIXME...");
-Console.ResetColor();
-foreach (var _file in _csFiles.Where(f => f.Replace('\\', '/').Contains("SOLTEC.Core/")))
-{
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine($"📝 Checking TODO/FIXME in file: {_file}...");
-    Console.ResetColor();
-
-    var _lines = File.ReadAllLines(_file);
-    for (int i = 0; i < _lines.Length; i++)
-    {
-        if (_lines[i].Contains("TODO") || _lines[i].Contains("FIXME"))
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"⚠️  {_file}: Pending comment on line {i + 1}: {_lines[i].Trim()}");
-            Console.ResetColor();
-            _hasError = true;
-        }
-    }
-}
-
-// ✅ Validate that there are test methods in test projects
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("🔍 Checking whether tests exist in unit testing projects...");
-Console.ResetColor();
-var _testFiles = _csFiles.Where(f => f.Contains("test", StringComparison.CurrentCultureIgnoreCase));
-bool _hasTests = _testFiles.Any(f =>
-{
-    var content = File.ReadAllText(f);
-    return content.Contains("[Fact]") || content.Contains("[Test]");
-});
-if (!_hasTests)
+catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("❌ No test methods with [Fact] or [Test] were found con [Fact] o [Test].");
+    Console.WriteLine($"❌ LangVersion or Nullable validation failed: {ex.Message}");
     Console.ResetColor();
-    _hasError = true;
+    gsuccess = false;
 }
-
-// ✅ Validate each public class in SOLTEC.Core has a matching test class
-Console.ForegroundColor = ConsoleColor.Cyan;
-Console.WriteLine("🔍 Checking test coverage by class...");
-Console.ResetColor();
-
-var _logicFiles = _csFiles
-    .Where(f => f.Replace('\\', '/').Contains("SOLTEC.Core/"))
-    .Where(f => f.EndsWith(".cs") && File.ReadAllText(f).Contains("public class"))
-    .Where(f =>
+try
 {
-var _content = File.ReadAllText(f);
-var _className = Path.GetFileNameWithoutExtension(f);
-
-Console.WriteLine($"➡️ Reviewing: {_className}");
-
-var excludedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "ProblemDetailsDto"
-        };
-
-if (excludedNames.Contains(_className))
-{
-Console.WriteLine($"⛔ Excluded by name list: {_className}");
-return false;
+    /// <summary>
+    /// Validates that all public classes and members have XML documentation.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// XmlDocValidator.ValidateXmlDocumentation(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📝 Checking XML documentation...");
+    XmlDocValidator.ValidateXmlDocumentation(gsolutionDirectory);
 }
-
-bool hasPublicMethod = Regex.IsMatch(_content, @"public\s+(static\s+)?[\w\<\>\[\]]+\s+\w+\s*\(");
-bool hasConstructor = Regex.IsMatch(_content, $@"public\s+{_className}\s*\(");
-bool hasAssignmentsInConstructor = _content.Contains(" = ") && hasConstructor;
-bool hasOverride = Regex.IsMatch(_content, @"public\s+override");
-bool hasExpressionBody = _content.Contains("=>");
-bool onlyProperties = Regex.IsMatch(_content, @"public\s+.*?{\s*get;\s*set;\s*}", RegexOptions.IgnoreCase);
-
-bool hasLogic = hasPublicMethod || hasConstructor || hasOverride || hasExpressionBody || hasAssignmentsInConstructor;
-
-if (hasLogic || !onlyProperties)
-{
-Console.ForegroundColor = ConsoleColor.Blue;
-Console.WriteLine($"✅ Detected logic class: {_className}");
-Console.ResetColor();
-return true;
-}
-
-Console.WriteLine($"🚫 No logic detected in: {_className}");
-return false;
-})
-    .ToList();
-
-// ✅ Check test class and methods per logic class
-_testFiles = _csFiles
-    .Where(f => f.Replace('\\', '/').Contains("Tests/") && f.EndsWith(".cs"))
-    .ToList()!;
-
-foreach (var _file in _logicFiles)
-{
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine($"📝 Checking if a unit test class exists for the file: {_file}...");
-    Console.ResetColor();
-
-    var _name = Path.GetFileNameWithoutExtension(_file);
-    var _expectedTestName = _name + "Tests";
-
-    var _matchedTest = _testFiles.FirstOrDefault(t => Path.GetFileNameWithoutExtension(t).Equals(_expectedTestName, StringComparison.OrdinalIgnoreCase));
-    if (_matchedTest == null)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"❌ Missing unit test class for: {_name}");
-        // _testCoverageReport.Add($"| {_name} | ❌ | No test class found |");
-        Console.ResetColor();
-        _hasError = true;
-    }
-    else
-    {
-        if (!File.Exists(_matchedTest))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"❌ Test file not found: {_matchedTest}");
-            Console.ResetColor();
-            _hasError = true;
-            continue;
-        }
-
-        var _testContent = File.ReadAllText(_matchedTest);
-        if (_testContent.Contains("[Fact]") || _testContent.Contains("[Test]"))
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"✅ Found test class with test method: {_expectedTestName}");
-            // _testCoverageReport.Add($"| {_name} | ✅ | Tests present |");
-            Console.ResetColor();
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"⚠️  {_expectedTestName} exists but has no [Fact] or [Test] methods");
-            // _testCoverageReport.Add($"| {_name} | ⚠️ | No test methods |");
-            Console.ResetColor();
-            _hasError = true;
-        }
-    }
-}
-
-if (_hasError)
+catch (Exception ex)
 {
     Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("❌ Validation failed. Please fix the issues above.");
+    Console.WriteLine($"❌ XML documentation validation failed: {ex.Message}");
     Console.ResetColor();
-    Environment.Exit(1);
+    gsuccess = false;
 }
-else
+
+try
+{
+    /// <summary>
+    /// Validates the absence of TODO or FIXME comments in the source code.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TodoFixmeValidator.ValidateTodoFixme(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("🧠 Checking TODO / FIXME...");
+    TodoFixmeValidator.ValidateTodoFixme(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ TODO/FIXME validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
+
+try
+{
+    /// <summary>
+    /// Validates that each logic-exposing class has a corresponding unit test class.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TestCoverageValidator.ValidateTestCoverage(gsolutionDirectory);
+    /// </code>
+    /// </example>
+    Console.WriteLine("📊 Checking test coverage by class...");
+    TestCoverageValidator.ValidateTestCoverage(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ Test coverage validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
+
+try
+{
+    /// <summary>
+    /// Validates that unit testing projects contain test classes and required test methods 
+    /// ([Fact] or [Test]) inside unit test classes.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// TestMethodPresenceValidator.ValidateTestMethods("path/to/solution");
+    /// </code>
+    /// </example>
+    Console.WriteLine("🧪 Checking whether tests exist in unit testing projects...");
+    TestMethodPresenceValidator.ValidateTestMethods(gsolutionDirectory);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine($"❌ Test coverage validation failed: {ex.Message}");
+    Console.ResetColor();
+    gsuccess = false;
+}
+
+/// <summary>
+/// Final result of the validations.
+/// </summary>
+if (gsuccess)
 {
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine("✅ All validations passed successfully.");
-    Console.ResetColor();
 }
+else
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("❌ Validation failed. Please fix the issues above.");
+    Environment.Exit(1);
+}
+Console.ResetColor();

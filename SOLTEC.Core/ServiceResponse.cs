@@ -7,14 +7,15 @@ namespace SOLTEC.Core;
 /// </summary>
 /// <example>
 /// Example of creating a successful response:
-/// <code>
+/// <![CDATA[
 /// var response = ServiceResponse.CreateSuccess(200);
-/// </code>
-/// 
+/// ]]>
+/// </example>
+/// <example>
 /// Example of creating an error response:
-/// <code>
+/// <![CDATA[
 /// var response = ServiceResponse.CreateError(500, "Internal server error");
-/// </code>
+/// ]]>
 /// </example>
 public class ServiceResponse
 {

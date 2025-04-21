@@ -1,6 +1,6 @@
 # SOLTEC.Core
 
-Una biblioteca sólida y extensible que ofrece modelos de respuesta estandarizados, utilidades de cifrado, gestión de comunicación HTTP y excepciones personalizadas para aplicaciones .NET 8.
+SOLTEC.Core es una biblioteca reutilizable para .NET 8 que proporciona modelos de respuesta estandarizados, utilidades de cifrado, gestión de comunicación HTTP, servicios y excepciones personalizadas y herramientas para aplicaciones empresariales.
 
 ---
 
@@ -14,16 +14,12 @@ Licenciado bajo GNU GPL v3.
 
 ## 🧩 Módulos
 
-- `ServiceResponse<T>`: Contenedor genérico de respuestas
-- `Encryptions`: Utilidades de seguridad y hash
-- `HttpCore`: Cliente HTTP tipado
-- `ResultException`, `HttpCoreException`: Excepciones personalizadas
-
----
-
-## 📘 Ejemplos de uso
-
-Consulta la [Guía de Uso](USAGE_ES.md) para ver ejemplos de código y patrones comunes.
+- 🔐 Utilidades de encriptación (MD5, SHA, HMAC, Base64)
+- 📄 Respuestas de servicio estandarizadas con manejo de errores y advertencias
+- 🌐 Abstracción para peticiones HTTP con validación automática
+- 📦 Ayudantes para gestión de archivos
+- 📊 Validador Pre-Build
+- 📚 Generador de documentación para la Wiki de GitHub
 
 ---
 
@@ -35,10 +31,50 @@ Todos los componentes están completamente testeados con **xUnit** y **NUnit**, 
 
 ## 🛠️ Validación Pre-Build
 
-Este proyecto incluye un validador pre-build personalizado:
-- Verifica que todas las clases públicas tengan documentación XML
-- Revisa TODOs / FIXMEs sin resolver
-- Confirma que todos los proyectos de test estén estructurados correctamente
+La herramienta `SOLTEC.Core.PreBuildValidator` realiza las siguientes comprobaciones antes de cada build o commit:
+
+- Verifica `LangVersion = 12.0` y `<Nullable>enable</Nullable>`
+- Asegura que todas las clases, métodos y propiedades públicas tengan documentación XML
+- Detecta comentarios sin resolver `TODO` y `FIXME`
+- Valida que existan clases de prueba por cada clase lógica pública
+- Verifica que cada clase de prueba tenga al menos un método de prueba
+- ✅ **NUEVO:** Verifica que cada método de prueba documente explícitamente qué envía, qué espera y qué se valida.
+
+Ejemplo de prueba válida:
+
+```csharp
+/// <summary>
+/// Verifica que CreateSuccess devuelva un resultado correcto.
+/// </summary>
+/// <remarks>
+/// Envia: Un código de respuesta válido.
+/// Espera: Un ServiceResponse con Success = true.
+/// Valida: Que el resultado sea correcto y tenga el código indicado.
+/// </remarks>
+[Test]
+public void CreateSuccess_ShouldReturnSuccess()
+{
+    var result = ServiceResponse.CreateSuccess(200);
+    Assert.IsTrue(result.Success);
+    Assert.AreEqual(200, result.ResponseCode);
+}
+```
+
+---
+
+### 🛠 Uso
+
+Para validar tu solución antes de compilar, ejecuta:
+
+```bash
+dotnet run --project Tools/SOLTEC.Core.PreBuildValidator
+```
+
+---
+
+## 📘 Ejemplos de uso
+
+Consulta la [Guía de Uso](USAGE_ES.md) para ver ejemplos de código y patrones comunes.
 
 ---
 
@@ -80,7 +116,7 @@ Documentación completa disponible en **inglés y español**.
 
 ---
 
-## 🧾 Generador de Documentación para la Wiki
+### 🧾 Generador de Documentación para la Wiki
 
 La solución incluye una herramienta para generar documentación Markdown de todas las clases públicas y enumeraciones en inglés y español.
 
@@ -99,6 +135,7 @@ También disponible mediante:
 
 La salida se encuentra en `DOCS/en/` y `DOCS/es/`.
 
+---
 
 ## 📥 Contribuciones y Normas
 

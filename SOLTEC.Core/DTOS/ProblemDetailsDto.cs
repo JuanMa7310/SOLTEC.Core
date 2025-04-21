@@ -5,7 +5,7 @@
 /// </summary>
 /// <example>
 /// Example of usage:
-/// <code>
+/// <![CDATA[
 /// var problem = new ProblemDetailsDto
 /// {
 ///     Type = "https://example.com/validation-error",
@@ -14,7 +14,7 @@
 ///     Detail = "The Name field is required.",
 ///     Instance = "/users"
 /// };
-/// </code>
+/// ]]>
 /// </example>
 public class ProblemDetailsDto
 {

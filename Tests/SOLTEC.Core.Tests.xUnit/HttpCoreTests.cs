@@ -8,8 +8,11 @@ using SOLTEC.Core.Enums;
 using System.Net;
 using System.Text;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
+/// <summary>
+/// Unit tests for the HttpCore class using xUnit.
+/// </summary>
 public class HttpCoreTests
 {
     private static HttpClient CreateMockHttpClient(HttpStatusCode statusCode, string content)

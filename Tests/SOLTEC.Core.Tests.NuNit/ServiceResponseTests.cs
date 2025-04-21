@@ -2,17 +2,17 @@
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+[TestFixture]
 /// <summary>
 /// Unit tests for the ServiceResponse class using NUnit.
 /// </summary>
-[TestFixture]
 public class ServiceResponseTests
 {
+    [Test]
     /// <summary>
     /// Tests that CreateSuccess with status code returns a successful response.
     /// Sends 200 and expects Success = true and ResponseCode = 200.
     /// </summary>
-    [Test]
     public void CreateSuccess_IntCode_ReturnsSuccessResponse()
     {
         var _response = ServiceResponse.CreateSuccess(200);
@@ -25,11 +25,11 @@ public class ServiceResponseTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests that CreateError with error message returns an error response.
     /// Sends 500 and "Internal error" and expects Success = false and proper error message.
     /// </summary>
-    [Test]
     public void CreateError_IntCodeAndMessage_ReturnsErrorResponse()
     {
         var _response = ServiceResponse.CreateError(500, "Internal error");
@@ -42,10 +42,10 @@ public class ServiceResponseTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests that CreateSuccess with warnings returns expected warning list.
     /// </summary>
-    [Test]
     public void CreateSuccess_WithWarnings_ReturnsWarnings()
     {
         var _warnings = new[] { "Low disk space" };
@@ -58,10 +58,10 @@ public class ServiceResponseTests
         });
     }
 
+    [Test]
     /// <summary>
     /// Tests that CreateError with warnings returns expected error and warnings.
     /// </summary>
-    [Test]
     public void CreateError_WithWarnings_ReturnsWarnings()
     {
         var _warnings = new[] { "Deprecated API" };

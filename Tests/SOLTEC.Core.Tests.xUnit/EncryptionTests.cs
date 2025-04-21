@@ -1,6 +1,6 @@
 ﻿using SOLTEC.Core.Encryptions;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// Unit tests for the Encryptions class using xUnit.
@@ -9,11 +9,11 @@ public class EncryptionTests
 {
     private readonly Encryption _encryption = new();
 
+    [Fact]
     /// <summary>
     /// Tests GenerateUniqueKey returns a string of specified length.
     /// Sends length 12 and expects 12 character result.
     /// </summary>
-    [Fact]
     public void GenerateUniqueKey_ReturnsCorrectLength()
     {
         var _result = _encryption.GenerateUniqueKey(12);
@@ -21,11 +21,11 @@ public class EncryptionTests
         Assert.Equal(12, _result.Length);
     }
 
+    [Fact]
     /// <summary>
     /// Tests CreateTokenHMACSHA256 returns a valid base64 string.
     /// Sends message and secret, expects non-empty base64 string.
     /// </summary>
-    [Fact]
     public void CreateTokenHMACSHA256_ReturnsBase64()
     {
         var _token = _encryption.CreateTokenHMACSHA256("test", "secret");
@@ -33,10 +33,10 @@ public class EncryptionTests
         Assert.False(string.IsNullOrWhiteSpace(_token));
     }
 
+    [Fact]
     /// <summary>
     /// Tests Base64Encode and Base64Decode return original string.
     /// </summary>
-    [Fact]
     public void Base64EncodeDecode_RoundTrip_Success()
     {
         var _original = "hello world";
@@ -46,10 +46,10 @@ public class EncryptionTests
         Assert.Equal(_original, _decoded);
     }
 
+    [Fact]
     /// <summary>
     /// Tests CreateMD5 returns 32-character hex string.
     /// </summary>
-    [Fact]
     public void CreateMD5_ReturnsHexHash()
     {
         var _hash = _encryption.CreateMD5("input");
@@ -57,10 +57,10 @@ public class EncryptionTests
         Assert.Equal(32, _hash.Length);
     }
 
+    [Fact]
     /// <summary>
     /// Tests Encrypt and Decrypt round-trip using a password.
     /// </summary>
-    [Fact]
     public void EncryptDecrypt_RoundTrip_Success()
     {
         var _text = "Sensitive Info";

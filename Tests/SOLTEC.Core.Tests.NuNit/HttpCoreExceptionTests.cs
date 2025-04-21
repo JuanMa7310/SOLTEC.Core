@@ -5,10 +5,10 @@ using System.Net;
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+[TestFixture]
 /// <summary>
 /// Unit tests for the HttpCoreException class using NUnit.
 /// </summary>
-[TestFixture]
 public class HttpCoreExceptionTests
 {
     [Test]

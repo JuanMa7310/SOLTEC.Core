@@ -11,6 +11,9 @@ using System.Text;
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+/// <summary>
+/// Unit tests for the HttpCore class using NUnit.
+/// </summary>
 public class HttpCoreTests
 {
     private HttpClient CreateMockHttpClient(HttpStatusCode statusCode, string content)

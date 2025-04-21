@@ -1,17 +1,17 @@
 ﻿using SOLTEC.Core.Exceptions;
 using System.Net;
 
-namespace SOLTEC.Core.Tests.NuNit;
+namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// Unit tests for the ResultException class using xUnit.
 /// </summary>
 public class ResultExceptionTests
 {
+    [Fact]
     /// <summary>
     /// Tests default constructor initializes an instance of ResultException.
     /// </summary>
-    [Fact]
     public void Constructor_Default_InitializesInstance()
     {
         var _ex = new ResultException();
@@ -19,11 +19,11 @@ public class ResultExceptionTests
         Assert.NotNull(_ex);
     }
 
+    [Fact]
     /// <summary>
     /// Tests constructor with message and inner exception assigns values correctly.
     /// Sends custom message and inner exception and expects properties to match.
     /// </summary>
-    [Fact]
     public void Constructor_WithMessageAndInnerException_SetsProperties()
     {
         var _inner = new InvalidOperationException("inner");
@@ -33,10 +33,10 @@ public class ResultExceptionTests
         Assert.Equal(_inner, _ex.InnerException);
     }
 
+    [Fact]
     /// <summary>
     /// Tests setting all custom properties works as expected.
     /// </summary>
-    [Fact]
     public void Properties_SetAndGet_WorkCorrectly()
     {
         var _ex = new ResultException
