@@ -139,6 +139,7 @@ La salida se encuentra en `DOCS/en/` y `DOCS/es/`.
 
 ## 📥 Contribuciones y Normas
 
+- [Guía de Integración](INTEGRATION_ES.md)
 - [Guía de Contribución](CONTRIBUTING_ES.md)
 - [Política de Seguridad](SECURITY_ES.md)
 - [Código de Conducta](CODE_OF_CONDUCT_ES.md)
