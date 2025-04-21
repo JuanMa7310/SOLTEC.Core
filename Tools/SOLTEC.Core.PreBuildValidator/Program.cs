@@ -9,7 +9,7 @@
 /// dotnet run --project Tools/SOLTEC.Core.PreBuildValidator
 /// </code>
 /// </example>
-using SOLTEC.Core.PreBuildValidator;
+using SOLTEC.Core.PreBuildValidator.Validators;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 

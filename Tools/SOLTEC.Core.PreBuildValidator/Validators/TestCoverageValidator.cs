@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SOLTEC.Core.PreBuildValidator;
+namespace SOLTEC.Core.PreBuildValidator.Validators;
 
 /// <summary>
 /// Validates that each public logic class in the solution has a corresponding unit test class.
@@ -18,7 +18,7 @@ public static class TestCoverageValidator
     /// <param name="gsolutionDirectory">The base directory of the solution.</param>
     public static void ValidateTestCoverage(string gsolutionDirectory)
     {
-        Console.WriteLine("🔍 Checking test coverage by class...");
+        Console.WriteLine("🔍 Starting Checking test coverage by class...");
 
         var _sourceFiles = Directory.GetFiles(Path.Combine(gsolutionDirectory, "SOLTEC.Core"), "*.cs", SearchOption.AllDirectories)
             .Where(_f => !_f.Contains(@"\obj\") && !_f.Contains(@"\bin\"))

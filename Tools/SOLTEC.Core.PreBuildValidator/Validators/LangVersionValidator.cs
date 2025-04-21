@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace SOLTEC.Core.PreBuildValidator;
+namespace SOLTEC.Core.PreBuildValidator.Validators;
 
 /// <summary>
 /// Validates that each project (.csproj) has the correct language version and nullable settings enabled.
@@ -23,7 +23,7 @@ public static class LangVersionValidator
     /// <param name="gsolutionDirectory">Path to the solution directory to scan.</param>
     public static void ValidateLangVersion(string gsolutionDirectory)
     {
-        Console.WriteLine("🔍 Starting project validation......");
+        Console.WriteLine("🔍 Starting Checking LangVersion and Nullable in project...");
 
         var _projectFiles = Directory.GetFiles(gsolutionDirectory, "*.csproj", SearchOption.AllDirectories);
 

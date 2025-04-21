@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SOLTEC.Core.PreBuildValidator;
+namespace SOLTEC.Core.PreBuildValidator.Validators;
 
 /// <summary>
 /// Validates that all public classes and public methods contain proper XML documentation.
@@ -19,6 +19,8 @@ public static class XmlDocValidator
     /// <param name="gsolutionDirectory">Path to the root directory of the solution.</param>
     public static void ValidateXmlDocumentation(string gsolutionDirectory)
     {
+        Console.WriteLine("🔍 Starting Checking XML documentation...");
+
         var _csFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories);
 
         foreach (var _file in _csFiles)

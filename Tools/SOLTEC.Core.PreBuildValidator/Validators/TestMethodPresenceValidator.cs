@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SOLTEC.Core.PreBuildValidator;
+namespace SOLTEC.Core.PreBuildValidator.Validators;
 
 /// <summary>
 /// Validates that all unit test classes in the solution contain at least one test method.
@@ -19,7 +19,7 @@ public static class TestMethodPresenceValidator
     /// <param name="gsolutionDirectory">Root path of the solution to scan.</param>
     public static void ValidateTestMethods(string gsolutionDirectory)
     {
-        Console.WriteLine("🔍 Checking whether tests exist in unit testing projects...");
+        Console.WriteLine("🔍 Starting Checking whether tests exist in unit testing projects...");
 
         var _testFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories)
             .Where(_file =>

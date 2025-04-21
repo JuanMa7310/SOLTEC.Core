@@ -1,4 +1,4 @@
-﻿namespace SOLTEC.Core.PreBuildValidator;
+﻿namespace SOLTEC.Core.PreBuildValidator.Validators;
 
 /// <summary>
 /// Scans all C# files in a given directory to detect unresolved TODO or FIXME comments.
@@ -17,7 +17,7 @@ public static class TodoFixmeValidator
     /// <param name="gsolutionDirectory">Root path to the solution where files should be checked.</param>
     public static void ValidateTodoFixme(string gsolutionDirectory)
     {
-        Console.WriteLine("🔍 Checking TODO / FIXME...");
+        Console.WriteLine("🔍 Starting Checking TODO / FIXME...");
 
         var _csFiles = Directory.GetFiles(gsolutionDirectory, "*.cs", SearchOption.AllDirectories);
 
