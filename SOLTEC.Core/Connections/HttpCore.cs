@@ -45,7 +45,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<T>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP GET request and returns a deserialized list of objects.
     /// </summary>
@@ -72,6 +71,11 @@ public class HttpCore
     /// </summary>
     /// <param name="uri">The target URI.</param>
     /// <param name="headerParameters">Optional headers to include in the request.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var response = await new HttpCore().PostAsync&lt;User&gt;("https://api.example.com/users", newUser);
+    /// ]]>
+    /// </example>
     public virtual async Task PostAsync(string uri, Dictionary<string, string>? headerParameters = null)
     {
         using var _client = CreateConfiguredHttpClient(headerParameters);
@@ -79,7 +83,6 @@ public class HttpCore
 
         await ValidateStatusResponse(_response);
     }
-
     /// <summary>
     /// Sends an HTTP POST request with a serialized request body.
     /// </summary>
@@ -95,7 +98,6 @@ public class HttpCore
 
         await ValidateStatusResponse(_response);
     }
-
     /// <summary>
     /// Sends an HTTP POST request and returns a deserialized response.
     /// </summary>
@@ -119,7 +121,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<TResult>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP POST request with no content and returns a deserialized response.
     /// </summary>
@@ -146,6 +147,11 @@ public class HttpCore
     /// </summary>
     /// <param name="uri">The target URI.</param>
     /// <param name="headerParameters">Optional headers to include in the request.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var response = await new HttpCore().PutAsync&lt;User&gt;("https://api.example.com/users/1", updatedUser);
+    /// ]]>
+    /// </example>
     public virtual async Task PutAsync(string uri, Dictionary<string, string>? headerParameters = null)
     {
         using var _client = CreateConfiguredHttpClient(headerParameters);
@@ -153,7 +159,6 @@ public class HttpCore
 
         await ValidateStatusResponse(_response);
     }
-
     /// <summary>
     /// Sends an HTTP PUT request with a serialized request body.
     /// </summary>
@@ -169,7 +174,6 @@ public class HttpCore
 
         await ValidateStatusResponse(_response);
     }
-
     /// <summary>
     /// Sends an HTTP PUT request and returns a deserialized response.
     /// </summary>
@@ -193,7 +197,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<TResult>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP PUT request with no content and returns a deserialized response.
     /// </summary>
@@ -222,6 +225,11 @@ public class HttpCore
     /// <param name="uri">The target URI.</param>
     /// <param name="headerParameters">Optional headers to include in the request.</param>
     /// <returns>The deserialized response object.</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var result = await new HttpCore().DeleteAsync<User>("https://api.example.com/users/1");
+    /// ]]>
+    /// </example>
     public virtual async Task<TResult?> DeleteAsync<TResult>(string uri, Dictionary<string, string>? headerParameters = null)
     {
         using var _client = CreateConfiguredHttpClient(headerParameters);
