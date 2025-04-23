@@ -1,5 +1,6 @@
 using NUnit.Framework;
-using SOLTEC.Core.Encryptions;
+using SOLTEC.Core;
+using System.Text;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit
 {

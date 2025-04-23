@@ -1,5 +1,5 @@
-using SOLTEC.Core.Encryptions;
 using Xunit;
+using SOLTEC.Core;
 
 namespace SOLTEC.Core.IntegrationTests.xUnit
 {

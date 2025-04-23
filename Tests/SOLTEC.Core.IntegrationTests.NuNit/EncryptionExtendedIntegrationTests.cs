@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using SOLTEC.Core.Encryptions;
+using SOLTEC.Core;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit
 {
