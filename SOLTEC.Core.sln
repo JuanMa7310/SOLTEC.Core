@@ -4,12 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		Documentation\README Scripts & WorkFlows.md = Documentation\README Scripts & WorkFlows.md
-		Documentation\README Scripts & WorkFlows_ES.md = Documentation\README Scripts & WorkFlows_ES.md
-		Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md
-		Documentation\SOLTEC_UnitTest_UseCases.md = Documentation\SOLTEC_UnitTest_UseCases.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F9F2555-B997-4547-8C25-5A7CB6BA58A3}"
 EndProject
@@ -37,6 +31,30 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.IntegrationTests.NuNit", "Tests\SOLTEC.Core.IntegrationTests.NuNit\SOLTEC.Core.IntegrationTests.NuNit.csproj", "{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.IntegrationTests.xUnit", "Tests\SOLTEC.Core.IntegrationTests.xUnit\SOLTEC.Core.IntegrationTests.xUnit.csproj", "{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ES", "ES", "{5FF2648A-FBF6-4828-811C-C16FF8491287}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\README Scripts & WorkFlows_ES.md = Documentation\README Scripts & WorkFlows_ES.md
+		Documentation\ES\README Scripts & WorkFlows_ES.md = Documentation\ES\README Scripts & WorkFlows_ES.md
+		Documentation\SOLTEC_Core_IntegrationCoverageReport_ES.md = Documentation\SOLTEC_Core_IntegrationCoverageReport_ES.md
+		Documentation\ES\SOLTEC_Core_IntegrationCoverageReport_ES.md = Documentation\ES\SOLTEC_Core_IntegrationCoverageReport_ES.md
+		Documentation\SOLTEC_Core_UnitTestCoverageReport_ES.md = Documentation\SOLTEC_Core_UnitTestCoverageReport_ES.md
+		Documentation\ES\SOLTEC_Core_UnitTestCoverageReport_ES.md = Documentation\ES\SOLTEC_Core_UnitTestCoverageReport_ES.md
+		Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md
+		Documentation\ES\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\ES\SOLTEC_UnitTest_CasosDeUso_ES.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EN", "EN", "{F7404003-A638-438A-AF5C-67F9894A45A6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\README Scripts & WorkFlows.md = Documentation\README Scripts & WorkFlows.md
+		Documentation\EN\README Scripts & WorkFlows.md = Documentation\EN\README Scripts & WorkFlows.md
+		Documentation\SOLTEC_Core_IntegrationCoverageReport.md = Documentation\SOLTEC_Core_IntegrationCoverageReport.md
+		Documentation\EN\SOLTEC_Core_IntegrationCoverageReport.md = Documentation\EN\SOLTEC_Core_IntegrationCoverageReport.md
+		Documentation\SOLTEC_Core_UnitTestCoverageReport.md = Documentation\SOLTEC_Core_UnitTestCoverageReport.md
+		Documentation\EN\SOLTEC_Core_UnitTestCoverageReport.md = Documentation\EN\SOLTEC_Core_UnitTestCoverageReport.md
+		Documentation\SOLTEC_UnitTest_UseCases.md = Documentation\SOLTEC_UnitTest_UseCases.md
+		Documentation\EN\SOLTEC_UnitTest_UseCases.md = Documentation\EN\SOLTEC_UnitTest_UseCases.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +107,8 @@ Global
 		{BC0AA913-73B6-4B43-BD43-251EAC8FEB98} = {544A3704-8645-41CF-91CD-B2636A7FEE1D}
 		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
 		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
+		{5FF2648A-FBF6-4828-811C-C16FF8491287} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F7404003-A638-438A-AF5C-67F9894A45A6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11301603-2537-4BFA-804D-A81E7F3C767A}
