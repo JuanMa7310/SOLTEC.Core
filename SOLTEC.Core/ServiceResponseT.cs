@@ -221,9 +221,9 @@ public class ServiceResponse<T> : ServiceResponse
     {
         return new ServiceResponse<T>()
         {
-            Success = false,
+            Success = true,
             ResponseCode = responseCode,
-            ErrorMessage = errorMessage,
+            Message = errorMessage,
             WarningMessages = warningMessages,
             Data = default,
         };
@@ -247,7 +247,8 @@ public class ServiceResponse<T> : ServiceResponse
             Success = true,
             Message = errorMessage,
             ResponseCode = (int)responseCode,
-            WarningMessages = warningMessgaes
+            WarningMessages = warningMessgaes,
+            Data = default
         };
     }
 }

@@ -65,4 +65,19 @@ public class ServiceResponseGenericTests
         Assert.Equal((int)HttpStatusCode.BadRequest, _response.ResponseCode);
         Assert.Contains("Check input", _response.WarningMessages!);
     }
+
+    [Fact]
+    /// <summary>
+    /// Ensures that CreateWarning for ServiceResponseT returns expected values:
+    /// Success = true, correct warning message, correct code, and null Result.
+    /// </summary>
+    public void CreateWarning_ShouldReturnExpectedWarningInGenericResponse()
+    {
+        var _response = ServiceResponse<string>.CreateWarning(206, "Warning message");
+
+        Assert.True(_response.Success);
+        Assert.Equal("Warning message", _response.Message);
+        Assert.Equal(206, _response.ResponseCode);
+        Assert.Null(_response.Data);
+    }
 }

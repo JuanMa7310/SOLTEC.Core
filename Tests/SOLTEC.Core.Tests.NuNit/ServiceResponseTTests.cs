@@ -78,4 +78,22 @@ public class ServiceResponseGenericTests
             Assert.That(_response.WarningMessages, Does.Contain("Check input"));
         });
     }
+
+    [Test]
+    /// <summary>
+    /// Verifies that CreateWarning creates a ServiceResponseT with Success = true,
+    /// correct message, response code, and a null Result.
+    /// </summary>
+    public void CreateWarning_ShouldReturnValidWarningResponseT()
+    {
+        var _response = ServiceResponse<string>.CreateWarning(206, "Warning message");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_response.Success, Is.True);
+            Assert.That(_response.Message, Is.EqualTo("Warning message"));
+            Assert.That(_response.ResponseCode, Is.EqualTo(206));
+            Assert.That(_response.Result, Is.Null);
+        });
+    }
 }
