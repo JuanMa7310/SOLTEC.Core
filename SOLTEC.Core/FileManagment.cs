@@ -196,9 +196,9 @@ public class FileManagement
     {
         if (!File.Exists(filePath))
             return string.Empty;
-        byte[] bytes = await File.ReadAllBytesAsync(filePath);
+        byte[] _bytes = await File.ReadAllBytesAsync(filePath);
 
-        return Convert.ToBase64String(bytes);
+        return Convert.ToBase64String(_bytes);
     }
 
     /// <summary>
