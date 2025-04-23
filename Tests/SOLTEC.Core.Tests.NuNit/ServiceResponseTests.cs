@@ -75,4 +75,20 @@ public class ServiceResponseTests
             Assert.That(_response.WarningMessages, Does.Contain("Deprecated API"));
         });
     }
+
+    [Test]
+    /// <summary>
+    /// Verifies that CreateWarning sets Success = true and stores the warning message in Message.
+    /// </summary>
+    public void CreateWarning_ShouldCreateValidWarningResponse()
+    {
+        var _response = ServiceResponse.CreateWarning(206, "Partial result");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_response.Success, Is.True);
+            Assert.That(_response.Message, Is.EqualTo("Partial result"));
+            Assert.That(_response.ResponseCode, Is.EqualTo(206));
+        });
+    }
 }
