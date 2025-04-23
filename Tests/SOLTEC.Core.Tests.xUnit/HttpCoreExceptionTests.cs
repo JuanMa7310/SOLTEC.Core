@@ -16,13 +16,18 @@ public class HttpCoreExceptionTests
     /// </summary>
     public void Constructor_WithAllParameters_AssignsCorrectValues()
     {
-        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.BadRequest, "Details", HttpCoreErrorEnum.BadRequest);
+        var exception = new HttpCoreException(
+            key: "ServerError",
+            reason: "Internal processing failed",
+            httpStatusCode: HttpStatusCode.InternalServerError,
+            errorMessage: "Stack overflow",
+            errorType: HttpCoreErrorEnum.InternalServerError);
 
-        Assert.Equal("Key", exception.Key);
-        Assert.Equal("Reason", exception.Reason);
-        Assert.Equal("Details", exception.ErrorMessage);
-        Assert.Equal(HttpStatusCode.BadRequest, exception.HttpStatusCode);
-        Assert.Equal(HttpCoreErrorEnum.BadRequest, exception.ErrorType);
+        Assert.Equal("ServerError", exception.Key);
+        Assert.Equal("Internal processing failed", exception.Reason);
+        Assert.Equal(HttpStatusCode.InternalServerError, exception.HttpStatusCode);
+        Assert.Equal("Stack overflow", exception.ErrorMessage);
+        Assert.Equal(HttpCoreErrorEnum.InternalServerError, exception.ErrorType);
     }
 
     [Fact]
@@ -31,12 +36,12 @@ public class HttpCoreExceptionTests
     /// </summary>
     public void Constructor_WithNulls_AssignsDefaultValues()
     {
-        var exception = new HttpCoreException(null, null, HttpStatusCode.NotFound, null, null);
+        var exception = new HttpCoreException(null, null, HttpStatusCode.NotFound);
 
         Assert.Equal("Unknown Key", exception.Key);
         Assert.Equal("Unknown Reason", exception.Reason);
-        Assert.Equal("", exception.ErrorMessage);
         Assert.Equal(HttpStatusCode.NotFound, exception.HttpStatusCode);
+        Assert.Equal("", exception.ErrorMessage);
         Assert.Null(exception.ErrorType);
     }
 

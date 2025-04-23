@@ -17,14 +17,19 @@ public class HttpCoreExceptionTests
     /// </summary>
     public void Constructor_WithAllParameters_AssignsCorrectValues()
     {
-        var exception = new HttpCoreException("Key", "Reason", HttpStatusCode.BadRequest, "Details", HttpCoreErrorEnum.BadRequest);
+        var exception = new HttpCoreException(
+            key: "InvalidInput",
+            reason: "The input format is not correct",
+            httpStatusCode: HttpStatusCode.BadRequest,
+            errorMessage: "The field 'name' is required",
+            errorType: HttpCoreErrorEnum.BadRequest);
 
         Assert.Multiple(() =>
         {
-            Assert.That(exception.Key, Is.EqualTo("Key"));
-            Assert.That(exception.Reason, Is.EqualTo("Reason"));
-            Assert.That(exception.ErrorMessage, Is.EqualTo("Details"));
+            Assert.That(exception.Key, Is.EqualTo("InvalidInput"));
+            Assert.That(exception.Reason, Is.EqualTo("The input format is not correct"));
             Assert.That(exception.HttpStatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            Assert.That(exception.ErrorMessage, Is.EqualTo("The field 'name' is required"));
             Assert.That(exception.ErrorType, Is.EqualTo(HttpCoreErrorEnum.BadRequest));
         });
     }
@@ -35,14 +40,14 @@ public class HttpCoreExceptionTests
     /// </summary>
     public void Constructor_WithNulls_AssignsDefaultValues()
     {
-        var exception = new HttpCoreException(null, null, HttpStatusCode.NotFound, null, null);
+        var exception = new HttpCoreException(null, null, HttpStatusCode.NotFound);
 
         Assert.Multiple(() =>
         {
             Assert.That(exception.Key, Is.EqualTo("Unknown Key"));
             Assert.That(exception.Reason, Is.EqualTo("Unknown Reason"));
-            Assert.That(exception.ErrorMessage, Is.EqualTo(""));
             Assert.That(exception.HttpStatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+            Assert.That(exception.ErrorMessage, Is.EqualTo(""));
             Assert.That(exception.ErrorType, Is.Null);
         });
     }
