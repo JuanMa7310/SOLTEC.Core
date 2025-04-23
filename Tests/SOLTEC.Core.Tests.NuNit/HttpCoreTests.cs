@@ -1,12 +1,11 @@
-﻿using Moq.Protected;
-using Moq;
+﻿using Moq;
+using Moq.Protected;
 using Newtonsoft.Json;
-using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.Connections;
+using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.DTOS;
 using SOLTEC.Core.Enums;
 using System.Net;
-using System.Reflection;
 using System.Text;
 
 namespace SOLTEC.Core.Tests.NuNit;
@@ -150,6 +149,71 @@ public class HttpCoreTests
                 Assert.That(ex.Key, Is.EqualTo("JsonDeserializationError"));
             });
         }
+    }
+
+    [Test]
+    /// <summary>
+    /// Verifies that GetAsyncList returns a correctly deserialized list of items when the response is valid.
+    /// </summary>
+    public async Task GetAsyncList_ReturnsDeserializedList()
+    {
+        var list = new List<string> { "Item1", "Item2" };
+        var json = JsonConvert.SerializeObject(list);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.GetAsyncList<string>("http://test");
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result[0], Is.EqualTo("Item1"));
+            Assert.That(result[1], Is.EqualTo("Item2"));
+        });
+    }
+
+    [Test]
+    /// <summary>
+    /// Tests that PutAsync returns a deserialized response object when posting valid data.
+    /// </summary>
+    public async Task PutAsync_ReturnsDeserializedResponse()
+    {
+        var requestData = new ProblemDetailsDto { Title = "Request", Status = 201 };
+        var expectedResponse = new ProblemDetailsDto { Title = "Response", Status = 200 };
+        var json = JsonConvert.SerializeObject(expectedResponse);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://put-endpoint", requestData);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Title, Is.EqualTo("Response"));
+            Assert.That(result.Status, Is.EqualTo(200));
+        });
+    }
+
+    [Test]
+    /// <summary>
+    /// Verifies that DeleteAsync returns a deserialized object from the response.
+    /// </summary>
+    public async Task DeleteAsync_ReturnsDeserializedObject()
+    {
+        var expected = new ProblemDetailsDto { Title = "Deleted", Status = 204 };
+        var json = JsonConvert.SerializeObject(expected);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://delete-endpoint");
+
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Title, Is.EqualTo("Deleted"));
+            Assert.That(result.Status, Is.EqualTo(204));
+        });
     }
 
     private class HttpCoreTestable(HttpClient client) : HttpCore
