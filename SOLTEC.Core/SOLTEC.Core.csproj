@@ -11,13 +11,13 @@
 
   <ItemGroup>
     <Folder Include="Adapters\Exceptions\" />
-    <Folder Include="Connections\Commands\" />
     <Folder Include="Encryptions\Exceptions\" />
     <Folder Include="Extensions\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
