@@ -20,12 +20,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: 📦 Restore PreBuildValidator project only
-        run: dotnet restore SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj
-
-      - name: 🔨 Build PreBuildValidator
-        run: dotnet build SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj --configuration Release
+      - name: 📥 Download PreBuildValidator release
+        run: |
+          mkdir -p Tools/PreBuildValidator
+          curl -L -o Tools/PreBuildValidator/PreBuildValidator.zip https://github.com/JuanMa7310/SOLTEC.PreBuildValidator/releases/latest/download/PreBuildValidator.zip
+          unzip Tools/PreBuildValidator/PreBuildValidator.zip -d Tools/PreBuildValidator/
 
       - name: 🚦 Run PreBuildValidator
-        run: dotnet SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
-        
+        run: dotnet Tools/SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
