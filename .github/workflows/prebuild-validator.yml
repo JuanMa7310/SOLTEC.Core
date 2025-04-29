@@ -27,5 +27,5 @@ jobs:
           unzip Tools/PreBuildValidator/PreBuildValidator.zip -d Tools/PreBuildValidator/
 
       - name: 🚦 Run PreBuildValidator
-        run: dotnet Tools/PreBuildValidator/SOLTEC.PreBuildValidator.dll .
+        run: dotnet ../SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
         
