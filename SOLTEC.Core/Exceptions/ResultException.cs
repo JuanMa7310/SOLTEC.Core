@@ -61,8 +61,7 @@ public class ResultException : Exception
     /// throw new ResultException("Error loading data", new IOException("File not found"));
     /// ]]>
     /// </example>
-    public ResultException(string message, Exception innerException)
-        : base(message, innerException)
+    public ResultException(string message, Exception innerException) : base(message, innerException)
     {
     }
 }
