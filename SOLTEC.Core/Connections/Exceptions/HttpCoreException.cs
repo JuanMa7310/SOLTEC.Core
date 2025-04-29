@@ -28,6 +28,11 @@ public class HttpCoreException : ResultException
     /// <param name="httpStatusCode">HTTP status code returned by the response.</param>
     /// <param name="errorMessage">Detailed error message (optional).</param>
     /// <param name="errorType">Mapped enum value from the status code (optional).</param>
+    /// <example>
+    /// <![CDATA[
+    /// throw new HttpCoreException("Timeout", "The operation timed out", HttpStatusCode.RequestTimeout);
+    /// ]]>
+    /// </example>
     public HttpCoreException(string? key, string? reason, HttpStatusCode httpStatusCode, string? errorMessage = "", HttpCoreErrorEnum? errorType = null)
     {
         Key = key ?? "Unknown Key";

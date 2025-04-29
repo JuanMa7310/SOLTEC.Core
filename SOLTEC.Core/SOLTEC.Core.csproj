@@ -11,18 +11,18 @@
 
   <ItemGroup>
     <Folder Include="Adapters\Exceptions\" />
-    <Folder Include="Connections\Commands\" />
     <Folder Include="Encryptions\Exceptions\" />
     <Folder Include="Extensions\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild" Condition=" '$(GITHUB_ACTIONS)' != 'true' ">
-	<Exec Command="dotnet $(SolutionDir)Tools/SOLTEC.Core.PreBuildValidator/bin/Debug/net8.0/SOLTEC.Core.PreBuildValidator.dll" />
+	<Exec Command="dotnet $(SolutionDir)../Tools/SOLTEC.PreBuildValidator/bin/Debug/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core" />
   </Target>
 
 </Project>

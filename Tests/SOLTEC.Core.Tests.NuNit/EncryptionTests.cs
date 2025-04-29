@@ -71,4 +71,56 @@ public class EncryptionTests
 
         Assert.That(_decrypted, Is.EqualTo(_text));
     }
+
+    [Test]
+    /// <summary>
+    /// Tests GenerateSHA1 returns a 40-character hexadecimal hash for a known input.
+    /// Passes the string "data" and expects a SHA1 hash string of length 40.
+    /// </summary>
+    public void GenerateSHA1_ReturnsSHA1Hash()
+    {
+        var _hash = _encryption.GenerateSHA1("data");
+
+        Assert.That(_hash.Length, Is.EqualTo(40));
+        Assert.That(_hash, Does.Match("^[a-f0-9]{40}$"));
+    }
+
+    [Test]
+    /// <summary>
+    /// Tests GenerateSHA256 returns a 64-character hexadecimal hash.
+    /// Passes "secure" and checks for expected format and length.
+    /// </summary>
+    public void GenerateSHA256_ReturnsSHA256Hash()
+    {
+        var _hash = _encryption.GenerateSHA256("secure");
+
+        Assert.That(_hash.Length, Is.EqualTo(64));
+        Assert.That(_hash, Does.Match("^[a-f0-9]{64}$"));
+    }
+
+    [Test]
+    /// <summary>
+    /// Tests GenerateSHA384 returns a 96-character hexadecimal string.
+    /// Passes "text" and ensures correct length and hexadecimal format.
+    /// </summary>
+    public void GenerateSHA384_ReturnsSHA384Hash()
+    {
+        var _hash = _encryption.GenerateSHA384("text");
+
+        Assert.That(_hash.Length, Is.EqualTo(96));
+        Assert.That(_hash, Does.Match("^[a-f0-9]{96}$"));
+    }
+
+    [Test]
+    /// <summary>
+    /// Tests GenerateSHA512 returns a 128-character hexadecimal string.
+    /// Passes "longinput" and verifies format and hash length.
+    /// </summary>
+    public void GenerateSHA512_ReturnsSHA512Hash()
+    {
+        var _hash = _encryption.GenerateSHA512("longinput");
+
+        Assert.That(_hash.Length, Is.EqualTo(128));
+        Assert.That(_hash, Does.Match("^[a-f0-9]{128}$"));
+    }
 }

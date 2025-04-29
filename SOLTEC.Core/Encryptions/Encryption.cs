@@ -18,9 +18,14 @@ public class Encryption
     /// Generates a random alphanumeric string of specified length.
     /// </summary>
     /// <param name="maxSize">The length of the generated key.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var key = new Encryption().GenerateUniqueKey(16);
+    /// ]]>
+    /// </example>
     public virtual string GenerateUniqueKey(int maxSize = 10)
     {
-        const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        const string _cchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         var _data = new byte[maxSize];
         using var _rng = RandomNumberGenerator.Create();
         _rng.GetBytes(_data);
@@ -28,7 +33,7 @@ public class Encryption
 
         foreach (var _b in _data)
         {
-            _result.Append(chars[_b % chars.Length]);
+            _result.Append(_cchars[_b % _cchars.Length]);
         }
 
         return _result.ToString();
@@ -39,6 +44,11 @@ public class Encryption
     /// </summary>
     /// <param name="message">The message to encode.</param>
     /// <param name="secret">The secret key used for encryption.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var token = new Encryption().CreateTokenHMACSHA256("data", "secret");
+    /// ]]>
+    /// </example>
     public virtual string CreateTokenHMACSHA256(string message, string secret)
     {
         var _key = Encoding.ASCII.GetBytes(secret ?? string.Empty);
@@ -53,6 +63,9 @@ public class Encryption
     /// Generates an MD5 hash from a given message.
     /// </summary>
     /// <param name="message">The input string.</param>
+    /// <example><![CDATA[
+    /// var hash = new Encryption().CreateMd5("test");
+    /// ]]></example>
     public virtual string CreateMD5(string message)
     {
         var _inputBytes = Encoding.ASCII.GetBytes(message);
@@ -64,6 +77,11 @@ public class Encryption
     /// <summary>
     /// Generates a unique MD5 token from a new GUID.
     /// </summary>
+    /// <example>
+    /// <![CDATA[
+    /// var token = new Encryption().Token();
+    /// ]]>
+    /// </example>
     public virtual string Token()
     {
         long _i = 1;
@@ -81,6 +99,11 @@ public class Encryption
     /// Decodes a base64 string.
     /// </summary>
     /// <param name="input">The encoded string.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var decoded = new Encryption().Base64Decode("SGVsbG8h");
+    /// ]]>
+    /// </example>
     public virtual string Base64Decode(string input)
     {
         var _output = Convert.FromBase64String(input);
@@ -92,6 +115,11 @@ public class Encryption
     /// Encodes a string into base64.
     /// </summary>
     /// <param name="input">The input string.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var encoded = new Encryption().Base64Encode("Hello!");
+    /// ]]>
+    /// </example>
     public virtual string Base64Encode(string input)
     {
         var _bytes = Encoding.UTF8.GetBytes(input);
@@ -103,6 +131,9 @@ public class Encryption
     /// Generates an SHA1 hash from a given message.
     /// </summary>
     /// <param name="message">The input string.</param>
+    /// <example><![CDATA[
+    /// var sha1 = new Encryption().GenerateSHA1("abc");
+    /// ]]></example>
     public virtual string GenerateSHA1(string message)
     {
         var _bytes = SHA1.HashData(Encoding.ASCII.GetBytes(message));
@@ -114,6 +145,11 @@ public class Encryption
     /// Generates an SHA256 hash from a given message.
     /// </summary>
     /// <param name="message">The input string.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var sha = new Encryption().GenerateSHA256("password");
+    /// ]]>
+    /// </example>
     public virtual string GenerateSHA256(string message)
     {
         var _bytes = SHA256.HashData(Encoding.ASCII.GetBytes(message));
@@ -125,6 +161,9 @@ public class Encryption
     /// Generates an SHA384 hash from a given message.
     /// </summary>
     /// <param name="message">The input string.</param>
+    /// <example><![CDATA[
+    /// var sha384 = new Encryption().GenerateSHA384("abc");
+    /// ]]></example>
     public virtual string GenerateSHA384(string message)
     {
         var _bytes = SHA384.HashData(Encoding.ASCII.GetBytes(message));
@@ -136,6 +175,9 @@ public class Encryption
     /// Generates an SHA512 hash from a given message.
     /// </summary>
     /// <param name="message">The input string.</param>
+    /// <example><![CDATA[
+    /// var sha384 = new Encryption().GenerateSHA512("abc");
+    /// ]]></example>
     public virtual string GenerateSHA512(string message)
     {
         var _bytes = SHA512.HashData(Encoding.ASCII.GetBytes(message));
@@ -148,6 +190,9 @@ public class Encryption
     /// </summary>
     /// <param name="data">The string to encrypt.</param>
     /// <param name="password">The password for encryption.</param>
+    /// <example><![CDATA[
+    /// var encrypted = new Encryption().Encrypt("secret", "password123");
+    /// ]]></example>
     public virtual string? Encrypt(string data, string password)
     {
         if (data == null) return null;
@@ -163,6 +208,9 @@ public class Encryption
     /// </summary>
     /// <param name="encryptedData">The encrypted base64 string.</param>
     /// <param name="password">The password used for encryption.</param>
+    /// <example><![CDATA[
+    /// var decrypted = new Encryption().Decrypt(encrypted, "password123");
+    /// ]]></example>
     public virtual string? Decrypt(string encryptedData, string password)
     {
         if (encryptedData == null) return null;
@@ -196,7 +244,6 @@ public class Encryption
 
         return _encrypted;
     }
-
     private static byte[] Decrypt(byte[] bytesToBeDecrypted, byte[] passwordBytes)
     {
         byte[] _decrypted;

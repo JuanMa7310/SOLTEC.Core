@@ -4,12 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		Documentation\README Scripts & WorkFlows.md = Documentation\README Scripts & WorkFlows.md
-		Documentation\README Scripts & WorkFlows_ES.md = Documentation\README Scripts & WorkFlows_ES.md
-		Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md
-		Documentation\SOLTEC_UnitTest_UseCases.md = Documentation\SOLTEC_UnitTest_UseCases.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F9F2555-B997-4547-8C25-5A7CB6BA58A3}"
 EndProject
@@ -21,15 +15,45 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.Tests.NuNit", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{A16F71B6-0F54-4734-B6BD-6E0CCD578E08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.PreBuildValidator", "Tools\SOLTEC.Core.PreBuildValidator\SOLTEC.Core.PreBuildValidator.csproj", "{D05D87A0-91AB-4237-BD8C-74C529CDB51E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.DocuWiki", "..\TOOLS\SOLTEC.DocuWiki\SOLTEC.DocuWiki.csproj", "{C748BAC4-616E-4C99-A34F-BE4BEF561DE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.WikiDocGen", "Tools\SOLTEC.Core.WikiDocGen\SOLTEC.Core.WikiDocGen.csproj", "{85032D75-BF0B-4A0C-BF45-88EC598611EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.PreBuildValidator", "..\TOOLS\SOLTEC.PreBuildValidator\SOLTEC.PreBuildValidator.csproj", "{D05D87A0-91AB-4237-BD8C-74C529CDB51E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.WikiDocGen", "..\TOOLS\SOLTEC.WikiDocGen\SOLTEC.WikiDocGen.csproj", "{85032D75-BF0B-4A0C-BF45-88EC598611EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{544A3704-8645-41CF-91CD-B2636A7FEE1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BC0AA913-73B6-4B43-BD43-251EAC8FEB98}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\prebuild-validator.yml = .github\workflows\prebuild-validator.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.IntegrationTests.NuNit", "Tests\SOLTEC.Core.IntegrationTests.NuNit\SOLTEC.Core.IntegrationTests.NuNit.csproj", "{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLTEC.Core.IntegrationTests.xUnit", "Tests\SOLTEC.Core.IntegrationTests.xUnit\SOLTEC.Core.IntegrationTests.xUnit.csproj", "{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ES", "ES", "{5FF2648A-FBF6-4828-811C-C16FF8491287}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\README Scripts & WorkFlows_ES.md = Documentation\README Scripts & WorkFlows_ES.md
+		Documentation\ES\README Scripts & WorkFlows_ES.md = Documentation\ES\README Scripts & WorkFlows_ES.md
+		Documentation\SOLTEC_Core_IntegrationCoverageReport_ES.md = Documentation\SOLTEC_Core_IntegrationCoverageReport_ES.md
+		Documentation\ES\SOLTEC_Core_IntegrationCoverageReport_ES.md = Documentation\ES\SOLTEC_Core_IntegrationCoverageReport_ES.md
+		Documentation\SOLTEC_Core_UnitTestCoverageReport_ES.md = Documentation\SOLTEC_Core_UnitTestCoverageReport_ES.md
+		Documentation\ES\SOLTEC_Core_UnitTestCoverageReport_ES.md = Documentation\ES\SOLTEC_Core_UnitTestCoverageReport_ES.md
+		Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\SOLTEC_UnitTest_CasosDeUso_ES.md
+		Documentation\ES\SOLTEC_UnitTest_CasosDeUso_ES.md = Documentation\ES\SOLTEC_UnitTest_CasosDeUso_ES.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EN", "EN", "{F7404003-A638-438A-AF5C-67F9894A45A6}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\README Scripts & WorkFlows.md = Documentation\README Scripts & WorkFlows.md
+		Documentation\EN\README Scripts & WorkFlows.md = Documentation\EN\README Scripts & WorkFlows.md
+		Documentation\SOLTEC_Core_IntegrationCoverageReport.md = Documentation\SOLTEC_Core_IntegrationCoverageReport.md
+		Documentation\EN\SOLTEC_Core_IntegrationCoverageReport.md = Documentation\EN\SOLTEC_Core_IntegrationCoverageReport.md
+		Documentation\SOLTEC_Core_UnitTestCoverageReport.md = Documentation\SOLTEC_Core_UnitTestCoverageReport.md
+		Documentation\EN\SOLTEC_Core_UnitTestCoverageReport.md = Documentation\EN\SOLTEC_Core_UnitTestCoverageReport.md
+		Documentation\SOLTEC_UnitTest_UseCases.md = Documentation\SOLTEC_UnitTest_UseCases.md
+		Documentation\EN\SOLTEC_UnitTest_UseCases.md = Documentation\EN\SOLTEC_UnitTest_UseCases.md
 	EndProjectSection
 EndProject
 Global
@@ -50,6 +74,10 @@ Global
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6B30726-2D87-4F0E-87E5-37662B037935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C748BAC4-616E-4C99-A34F-BE4BEF561DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C748BAC4-616E-4C99-A34F-BE4BEF561DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C748BAC4-616E-4C99-A34F-BE4BEF561DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C748BAC4-616E-4C99-A34F-BE4BEF561DE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D05D87A0-91AB-4237-BD8C-74C529CDB51E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -58,6 +86,14 @@ Global
 		{85032D75-BF0B-4A0C-BF45-88EC598611EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85032D75-BF0B-4A0C-BF45-88EC598611EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85032D75-BF0B-4A0C-BF45-88EC598611EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,9 +101,14 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D183D956-5F84-46A5-A108-0E92B6612E27} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
 		{C6B30726-2D87-4F0E-87E5-37662B037935} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
+		{C748BAC4-616E-4C99-A34F-BE4BEF561DE6} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
 		{D05D87A0-91AB-4237-BD8C-74C529CDB51E} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
 		{85032D75-BF0B-4A0C-BF45-88EC598611EB} = {A16F71B6-0F54-4734-B6BD-6E0CCD578E08}
 		{BC0AA913-73B6-4B43-BD43-251EAC8FEB98} = {544A3704-8645-41CF-91CD-B2636A7FEE1D}
+		{FE41C6AD-DE06-4F71-A36A-EC2FC9938057} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
+		{A37E5CB6-7220-45D2-8B0D-C3DCF3DF2B9A} = {0F9F2555-B997-4547-8C25-5A7CB6BA58A3}
+		{5FF2648A-FBF6-4828-811C-C16FF8491287} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F7404003-A638-438A-AF5C-67F9894A45A6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11301603-2537-4BFA-804D-A81E7F3C767A}

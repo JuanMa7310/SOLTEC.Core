@@ -42,6 +42,11 @@ public class ResultException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="ResultException"/> class.
     /// </summary>
+    /// <example>
+    /// <![CDATA[
+    /// throw new ResultException();
+    /// ]]>
+    /// </example>
     public ResultException()
     {
     }
@@ -51,8 +56,12 @@ public class ResultException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
-    public ResultException(string message, Exception innerException)
-        : base(message, innerException)
+    /// <example>
+    /// <![CDATA[
+    /// throw new ResultException("Error loading data", new IOException("File not found"));
+    /// ]]>
+    /// </example>
+    public ResultException(string message, Exception innerException) : base(message, innerException)
     {
     }
 }

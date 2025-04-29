@@ -142,6 +142,62 @@ public class HttpCoreTests
         }
     }
 
+    [Fact]
+    /// <summary>
+    /// Verifies that GetAsyncList returns a list of deserialized objects from JSON.
+    /// </summary>
+    public async Task GetAsyncList_ShouldReturnExpectedList()
+    {
+        var data = new List<string> { "Alpha", "Beta" };
+        var json = JsonConvert.SerializeObject(data);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.GetAsyncList<string>("http://api/items");
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count);
+        Assert.Equal("Alpha", result[0]);
+        Assert.Equal("Beta", result[1]);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Ensures that PutAsync returns a deserialized result from a mocked HTTP response.
+    /// </summary>
+    public async Task PutAsync_ShouldReturnTypedResponse()
+    {
+        var requestData = new ProblemDetailsDto { Title = "Request", Status = 100 };
+        var expected = new ProblemDetailsDto { Title = "Updated", Status = 200 };
+        var json = JsonConvert.SerializeObject(expected);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://api/update", requestData);
+
+        Assert.NotNull(result);
+        Assert.Equal("Updated", result.Title);
+        Assert.Equal(200, result.Status);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Tests that DeleteAsync returns the deserialized object from a successful response.
+    /// </summary>
+    public async Task DeleteAsync_ShouldReturnDeserializedResult()
+    {
+        var expected = new ProblemDetailsDto { Title = "Removed", Status = 204 };
+        var json = JsonConvert.SerializeObject(expected);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+
+        var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://api/remove");
+
+        Assert.NotNull(result);
+        Assert.Equal("Removed", result.Title);
+        Assert.Equal(204, result.Status);
+    }
+
     private class HttpCoreTestable(HttpClient client) : HttpCore
     {
         protected override HttpClient CreateConfiguredHttpClient(Dictionary<string, string>? headers)

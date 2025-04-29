@@ -62,4 +62,17 @@ public class ServiceResponseTests
         Assert.Equal("Bad input", _response.ErrorMessage);
         Assert.Contains("Deprecated API", _response.WarningMessages!);
     }
+
+    [Fact]
+    /// <summary>
+    /// Ensures that CreateWarning returns a response with Success = true and the correct warning message.
+    /// </summary>
+    public void CreateWarning_ShouldReturnWarningWithMessage()
+    {
+        var _response = ServiceResponse.CreateWarning(206, "Partial result");
+
+        Assert.True(_response.Success);
+        Assert.Equal("Partial result", _response.Message);
+        Assert.Equal(206, _response.ResponseCode);
+    }
 }
