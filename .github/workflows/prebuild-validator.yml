@@ -1,4 +1,4 @@
-name: 🧪 PreBuild Validator
+name: 🧪 PreBuild Validator 
 
 on:
   push:
@@ -20,11 +20,12 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: 📦 Restore dependencies
-        run: dotnet restore
+      - name: 📦 Restore PreBuildValidator project only
+        run: dotnet restore Tools/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj
 
-      - name: 🔨 Build validator
-        run: dotnet build Tools/SOLTEC.Core.PreBuildValidator --configuration Release
+      - name: 🔨 Build PreBuildValidator
+        run: dotnet build Tools/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj --configuration Release
 
-      - name: 🚦 Run validator
-        run: dotnet Tools/SOLTEC.Core.PreBuildValidator/bin/Release/net8.0/SOLTEC.Core.PreBuildValidator.dll
+      - name: 🚦 Run PreBuildValidator
+        run: dotnet Tools/SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
+        
