@@ -1,0 +1,30 @@
+name: 🧪 PreBuild Validator
+
+on:
+  push:
+    branches: [ Master, DEV ]
+  pull_request:
+    branches: [ Master, DEV ]
+
+jobs:
+  validate:
+    name: Run PreBuild Validator
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 📦 Restore dependencies
+        run: dotnet restore
+
+      - name: 🔨 Build validator
+        run: dotnet build Tools/SOLTEC.Core.PreBuildValidator --configuration Release
+
+      - name: 🚦 Run validator
+        run: dotnet Tools/SOLTEC.Core.PreBuildValidator/bin/Release/net8.0/SOLTEC.Core.PreBuildValidator.dll
