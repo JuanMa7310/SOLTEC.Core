@@ -1,5 +1,4 @@
-﻿using MoreLinq;
-using SOLTEC.Core.Connections.Commands;
+﻿using SOLTEC.Core.Connections.Commands;
 using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.Enums;
 using System.Net;
