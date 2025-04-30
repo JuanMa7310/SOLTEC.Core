@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using SOLTEC.Core;
+using SOLTEC.Core.Encryptions;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit
 {
@@ -13,6 +13,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         {
             var _input = "md5-test";
             var _hash = _encryption.CreateMD5(_input);
+
             Assert.That(_hash.Length, Is.EqualTo(32));
         }
 
@@ -21,6 +22,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         {
             var _input = "sha1";
             var _hash = _encryption.GenerateSHA1(_input);
+
             Assert.That(_hash.Length, Is.EqualTo(40));
         }
 
@@ -29,6 +31,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         {
             var _input = "sha384";
             var _hash = _encryption.GenerateSHA384(_input);
+
             Assert.That(_hash.Length, Is.EqualTo(96));
         }
 
@@ -37,6 +40,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         {
             var _input = "sha512";
             var _hash = _encryption.GenerateSHA512(_input);
+
             Assert.That(_hash.Length, Is.EqualTo(128));
         }
 
@@ -44,13 +48,15 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         public void CreateTokenHMACSHA256_ShouldReturnToken()
         {
             var _token = _encryption.CreateTokenHMACSHA256("secret", "payload");
+
             Assert.That(_token, Is.Not.Null.And.Not.Empty);
         }
 
         [Test]
         public void Token_ShouldReturnExpectedToken()
         {
-            var _token = _encryption.Token("key", "payload");
+            var _token = _encryption.CreateTokenHMACSHA256("key", "payload");
+
             Assert.That(_token, Is.Not.Null.And.Not.Empty);
         }
 
@@ -58,6 +64,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         public void GenerateUniqueKey_ShouldReturnNonEmptyString()
         {
             var _key = _encryption.GenerateUniqueKey();
+
             Assert.That(_key, Is.Not.Null.And.Not.Empty);
         }
     }

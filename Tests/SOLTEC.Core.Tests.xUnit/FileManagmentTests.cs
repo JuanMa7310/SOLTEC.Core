@@ -4,12 +4,12 @@ using System.Text;
 namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
-/// Unit tests for the <see cref="FileManagement"/> class using xUnit.
+/// Unit tests for the <see cref="FileManagment"/> class using xUnit.
 /// Validates behavior for file creation, reading, deletion, and conversion.
 /// </summary>
 public class FileManagmentTests : IDisposable
 {
-    private readonly FileManagement _fileManager;
+    private readonly FileManagment _fileManager;
     private readonly string _testDir;
 
     /// <summary>
@@ -17,7 +17,7 @@ public class FileManagmentTests : IDisposable
     /// </summary>
     public FileManagmentTests()
     {
-        _fileManager = new FileManagement();
+        _fileManager = new FileManagment();
         _testDir = Path.Combine(Path.GetTempPath(), "FileManagementTests");
         Directory.CreateDirectory(_testDir);
     }

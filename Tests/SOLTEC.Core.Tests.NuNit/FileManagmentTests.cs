@@ -5,21 +5,21 @@ namespace SOLTEC.Core.Tests.NuNit;
 
 [TestFixture]
 /// <summary>
-/// Unit tests for the <see cref="FileManagement"/> class using xUnit.
+/// Unit tests for the <see cref="FileManagment"/> class using xUnit.
 /// Validates behavior for file creation, reading, deletion, and conversion.
 /// </summary>
 public class FileManagmentTests
 {
-    private FileManagement _fileManager;
+    private FileManagment _fileManager;
     private string _testDir;
 
     [SetUp]
     /// <summary>
-    /// Initializes a temporary directory and FileManagement instance before each test.
+    /// Initializes a temporary directory and FileManagment instance before each test.
     /// </summary>
     public void SetUp()
     {
-        _fileManager = new FileManagement();
+        _fileManager = new FileManagment();
         _testDir = Path.Combine(Path.GetTempPath(), "FileManagementTests_NUnit");
         Directory.CreateDirectory(_testDir);
     }
