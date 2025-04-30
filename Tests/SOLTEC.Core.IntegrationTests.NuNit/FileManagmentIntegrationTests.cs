@@ -7,7 +7,7 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
 {
     [TestFixture]
     /// <summary>
-    /// Integration tests for the FileManagement class using mocked paths and simulated file operations.
+    /// Integration tests for the FileManagment class using mocked paths and simulated file operations.
     /// </summary>
     public class FileManagmentIntegrationTests
     {

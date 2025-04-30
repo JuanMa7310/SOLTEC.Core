@@ -15,7 +15,7 @@ public class FileManagmentTests
 
     [SetUp]
     /// <summary>
-    /// Initializes a temporary directory and FileManagement instance before each test.
+    /// Initializes a temporary directory and FileManagment instance before each test.
     /// </summary>
     public void SetUp()
     {

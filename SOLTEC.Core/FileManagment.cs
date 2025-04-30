@@ -9,7 +9,7 @@ namespace SOLTEC.Core;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var fileManager = new FileManagement();
+/// var fileManager = new FileManagment();
 /// string name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
 /// ]]>
 /// </example>
