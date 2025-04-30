@@ -9,11 +9,11 @@ namespace SOLTEC.Core;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var fileManager = new FileManagement();
+/// var fileManager = new FileManagment();
 /// string name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
 /// ]]>
 /// </example>
-public class FileManagement
+public class FileManagment
 {
     /// <summary>
     /// Extracts the file name without its extension from a given file path.

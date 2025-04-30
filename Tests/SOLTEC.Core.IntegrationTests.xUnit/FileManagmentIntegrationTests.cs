@@ -6,18 +6,18 @@ using Xunit;
 namespace SOLTEC.Core.IntegrationTests.xUnit
 {
     /// <summary>
-    /// Integration tests for the FileManagement class using mocked paths and simulated file operations.
+    /// Integration tests for the FileManagment class using mocked paths and simulated file operations.
     /// </summary>
     public class FileManagmentIntegrationTests
     {
-        private readonly FileManagement gfileManagement;
+        private readonly FileManagment gfileManagement;
 
         /// <summary>
         /// Initializes a new instance of the integration test class.
         /// </summary>
         public FileManagmentIntegrationTests()
         {
-            gfileManagement = new FileManagement();
+            gfileManagement = new FileManagment();
         }
 
         /// <summary>
@@ -48,7 +48,6 @@ namespace SOLTEC.Core.IntegrationTests.xUnit
         [Fact]
         public void CreateFile_ShouldHandleMockedPath()
         {
-            string _mockPath = "C:/mock/path/testfile.txt";
             string _mockContent = "Hello, world!";
             byte[] _bytes = Encoding.UTF8.GetBytes(_mockContent);
 

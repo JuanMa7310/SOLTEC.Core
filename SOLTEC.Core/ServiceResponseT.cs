@@ -121,7 +121,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var error = ServiceResponse<string>.CreateError(404, "Not found");
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateError(int responseCode, string errorMessage) => CreateError(responseCode, errorMessage, null);
+    public new static ServiceResponse<T> CreateError(int responseCode, string errorMessage) => CreateError(responseCode, errorMessage, null);
     /// <summary>
     /// Creates an error response with HTTP code and error message.
     /// </summary>
@@ -133,7 +133,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found");
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage) => CreateError((int)responseCode, errorMessage, null);
+    public new static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage) => CreateError((int)responseCode, errorMessage, null);
     /// <summary>
     /// Creates an error response with code, message and warnings.
     /// </summary>
@@ -146,7 +146,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var error = ServiceResponse<string>.CreateError(404, "Not found", null);
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateError(int responseCode, string errorMessage, string[]? warningMessages)
+    public new static ServiceResponse<T> CreateError(int responseCode, string errorMessage, string[]? warningMessages)
     {
         return new ServiceResponse<T>()
         {
@@ -169,7 +169,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found", null);
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage, string[]? warningMessages)
+    public new static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage, string[]? warningMessages)
     {
         return new ServiceResponse<T>()
         {
@@ -192,7 +192,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var response = ServiceResponse.CreateWarning(206, "Partial result");
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage) => CreateWarning(responseCode, errorMessage, null);
+    public new static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage) => CreateWarning(responseCode, errorMessage, null);
     /// <summary>
     /// Creates an warning response with HTTP code and error message.
     /// </summary>
@@ -204,7 +204,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result");
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage) => CreateWarning((int)responseCode, errorMessage, null);
+    public new static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage) => CreateWarning((int)responseCode, errorMessage, null);
     /// <summary>
     /// Creates an warning response with code, message and warnings.
     /// </summary>
@@ -217,7 +217,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage, string[]? warningMessages)
+    public new static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage, string[]? warningMessages)
     {
         return new ServiceResponse<T>()
         {
@@ -240,7 +240,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// var response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
-    public static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage, string[]? warningMessgaes) 
+    public new static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage, string[]? warningMessgaes) 
     {
         return new ServiceResponse<T>()
         {
