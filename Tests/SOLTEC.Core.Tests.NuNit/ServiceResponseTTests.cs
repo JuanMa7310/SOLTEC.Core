@@ -93,7 +93,7 @@ public class ServiceResponseGenericTests
             Assert.That(_response.Success, Is.True);
             Assert.That(_response.Message, Is.EqualTo("Warning message"));
             Assert.That(_response.ResponseCode, Is.EqualTo(206));
-            Assert.That(_response.Result, Is.Null);
+            Assert.That(_response.Data, Is.Null);
         });
     }
 }
