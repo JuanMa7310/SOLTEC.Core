@@ -14,19 +14,19 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: 🧰 Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          
+      - name: 📦 Restore only PreBuildValidator
+        run: dotnet restore TOOLS/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj
 
-      - name: 📦 Download PreBuildValidator release
-        run: |
-          mkdir -p SOLTEC.PreBuildValidator
-          curl -L -o SOLTEC.PreBuildValidator/PreBuildValidator.zip https://github.com/JuanMa7310/SOLTEC.PreBuildValidator/releases/latest/download/PreBuildValidator.zip
-          unzip SOLTEC.PreBuildValidator/PreBuildValidator.zip -d SOLTEC.PreBuildValidator/
+      - name: 🔨 Build PreBuildValidator
+        run: dotnet build TOOLS/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj --configuration Release
 
       - name: 🚦 Run PreBuildValidator
-        working-directory: SOLTEC.Core
-        run: dotnet ../SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.dll SOLTEC.Core
-        
+        run: dotnet TOOLS/SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
