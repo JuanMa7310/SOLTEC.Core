@@ -84,7 +84,7 @@ public class HttpCoreTests
         {
             var _ = await httpCore.GetAsync<ProblemDetailsDto>("http://mock");
 
-            Assert.Fail("Expected HttpCoreException was not thrown."); 
+            Assert.Fail("Expected HttpCoreException was not thrown.");
         }
         catch (HttpCoreException ex)
         {
@@ -109,7 +109,7 @@ public class HttpCoreTests
         {
             var _ = await httpCore.GetAsync<ProblemDetailsDto>("http://fail");
 
-            Assert.Fail("Expected HttpCoreException was not thrown."); 
+            Assert.Fail("Expected HttpCoreException was not thrown.");
         }
         catch (HttpCoreException ex)
         {
@@ -152,7 +152,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(data);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.GetAsyncList<string>("http://api/items");
 
         Assert.NotNull(result);
@@ -172,7 +171,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(expected);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://api/update", requestData);
 
         Assert.NotNull(result);
@@ -190,7 +188,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(expected);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://api/remove");
 
         Assert.NotNull(result);
@@ -198,9 +195,63 @@ public class HttpCoreTests
         Assert.Equal(204, result.Status);
     }
 
+    [Fact]
+    /// <summary>
+    /// Validates that an HttpCoreException is thrown for a 400 BadRequest with detailed content.
+    /// </summary>
+    public async Task ValidateStatusResponse_WithBadRequest_ShouldThrowWithContent()
+    {
+        var _response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new StringContent("Error detail")
+        };
+        var _ex = await Assert.ThrowsAsync<HttpCoreException>(() => HttpCoreTests.HttpCoreForTest.CallValidateStatusResponse(_response));
+
+        Assert.Equal("BadRequest", _ex.Reason);
+        Assert.Equal("Error detail", _ex.Message);
+    }
+
+    [Fact]
+    /// <summary>
+    /// Validates that an HttpCoreException is thrown for a 418 status code not in the enum.
+    /// </summary>
+    public async Task ValidateStatusResponse_WithUnknownStatus_ShouldThrowWithFallback()
+    {
+        var _response = new HttpResponseMessage((HttpStatusCode)599)
+        {
+            ReasonPhrase = "Unknown Error"
+        };
+        var _ex = await Assert.ThrowsAsync<HttpCoreException>(() => HttpCoreTests.HttpCoreForTest.CallValidateStatusResponse(_response));
+
+        Assert.Equal("Unhandled", _ex.Reason);
+        Assert.Equal("Unknown Error", _ex.Message);
+    }
+
     private class HttpCoreTestable(HttpClient client) : HttpCore
     {
         protected override HttpClient CreateConfiguredHttpClient(Dictionary<string, string>? headers)
             => client;
+    }
+
+    /// <summary>
+    /// Derived class to expose the protected ValidateStatusResponse method for testing.
+    /// </summary>
+    public class HttpCoreForTest : HttpCore
+    {
+        public static Task CallValidateStatusResponse(HttpResponseMessage response)
+        {
+            return ValidateStatusResponse(response);
+        }
+    }
+
+    /// <summary>
+    /// Validates that ValidateStatusResponse does not throw when status is OK.
+    /// </summary>
+
+    [Fact]
+    public async Task ValidateStatusResponse_WithSuccessStatus_ShouldNotThrow()
+    {
+        var _response = new HttpResponseMessage(HttpStatusCode.OK);
+        await HttpCoreForTest.CallValidateStatusResponse(_response);
     }
 }

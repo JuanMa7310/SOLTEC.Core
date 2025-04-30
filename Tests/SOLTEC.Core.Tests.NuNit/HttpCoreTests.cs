@@ -15,7 +15,7 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// </summary>
 public class HttpCoreTests
 {
-    private HttpClient CreateMockHttpClient(HttpStatusCode statusCode, string content)
+    private static HttpClient CreateMockHttpClient(HttpStatusCode statusCode, string content)
     {
         var handlerMock = new Mock<HttpMessageHandler>();
         handlerMock.Protected()
@@ -161,7 +161,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(list);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.GetAsyncList<string>("http://test");
 
         Assert.That(result, Is.Not.Null);
@@ -184,7 +183,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(expectedResponse);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://put-endpoint", requestData);
 
         Assert.That(result, Is.Not.Null);
@@ -205,7 +203,6 @@ public class HttpCoreTests
         var json = JsonConvert.SerializeObject(expected);
         var client = CreateMockHttpClient(HttpStatusCode.OK, json);
         var httpCore = new HttpCoreTestable(client);
-
         var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://delete-endpoint");
 
         Assert.That(result, Is.Not.Null);
@@ -216,9 +213,74 @@ public class HttpCoreTests
         });
     }
 
+    [Test]
+    /// <summary>
+    /// Validates that no exception is thrown for a successful response (200 OK).
+    /// </summary>
+    public async Task ValidateStatusResponse_WithSuccessStatus_ShouldNotThrow()
+    {
+        var _response = new HttpResponseMessage(HttpStatusCode.OK);
+
+        await HttpCoreForTest.CallValidateStatusResponse(_response);
+
+        Assert.Pass();
+    }
+
+    [Test]
+    /// <summary>
+    /// Validates that an HttpCoreException is thrown for a 400 BadRequest with detailed content.
+    /// </summary>
+    public void ValidateStatusResponse_WithBadRequest_ShouldThrowWithContent()
+    {
+        var _response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+        {
+            Content = new StringContent("Invalid input")
+        };
+        var _ex = Assert.ThrowsAsync<HttpCoreException>(async () => await HttpCoreForTest.CallValidateStatusResponse(_response));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_ex!.HttpStatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            Assert.That(_ex.ErrorMessage, Is.EqualTo("Invalid input"));
+            Assert.That(_ex.ErrorType.ToString(), Is.EqualTo("BadRequest"));
+        });
+    }
+
+    [Test]
+    /// <summary>
+    /// Validates that an HttpCoreException is thrown for a 418 status code not in the enum.
+    /// </summary>
+    public void ValidateStatusResponse_WithUnknownStatus_ShouldThrowWithFallback()
+    {
+        var _response = new HttpResponseMessage((HttpStatusCode)418)
+        {
+            ReasonPhrase = "I'm a teapot",
+            Content = new StringContent("")
+        };
+        var _ex = Assert.ThrowsAsync<HttpCoreException>(async () => await HttpCoreForTest.CallValidateStatusResponse(_response));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_ex!.HttpStatusCode, Is.EqualTo((HttpStatusCode)418));
+            Assert.That(_ex.ErrorMessage, Is.EqualTo("I'm a teapot"));
+            Assert.That(_ex.ErrorType, Is.Null);
+        });
+    }
+
     private class HttpCoreTestable(HttpClient client) : HttpCore
     {
         protected override HttpClient CreateConfiguredHttpClient(Dictionary<string, string>? headers)
             => client;
+    }
+
+    /// <summary>
+    /// Derived class to expose the protected ValidateStatusResponse method for testing.
+    /// </summary>
+    public class HttpCoreForTest : HttpCore
+    {
+        public static Task CallValidateStatusResponse(HttpResponseMessage response)
+        {
+            return ValidateStatusResponse(response);
+        }
     }
 }
