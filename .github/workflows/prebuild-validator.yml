@@ -2,9 +2,9 @@ name: 🧪 PreBuild Validator
 
 on:
   push:
-    branches: [ Master, DEV ]
+    branches: [ DEV, Master ]
   pull_request:
-    branches: [ Master, DEV ]
+    branches: [ DEV, Master ]
 
 jobs:
   validate:
@@ -12,21 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout repository (SOLTEC.Core)
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
 
-      - name: 🧰 Setup .NET 8
+      - name: 🧰 Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-          
+
+      - name: 📥 Clone SOLTEC.PreBuildValidator
+        run: git clone https://github.com/JuanMa7310/SOLTEC.PreBuildValidator.git TOOLS/SOLTEC.PreBuildValidator
+
       - name: 📦 Restore only PreBuildValidator
         run: dotnet restore TOOLS/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj
 
       - name: 🔨 Build PreBuildValidator
         run: dotnet build TOOLS/SOLTEC.PreBuildValidator/SOLTEC.PreBuildValidator.csproj --configuration Release
 
-      - name: 🚦 Run PreBuildValidator
+      - name: 🚦 Run validator
         run: dotnet TOOLS/SOLTEC.PreBuildValidator/bin/Release/net8.0/SOLTEC.PreBuildValidator.dll SOLTEC.Core
