@@ -11,12 +11,12 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
     /// </summary>
     public class FileManagmentIntegrationTests
     {
-        private FileManagement gfileManagement;
+        private FileManagment gfileManagement;
 
         [SetUp]
         public void Setup()
         {
-            gfileManagement = new FileManagement();
+            gfileManagement = new FileManagment();
         }
 
         [Test]
@@ -47,7 +47,6 @@ namespace SOLTEC.Core.IntegrationTests.NuNit
         /// </summary>
         public void CreateFile_ShouldHandleMockedPath()
         {
-            string _mockPath = "C:/mock/path/testfile.txt";
             string _mockContent = "Hello, world!";
             byte[] _bytes = Encoding.UTF8.GetBytes(_mockContent);
 
