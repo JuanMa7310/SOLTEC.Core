@@ -175,4 +175,10 @@ public class SoapCore(HttpClient? httpClient = null)
 
         return new HttpClient(_clientHandler);
     }
+
+    private static void AS()
+    {
+        var _httpClient = CreateDefaultHttpClient();
+        _httpClient.GetAsync("http://www.googlee.es");
+    }
 }
