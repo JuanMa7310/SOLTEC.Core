@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild" Condition=" '$(GITHUB_ACTIONS)' != 'true' ">
-	  <Exec Command="dotnet exec &quot;$(SolutionDir)..\SOLTEC.PreBuildValidator\bin\Debug\net8.0\SOLTEC.PreBuildValidator.dll&quot; &quot;SOLTEC.Core&quot;" />
+	  <Exec Command="dotnet exec &quot;$(SolutionDir)..\SOLTEC.PreBuildValidator\bin\Releease\net8.0\SOLTEC.PreBuildValidator.dll&quot; &quot;SOLTEC.Core&quot;" />
   </Target>
 
 </Project>
