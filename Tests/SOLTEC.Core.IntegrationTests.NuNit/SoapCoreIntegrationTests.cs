@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using SOLTEC.Core.Connections.Commands;
 using SOLTEC.Core.Connections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using SOLTEC.Core.Connections.Commands;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit;
 

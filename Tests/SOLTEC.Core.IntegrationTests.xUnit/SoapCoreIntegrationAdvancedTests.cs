@@ -1,12 +1,9 @@
-﻿using SOLTEC.Core.Connections.Commands;
-using SOLTEC.Core.Connections;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using SOLTEC.Core.Connections;
+using SOLTEC.Core.Connections.Commands;
+using SOLTEC.Core.IntegrationTests.xUnit.Helpers;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using SOLTEC.Core.IntegrationTests.xUnit.Helpers;
 
 namespace SOLTEC.Core.IntegrationTests.xUnit;
 
