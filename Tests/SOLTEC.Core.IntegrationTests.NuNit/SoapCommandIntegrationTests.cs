@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using SOLTEC.Core.Connections.Commands;
-using System.Collections.Generic;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit;
 

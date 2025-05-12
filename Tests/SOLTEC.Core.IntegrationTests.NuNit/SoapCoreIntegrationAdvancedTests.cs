@@ -3,9 +3,7 @@ using SOLTEC.Core.Connections;
 using SOLTEC.Core.Connections.Commands;
 using SOLTEC.Core.IntegrationTests.NuNit.Helpers;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SOLTEC.Core.IntegrationTests.NuNit;
 

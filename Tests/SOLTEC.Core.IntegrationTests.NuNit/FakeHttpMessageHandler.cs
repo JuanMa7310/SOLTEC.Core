@@ -1,6 +1,4 @@
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+namespace SOLTEC.Core.IntegrationTests.NuNit;
 
 public class FakeHttpMessageHandler : HttpMessageHandler
 {
