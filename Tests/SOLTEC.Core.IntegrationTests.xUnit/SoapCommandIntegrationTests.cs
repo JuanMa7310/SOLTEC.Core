@@ -1,5 +1,4 @@
 ﻿using SOLTEC.Core.Connections.Commands;
-using System.Collections.Generic;
 using Xunit;
 
 namespace SOLTEC.Core.IntegrationTests.xUnit;
