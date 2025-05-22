@@ -26,8 +26,4 @@
   <Target Name="RunPreBuildValidator" BeforeTargets="BeforeBuild" Condition=" '$(GITHUB_ACTIONS)' != 'true' ">
 	  <Exec Command="dotnet exec &quot;$(SolutionDir)..\SOLTEC.PreBuildValidator\bin\Release\net8.0\SOLTEC.PreBuildValidator.dll&quot; &quot;SOLTEC.Core&quot;" />
   </Target>
-  <Target Name="RunTestsBeforeBuild" BeforeTargets="BeforeBuild" Condition=" '$(GITHUB_ACTIONS)' != 'true' ">
-	  <Exec Command="dotnet test ../Tests/SOLTEC.Core.Tests.NuNit/SOLTEC.Core.Tests.NuNit.csproj --no-build --nologo --verbosity quiet" ContinueOnError="false" />
-	  <Exec Command="dotnet test ../Tests/SOLTEC.Core.Tests.xUnit/SOLTEC.Core.Tests.xUnit.csproj --no-build --nologo --verbosity quiet" ContinueOnError="false" />
-  </Target>
 </Project>
