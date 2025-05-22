@@ -1,4 +1,5 @@
 ﻿using Ganss.Excel;
+using NPOI.OpenXml4Net.Exceptions;
 
 namespace SOLTEC.Core.Adapters;
 
@@ -28,9 +29,24 @@ public class ExcelAdapter : Adapter
     /// </example>
     public virtual IEnumerable<T> Execute<T>(string pathFile, bool headerRow = false, string? sheetName = null)
     {
-        if (string.IsNullOrWhiteSpace(sheetName))
-            return new ExcelMapper(pathFile) { HeaderRow = headerRow }.Fetch<T>();
-        return new ExcelMapper() { HeaderRow = headerRow }.Fetch<T>(pathFile, sheetName);
+        try
+        {
+            if (string.IsNullOrWhiteSpace(sheetName))
+                return new ExcelMapper(pathFile) { HeaderRow = headerRow }.Fetch<T>();
+            return new ExcelMapper() { HeaderRow = headerRow }.Fetch<T>(pathFile, sheetName);
+        }
+        catch(FileNotFoundException) 
+        {
+            return [];
+        }
+        catch (InvalidFormatException)
+        {
+            return [];
+        }
+        catch
+        {
+            return [];
+        }
     }
 
     /// <summary>
@@ -49,8 +65,19 @@ public class ExcelAdapter : Adapter
     /// </example>
     public virtual IEnumerable<T> Execute<T>(Stream stream, bool headerRow = false, string? sheetName = null)
     {
-        if (string.IsNullOrWhiteSpace(sheetName))
-            return new ExcelMapper(stream) { HeaderRow = headerRow }.Fetch<T>();
-        return new ExcelMapper() { HeaderRow = headerRow }.Fetch<T>(stream, sheetName);
+        try
+        {
+            if (string.IsNullOrWhiteSpace(sheetName))
+                return new ExcelMapper(stream) { HeaderRow = headerRow }.Fetch<T>();
+            return new ExcelMapper() { HeaderRow = headerRow }.Fetch<T>(stream, sheetName);
+        }
+        catch (InvalidFormatException)
+        {
+            return [];
+        }
+        catch
+        {
+            return [];
+        }
     }
 }

@@ -208,15 +208,16 @@ public class FileManagmentTests : IDisposable
 
         Assert.Equal(string.Empty, result);
     }
-
     [Fact]
     /// <summary>
-    /// Ensures invalid base64 input returns empty stream.
+    /// Returns an empty stream when base64 input is invalid.
     /// </summary>
     public void DecodeBase64ToStream_InvalidInput_ShouldReturnEmptyStream()
     {
-        var stream = _fileManager.DecodeBase64ToStream("???");
+        var manager = new FileManagment();
+        var result = manager.DecodeBase64ToStream("invalid_base64_%%%");
 
-        Assert.Equal(0, stream.Length);
+        Assert.NotNull(result);
+        Assert.Equal(0, result.Length);
     }
 }

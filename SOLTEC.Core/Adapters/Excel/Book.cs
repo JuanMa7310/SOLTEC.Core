@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using System.Data;
+using System.Globalization;
 using System.Net;
 using System.Text;
 
@@ -19,8 +20,33 @@ namespace SOLTEC.Core.Adapters.Excel;
 /// }
 /// ]]>
 /// </example>
-public class Book
+/// <remarks>
+/// Creates a new instance of <see cref="Book"/> with injected dependencies.
+/// </remarks>
+/// <param name="fileOpener">The file opener to use for opening streams.</param>
+/// <param name="readerFactory">The reader factory to use for creating Excel readers.</param>
+/// <example>
+/// <![CDATA[
+/// var fileOpener = new DefaultFileOpener();
+/// var readerFactory = new ExcelReaderFactoryWrapper();
+/// var book = new Book(fileOpener, readerFactory);
+/// ]]>
+/// </example>
+public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFactory)
 {
+
+    /// <summary>
+    /// Creates a new instance of <see cref="Book"/> with default file opener and reader factory.
+    /// </summary>
+    /// <example>
+    /// <![CDATA[
+    /// var book = new Book();
+    /// ]]>
+    /// </example>
+    public Book() : this(new DefaultFileOpener(), new ExcelReaderFactoryWrapper())
+    {
+    }
+
     /// <summary>
     /// Gets or sets the file path for the Excel file.
     /// </summary>
@@ -38,7 +64,7 @@ public class Book
     /// DataSet ds = book.Data;
     /// ]]>
     /// </example>
-    public DataSet Data { get; private set; } = new DataSet();
+    public virtual DataSet Data { get; private set; } = new DataSet();
 
     /// <summary>
     /// Opens and reads the Excel file from a file path.
@@ -51,11 +77,18 @@ public class Book
     /// var result = book.Open("document.xlsx");
     /// ]]>
     /// </example>
-    public ServiceResponse Open(string filePath)
+    public virtual ServiceResponse Open(string filePath)
     {
         FilePath = filePath;
-        using var _stream = File.Open(FilePath, FileMode.Open, FileAccess.Read);
-        return Open(_stream);
+        try
+        {
+            using var stream = fileOpener.Open(FilePath);
+            return Open(stream);
+        }
+        catch (Exception ex)
+        {
+            return ServiceResponse.CreateError(-1, ex.Message);
+        }
     }
 
     /// <summary>
@@ -70,20 +103,14 @@ public class Book
     /// var result = book.Open(stream);
     /// ]]>
     /// </example>
-    public ServiceResponse Open(Stream stream)
+    public virtual ServiceResponse Open(Stream stream)
     {
         try
         {
-            using var _reader = ExcelReaderFactory.CreateReader(stream, new ExcelReaderConfiguration
-            {
-                FallbackEncoding = Encoding.GetEncoding(1252)
-            });
-
-            Data = _reader.AsDataSet();
-
+            using var reader = readerFactory.CreateReader(stream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.GetEncoding(1252) });
+            Data = reader.AsDataSet();
             if (Data == null || Data.Tables.Count == 0)
                 return ServiceResponse.CreateError(5, "Invalid or empty Excel file.");
-
             return ServiceResponse.CreateSuccess(HttpStatusCode.OK);
         }
         catch (Exception ex)
@@ -135,114 +162,101 @@ public class Book
     /// ]]>
     /// </example>
     public string GetSheetName(int sheetIndex) => Data.Tables[sheetIndex].TableName;
-
     /// <summary>
-    /// Reads a decimal value from a specific cell.
+    /// Reads a cell and converts its value to decimal using invariant culture.
     /// </summary>
-    /// <param name="sheetIndex">The index of the worksheet (0-based).</param>
-    /// <param name="columnLetter">Excel-style column letter (e.g., "B").</param>
-    /// <param name="row">The row number (1-based).</param>
-    /// <returns>Decimal value or null.</returns>
+    /// <param name="sheetIndex">Index of the sheet.</param>
+    /// <param name="columnLetter">Column letter (e.g. 'A').</param>
+    /// <param name="rowIndex">1-based row index.</param>
+    /// <returns>The decimal value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// decimal? value = book.ReadDecimalCell(0, "B", 2);
+    /// decimal value = book.ReadDecimalCell(0, "A", 1);
     /// ]]>
     /// </example>
-    public decimal? ReadDecimalCell(int sheetIndex, string columnLetter, int row)
+    public decimal ReadDecimalCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var _col = ColumnToIndex(columnLetter);
-        var _row = row - 1;
-        var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-        return string.IsNullOrWhiteSpace(_value) ? null : Convert.ToDecimal(_value);
+        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
+            ? result
+            : 0m;
     }
-
     /// <summary>
-    /// Reads a float value from a specific cell.
+    /// Reads a cell and converts its value to float using invariant culture.
     /// </summary>
-    /// <param name="sheetIndex">The index of the worksheet (0-based).</param>
-    /// <param name="columnLetter">Excel-style column letter (e.g., "C").</param>
-    /// <param name="row">The row number (1-based).</param>
-    /// <returns>Float value or null.</returns>
+    /// <param name="sheetIndex">Index of the sheet.</param>
+    /// <param name="columnLetter">Column letter (e.g. 'B').</param>
+    /// <param name="rowIndex">1-based row index.</param>
+    /// <returns>The float value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// float? value = book.ReadFloatCell(0, "C", 3);
+    /// float value = book.ReadFloatCell(0, "B", 1);
     /// ]]>
     /// </example>
-    public float? ReadFloatCell(int sheetIndex, string columnLetter, int row)
+    public float ReadFloatCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var _col = ColumnToIndex(columnLetter);
-        var _row = row - 1;
-        var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-        return string.IsNullOrWhiteSpace(_value) ? null : Convert.ToSingle(_value);
+        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
+            ? result
+            : 0f;
     }
-
     /// <summary>
-    /// Reads an integer (Int32) value from a specific cell.
+    /// Reads a cell and converts its value to int.
     /// </summary>
-    /// <param name="sheetIndex">The index of the worksheet (0-based).</param>
-    /// <param name="columnLetter">Excel-style column letter (e.g., "D").</param>
-    /// <param name="row">The row number (1-based).</param>
-    /// <returns>Int32 value or null.</returns>
+    /// <param name="sheetIndex">Index of the sheet.</param>
+    /// <param name="columnLetter">Column letter (e.g. 'D').</param>
+    /// <param name="rowIndex">1-based row index.</param>
+    /// <returns>The int value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// int? value = book.ReadInt32Cell(0, "D", 4);
+    /// int value = book.ReadInt32Cell(0, "D", 1);
     /// ]]>
     /// </example>
-    public int? ReadInt32Cell(int sheetIndex, string columnLetter, int row)
+    public int ReadInt32Cell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var _col = ColumnToIndex(columnLetter);
-        var _row = row - 1;
-        var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-        return string.IsNullOrWhiteSpace(_value) ? null : Convert.ToInt32(_value);
+        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return int.TryParse(value, out var result)
+            ? result
+            : 0;
     }
-
     /// <summary>
-    /// Reads a long (Int64) value from a specific cell.
+    /// Reads a cell and converts its value to long.
     /// </summary>
-    /// <param name="sheetIndex">The index of the worksheet (0-based).</param>
-    /// <param name="columnLetter">Excel-style column letter (e.g., "E").</param>
-    /// <param name="row">The row number (1-based).</param>
-    /// <returns>Int64 value or null.</returns>
+    /// <param name="sheetIndex">Index of the sheet.</param>
+    /// <param name="columnLetter">Column letter (e.g. 'E').</param>
+    /// <param name="rowIndex">1-based row index.</param>
+    /// <returns>The long value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// long? value = book.ReadInt64Cell(0, "E", 5);
+    /// long value = book.ReadInt64Cell(0, "E", 1);
     /// ]]>
     /// </example>
-    public long? ReadInt64Cell(int sheetIndex, string columnLetter, int row)
+    public long ReadInt64Cell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var _col = ColumnToIndex(columnLetter);
-        var _row = row - 1;
-        var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-        return string.IsNullOrWhiteSpace(_value) ? null : Convert.ToInt64(_value);
+        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return long.TryParse(value, out var result)
+            ? result
+            : 0L;
     }
-
     /// <summary>
-    /// Reads a DateTime value from a specific cell.
+    /// Reads a cell and converts its value to DateTime.
     /// </summary>
-    /// <param name="sheetIndex">The index of the worksheet (0-based).</param>
-    /// <param name="columnLetter">Excel-style column letter (e.g., "F").</param>
-    /// <param name="row">The row number (1-based).</param>
-    /// <returns>DateTime value or null.</returns>
+    /// <param name="sheetIndex">Index of the sheet.</param>
+    /// <param name="columnLetter">Column letter (e.g. 'F').</param>
+    /// <param name="rowIndex">1-based row index.</param>
+    /// <returns>The DateTime value of the cell, or DateTime.MinValue if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime? value = book.ReadDateCell(0, "F", 6);
+    /// DateTime date = book.ReadDateCell(0, "F", 1);
     /// ]]>
     /// </example>
-    public DateTime? ReadDateCell(int sheetIndex, string columnLetter, int row)
+    public DateTime ReadDateCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var _col = ColumnToIndex(columnLetter);
-        var _row = row - 1;
-        try
-        {
-            var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-            if (string.IsNullOrWhiteSpace(_value)) return null;
-            return DateTime.TryParse(_value, out var _parsedDate)
-                ? _parsedDate
-                : DateTime.FromOADate(double.Parse(_value));
-        }
-        catch { return null; }
+        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
+            ? result
+            : DateTime.MinValue;
     }
-
     /// <summary>
     /// Reads a string value from a specific cell by column letter.
     /// </summary>
@@ -259,6 +273,11 @@ public class Book
     {
         var _col = ColumnToIndex(columnLetter);
         var _row = row - 1;
+        if (_row >= Data.Tables[sheetIndex].Rows.Count || _col >= Data.Tables[sheetIndex].Columns.Count)
+        {
+            return string.Empty;
+        }
+
         return Data.Tables[sheetIndex].Rows[_row][_col]?.ToString() ?? string.Empty;
     }
 
@@ -278,6 +297,11 @@ public class Book
     {
         var _col = columnIndex - 1;
         var _row = row - 1;
+        if (_row >= Data.Tables[sheetIndex].Rows.Count || _col >= Data.Tables[sheetIndex].Columns.Count)
+        {
+            return string.Empty;
+        }
+
         return Data.Tables[sheetIndex].Rows[_row][_col]?.ToString() ?? string.Empty;
     }
 
