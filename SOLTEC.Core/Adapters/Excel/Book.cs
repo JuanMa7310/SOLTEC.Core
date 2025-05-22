@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using SOLTEC.Core.Extensions;
 using System.Data;
 using System.Net;
 using System.Text;
@@ -21,6 +22,39 @@ namespace SOLTEC.Core.Adapters.Excel;
 /// </example>
 public class Book
 {
+    private readonly IFileOpener _fileOpener;
+    private readonly IExcelReaderFactoryWrapper _readerFactory;
+
+    /// <summary>
+    /// Creates a new instance of <see cref="Book"/> with default file opener and reader factory.
+    /// </summary>
+    /// <example>
+    /// <![CDATA[
+    /// var book = new Book();
+    /// ]]>
+    /// </example>
+    public Book() : this(new DefaultFileOpener(), new ExcelReaderFactoryWrapper())
+    {
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="Book"/> with injected dependencies.
+    /// </summary>
+    /// <param name="fileOpener">The file opener to use for opening streams.</param>
+    /// <param name="readerFactory">The reader factory to use for creating Excel readers.</param>
+    /// <example>
+    /// <![CDATA[
+    /// var fileOpener = new DefaultFileOpener();
+    /// var readerFactory = new ExcelReaderFactoryWrapper();
+    /// var book = new Book(fileOpener, readerFactory);
+    /// ]]>
+    /// </example>
+    public Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFactory)
+    {
+        _fileOpener = fileOpener;
+        _readerFactory = readerFactory;
+    }
+
     /// <summary>
     /// Gets or sets the file path for the Excel file.
     /// </summary>
@@ -54,8 +88,15 @@ public class Book
     public ServiceResponse Open(string filePath)
     {
         FilePath = filePath;
-        using var _stream = File.Open(FilePath, FileMode.Open, FileAccess.Read);
-        return Open(_stream);
+        try
+        {
+            using var stream = _fileOpener.Open(FilePath);
+            return Open(stream);
+        }
+        catch (Exception ex)
+        {
+            return ServiceResponse.CreateError(-1, ex.Message);
+        }
     }
 
     /// <summary>
@@ -74,16 +115,10 @@ public class Book
     {
         try
         {
-            using var _reader = ExcelReaderFactory.CreateReader(stream, new ExcelReaderConfiguration
-            {
-                FallbackEncoding = Encoding.GetEncoding(1252)
-            });
-
-            Data = _reader.AsDataSet();
-
+            using var reader = _readerFactory.CreateReader(stream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.GetEncoding(1252) });
+            Data = reader.AsDataSet();
             if (Data == null || Data.Tables.Count == 0)
                 return ServiceResponse.CreateError(5, "Invalid or empty Excel file.");
-
             return ServiceResponse.CreateSuccess(HttpStatusCode.OK);
         }
         catch (Exception ex)
@@ -173,7 +208,7 @@ public class Book
         var _col = ColumnToIndex(columnLetter);
         var _row = row - 1;
         var _value = Data.Tables[sheetIndex].Rows[_row][_col]?.ToString();
-        return string.IsNullOrWhiteSpace(_value) ? null : Convert.ToSingle(_value);
+        return string.IsNullOrWhiteSpace(_value) ? null : _value.ToFloatFlexible();
     }
 
     /// <summary>

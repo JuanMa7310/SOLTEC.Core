@@ -1,5 +1,7 @@
 ﻿using SOLTEC.Core.Adapters.Excel;
 using System.Data;
+using System.Net;
+using System.Reflection;
 
 namespace SOLTEC.Core.Tests.xUnit;
 
@@ -8,139 +10,239 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// </summary>
 public class BookTests
 {
-    private readonly Book _book;
+    private const string SampleFileName = "TestData/Sample.xlsx";
 
-    public BookTests()
+    private static DataSet CreateSampleDataSet()
     {
-        _book = new Book();
         var table = new DataTable("Sheet1");
+
         table.Columns.Add("A");
         table.Columns.Add("B");
-        table.Rows.Add("123", "2023-12-31");
-        table.Rows.Add("456", "42.5");
-
-        _book.Data.Tables.Add(table);
+        table.Columns.Add("C");
+        table.Columns.Add("D");
+        table.Columns.Add("E");
+        table.Columns.Add("F");
+        table.Columns.Add("G");
+        table.Rows.Add("123.45", "2.5", "", "42", "10000000000", "2025-01-01", "TextValue");
+        return new DataSet { Tables = { table } };
     }
 
-    /// <summary>
-    /// Tests that GetSheetCount returns the correct number of sheets.
-    /// </summary>
+    private static void SetData(Book book, DataSet dataSet)
+    {
+        var property = typeof(Book).GetProperty("Data", BindingFlags.Instance | BindingFlags.Public);
+
+        property?.SetValue(book, dataSet);
+    }
+
     [Fact]
+    /// <summary>
+    /// Test that Open(file path) returns success for a valid Excel file.
+    /// </summary>
+    public void Open_WithFilePath_ReturnsSuccess()
+    {
+        var book = new Book();
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SampleFileName);
+        var response = book.Open(path);
+
+        Assert.True(response.Success);
+        Assert.Equal((int)HttpStatusCode.OK, response.ResponseCode);
+        Assert.NotEmpty(book.Data.Tables);
+    }
+    [Fact]
+    /// <summary>
+    /// Test that Open(stream) returns success for a valid Excel stream.
+    /// </summary>
+    public void Open_WithStream_ReturnsSuccess()
+    {
+        var book = new Book();
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SampleFileName);
+        using var stream = File.OpenRead(path);
+        var response = book.Open(stream);
+
+        Assert.True(response.Success);
+        Assert.Equal((int)HttpStatusCode.OK, response.ResponseCode);
+        Assert.NotEmpty(book.Data.Tables);
+    }
+    [Fact]
+    /// <summary>
+    /// Test that Open(file path) returns error for an invalid file path.
+    /// </summary>
+    public void Open_WithInvalidFilePath_ReturnsError()
+    {
+        var book = new Book();
+        var response = book.Open("nonexistent.xlsx");
+
+        Assert.False(response.Success);
+        Assert.Equal(-1, response.ResponseCode);
+    }
+    [Fact]
+    /// <summary>
+    /// Test that Open(stream) returns error for an invalid stream.
+    /// </summary>
+    public void Open_WithInvalidStream_ReturnsError()
+    {
+        var book = new Book();
+        using var invalidStream = new MemoryStream([0x00]);
+        var response = book.Open(invalidStream);
+
+        Assert.False(response.Success);
+        Assert.Equal(-1, response.ResponseCode);
+    }
+    [Fact]
+    /// <summary>
+    /// Test that GetSheetCount returns correct table count.
+    /// </summary>
     public void GetSheetCount_ReturnsCorrectCount()
     {
-        Assert.Equal(1, _book.GetSheetCount());
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var count = book.GetSheetCount();
 
-    /// <summary>
-    /// Tests that GetRowCount returns the correct number of rows.
-    /// </summary>
+        Assert.Equal(1, count);
+    }
     [Fact]
-    public void GetRowCount_ReturnsCorrectValue()
+    /// <summary>
+    /// Test that GetRowCount returns correct row count.
+    /// </summary>
+    public void GetRowCount_ReturnsCorrectCount()
     {
-        Assert.Equal(2, _book.GetRowCount(0));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var rows = book.GetRowCount(0);
 
-    /// <summary>
-    /// Tests that GetColumnCount returns the correct number of columns.
-    /// </summary>
+        Assert.Equal(1, rows);
+    }
     [Fact]
-    public void GetColumnCount_ReturnsCorrectValue()
+    /// <summary>
+    /// Test that GetColumnCount returns correct column count.
+    /// </summary>
+    public void GetColumnCount_ReturnsCorrectCount()
     {
-        Assert.Equal(2, _book.GetColumnCount(0));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var cols = book.GetColumnCount(0);
 
-    /// <summary>
-    /// Tests that GetSheetName returns the correct name.
-    /// </summary>
+        Assert.Equal(7, cols);
+    }
     [Fact]
+    /// <summary>
+    /// Test that GetSheetName returns the table name.
+    /// </summary>
     public void GetSheetName_ReturnsCorrectName()
     {
-        Assert.Equal("Sheet1", _book.GetSheetName(0));
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var name = book.GetSheetName(0);
+
+        Assert.Equal("Sheet1", name);
     }
-
-    /// <summary>
-    /// Tests that ReadDecimalCell returns the expected decimal value.
-    /// </summary>
     [Fact]
-    public void ReadDecimalCell_ValidInput_ReturnsDecimal()
+    /// <summary>
+    /// Test that ReadDecimalCell returns correct decimal value.
+    /// </summary>
+    public void ReadDecimalCell_ReturnsDecimalValue()
     {
-        decimal? result = _book.ReadDecimalCell(0, "A", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadDecimalCell(0, "A", 1);
 
-        Assert.Equal(123m, result);
+        Assert.Equal(123.45m, value);
     }
-
-    /// <summary>
-    /// Tests that ReadInt32Cell returns the expected int value.
-    /// </summary>
     [Fact]
-    public void ReadInt32Cell_ValidInput_ReturnsInt32()
+    /// <summary>
+    /// Test that ReadFloatCell returns correct float value.
+    /// </summary>
+    public void ReadFloatCell_ReturnsFloatValue()
     {
-        int? result = _book.ReadInt32Cell(0, "A", 2);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadFloatCell(0, "B", 1);
 
-        Assert.Equal(456, result);
+        Assert.Equal(2.5f, value);
     }
-
-    /// <summary>
-    /// Tests that ReadFloatCell returns the expected float value.
-    /// </summary>
     [Fact]
-    public void ReadFloatCell_ValidInput_ReturnsFloat()
+    /// <summary>
+    /// Test that ReadInt32Cell returns correct int value.
+    /// </summary>
+    public void ReadInt32Cell_ReturnsIntValue()
     {
-        float? result = _book.ReadFloatCell(0, "B", 2);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadInt32Cell(0, "D", 1);
 
-        Assert.NotNull(result);
-        Assert.Equal(42.5, (double)result!, precision: 1);
+        Assert.Equal(42, value);
     }
-
-    /// <summary>
-    /// Tests that ReadDateCell returns the expected DateTime value.
-    /// </summary>
     [Fact]
-    public void ReadDateCell_ValidDateString_ReturnsDateTime()
+    /// <summary>
+    /// Test that ReadInt64Cell returns correct long value.
+    /// </summary>
+    public void ReadInt64Cell_ReturnsLongValue()
     {
-        DateTime? result = _book.ReadDateCell(0, "B", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadInt64Cell(0, "E", 1);
 
-        Assert.Equal(new DateTime(2023, 12, 31), result);
+        Assert.Equal(10000000000L, value);
     }
-
-    /// <summary>
-    /// Tests that ReadCell by column letter returns the expected string.
-    /// </summary>
     [Fact]
-    public void ReadCell_ByColumnLetter_ReturnsString()
+    /// <summary>
+    /// Test that ReadDateCell returns correct DateTime value.
+    /// </summary>
+    public void ReadDateCell_ReturnsDateTimeValue()
     {
-        string result = _book.ReadCell(0, "A", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadDateCell(0, "F", 1);
 
-        Assert.Equal("123", result);
+        Assert.Equal(new DateTime(2025, 1, 1), value);
     }
-
-    /// <summary>
-    /// Tests that ReadCell by column index returns the expected string.
-    /// </summary>
     [Fact]
-    public void ReadCell_ByColumnIndex_ReturnsString()
+    /// <summary>
+    /// Test that ReadCell(letter,index) returns correct string value.
+    /// </summary>
+    public void ReadCell_ByLetter_ReturnsString()
     {
-        string result = _book.ReadCell(0, 1, 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadCell(0, "G", 1);
 
-        Assert.Equal("123", result);
+        Assert.Equal("TextValue", value);
     }
-
-    /// <summary>
-    /// Tests that the private method ColumnToIndex returns the correct index.
-    /// </summary>
     [Fact]
-    public void ColumnToIndex_ReturnsCorrectIndex()
+    /// <summary>
+    /// Test that ReadCell(columnIndex) returns correct string value.
+    /// </summary>
+    public void ReadCell_ByIndex_ReturnsString()
     {
-        var method = typeof(Book).GetMethod("ColumnToIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadCell(0, 7, 1);
 
+        Assert.Equal("TextValue", value);
+    }
+    [Fact]
+    /// <summary>
+    /// Test that ColumnToIndex computes correct index for multiletter.
+    /// </summary>
+    public void ColumnToIndex_ComputesCorrectValue()
+    {
+        var method = typeof(Book).GetMethod("ColumnToIndex", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.NotNull(method);
+        var resultObj = method!.Invoke(null, ["AB"]);
+        Assert.NotNull(resultObj);
+        var index = (int)resultObj!;
 
-        var result = method!.Invoke(null, ["B"]);
-
-        Assert.NotNull(result);
-
-        int index = (int)result;
-
-        Assert.Equal(1, index);
+        Assert.Equal(27, index);
     }
 }

@@ -1,5 +1,10 @@
-﻿using SOLTEC.Core.Adapters.Excel;
+﻿using ExcelDataReader;
+using Moq;
+using SOLTEC.Core.Adapters.Excel;
 using System.Data;
+using System.Globalization;
+using System.Net;
+using System.Reflection;
 
 namespace SOLTEC.Core.Tests.NuNit;
 
@@ -9,139 +14,261 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// </summary>
 public class BookTests
 {
+    private Mock<IFileOpener> _fileOpenerMock;
+    private Mock<IExcelReaderFactoryWrapper> _readerFactoryMock;
     private Book _book;
+    private MemoryStream _dummyStream;
+    private Mock<IExcelDataReader> _readerMock;
+    private DataSet _sampleDataSet;
 
     [SetUp]
     public void Setup()
     {
-        _book = new Book();
+        _fileOpenerMock = new Mock<IFileOpener>();
+        _readerFactoryMock = new Mock<IExcelReaderFactoryWrapper>();
+        _book = new Book(_fileOpenerMock.Object, _readerFactoryMock.Object);
+
+        // Sample dataset for AsDataSet()
+        _sampleDataSet = new DataSet();
+        var table = new DataTable("Sheet1");
+        table.Columns.Add("A");
+        table.Rows.Add("Value");
+        _sampleDataSet.Tables.Add(table);
+
+        _dummyStream = new MemoryStream();
+        _readerMock = new Mock<IExcelDataReader>();
+        _readerMock.Setup(r => r.AsDataSet(It.IsAny<ExcelDataSetConfiguration>()))
+                   .Returns(_sampleDataSet);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _dummyStream.Dispose();
+        _sampleDataSet.Dispose();
+    }
+
+    /// <summary>
+    /// Creates a sample DataSet with one sheet and predefined values.
+    /// </summary>
+    private static DataSet CreateSampleDataSet()
+    {
         var table = new DataTable("Sheet1");
         table.Columns.Add("A");
         table.Columns.Add("B");
-        table.Rows.Add("123", "2023-12-31");
-        table.Rows.Add("456", "42.5");
+        table.Columns.Add("C");
+        table.Columns.Add("D");
+        table.Columns.Add("E");
+        table.Columns.Add("F");
+        table.Columns.Add("G");
+        table.Rows.Add("123.45", "2.5", string.Empty, "42", "10000000000", "2025-01-01", "TextValue");
+        return new DataSet { Tables = { table } };
+    }
 
-        _book.Data.Tables.Add(table);
+    /// <summary>
+    /// Sets the Data property of Book via reflection.
+    /// </summary>
+    private static void SetData(Book book, DataSet dataSet)
+    {
+        var prop = typeof(Book).GetProperty("Data", BindingFlags.Instance | BindingFlags.Public);
+        Assert.That(prop, Is.Not.Null);
+        prop!.SetValue(book, dataSet);
+    }
+    [Test]
+    public void Open_WithFilePath_UsesFileOpenerAndReaderFactory()
+    {
+        // Arrange
+        _fileOpenerMock.Setup(op => op.Open("fake.xlsx")).Returns(_dummyStream);
+        _readerFactoryMock.Setup(f => f.CreateReader(_dummyStream, It.IsAny<ExcelReaderConfiguration>()))
+                          .Returns(_readerMock.Object);
+
+        // Act
+        var response = _book.Open("fake.xlsx");
+
+        Assert.Multiple(() =>
+        {
+            // Assert
+            Assert.That(response.Success, Is.True);
+            Assert.That(response.ResponseCode, Is.EqualTo((int)HttpStatusCode.OK));
+            Assert.That(_book.Data, Is.EqualTo(_sampleDataSet));
+        });
+        _fileOpenerMock.Verify(op => op.Open("fake.xlsx"), Times.Once);
+        _readerFactoryMock.Verify(f => f.CreateReader(_dummyStream, It.IsAny<ExcelReaderConfiguration>()), Times.Once);
     }
 
     [Test]
+    public void Open_StreamThrowsException_ReturnsError()
+    {
+        // Arrange
+        _readerFactoryMock.Setup(f => f.CreateReader(_dummyStream, It.IsAny<ExcelReaderConfiguration>()))
+                          .Throws(new InvalidDataException("Bad format"));
+        _fileOpenerMock.Setup(op => op.Open(It.IsAny<string>())).Returns(_dummyStream);
+
+        // Act
+        var response = _book.Open("any.xlsx");
+
+        // Assert
+        Assert.That(response.Success, Is.False);
+        StringAssert.Contains("Bad format", response.ErrorMessage);
+    }
+    [Test]
     /// <summary>
-    /// Tests that GetSheetCount returns the correct number of sheets.
+    /// Test that GetSheetCount returns the correct number of sheets.
     /// </summary>
     public void GetSheetCount_ReturnsCorrectCount()
     {
-        Assert.That(_book.GetSheetCount(), Is.EqualTo(1));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var count = book.GetSheetCount();
 
+        Assert.That(count, Is.EqualTo(1));
+    }
     [Test]
     /// <summary>
-    /// Tests that GetRowCount returns the correct number of rows.
+    /// Test that GetRowCount returns the correct number of rows.
     /// </summary>
-    public void GetRowCount_ReturnsCorrectValue()
+    public void GetRowCount_ReturnsCorrectCount()
     {
-        Assert.That(_book.GetRowCount(0), Is.EqualTo(2));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var rows = book.GetRowCount(0);
 
+        Assert.That(rows, Is.EqualTo(1));
+    }
     [Test]
     /// <summary>
-    /// Tests that GetColumnCount returns the correct number of columns.
+    /// Test that GetColumnCount returns the correct number of columns.
     /// </summary>
-    public void GetColumnCount_ReturnsCorrectValue()
+    public void GetColumnCount_ReturnsCorrectCount()
     {
-        Assert.That(_book.GetColumnCount(0), Is.EqualTo(2));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var cols = book.GetColumnCount(0);
 
+        Assert.That(cols, Is.EqualTo(7));
+    }
     [Test]
     /// <summary>
-    /// Tests that GetSheetName returns the correct name.
+    /// Test that GetSheetName returns the correct sheet name.
     /// </summary>
     public void GetSheetName_ReturnsCorrectName()
     {
-        Assert.That(_book.GetSheetName(0), Is.EqualTo("Sheet1"));
-    }
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var name = book.GetSheetName(0);
 
+        Assert.That(name, Is.EqualTo("Sheet1"));
+    }
     [Test]
     /// <summary>
-    /// Tests that ReadDecimalCell returns the expected decimal value.
+    /// Test that ReadDecimalCell returns the correct decimal value.
     /// </summary>
-    public void ReadDecimalCell_ValidInput_ReturnsDecimal()
+    public void ReadDecimalCell_ReturnsDecimalValue()
     {
-        decimal? result = _book.ReadDecimalCell(0, "A", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadDecimalCell(0, "A", 1);
 
-        Assert.That(result, Is.EqualTo(123m));
+        Assert.That(value, Is.EqualTo(123.45m));
     }
-
     [Test]
     /// <summary>
-    /// Tests that ReadInt32Cell returns the expected int value.
+    /// Test that ReadFloatCell returns the correct float value.
     /// </summary>
-    public void ReadInt32Cell_ValidInput_ReturnsInt32()
+    public void ReadFloatCell_ReturnsFloatValue()
     {
-        int? result = _book.ReadInt32Cell(0, "A", 2);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadFloatCell(0, "B", 1);
 
-        Assert.That(result, Is.EqualTo(456));
+        Assert.That(value, Is.EqualTo(2.5f));
     }
-
     [Test]
     /// <summary>
-    /// Tests that ReadFloatCell returns the expected float value.
+    /// Test that ReadInt32Cell returns the correct integer value.
     /// </summary>
-    public void ReadFloatCell_ValidInput_ReturnsFloat()
+    public void ReadInt32Cell_ReturnsIntValue()
     {
-        float? result = _book.ReadFloatCell(0, "B", 2);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadInt32Cell(0, "D", 1);
 
-        Assert.That(result, Is.EqualTo(42.5f).Within(0.1f));
+        Assert.That(value, Is.EqualTo(42));
     }
-
     [Test]
     /// <summary>
-    /// Tests that ReadDateCell returns the expected DateTime value.
+    /// Test that ReadInt64Cell returns the correct long value.
     /// </summary>
-    public void ReadDateCell_ValidDateString_ReturnsDateTime()
+    public void ReadInt64Cell_ReturnsLongValue()
     {
-        DateTime? result = _book.ReadDateCell(0, "B", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadInt64Cell(0, "E", 1);
 
-        Assert.That(result, Is.EqualTo(new DateTime(2023, 12, 31)));
+        Assert.That(value, Is.EqualTo(10000000000L));
     }
-
     [Test]
     /// <summary>
-    /// Tests that ReadCell by column letter returns the expected string.
+    /// Test that ReadDateCell returns the correct DateTime value.
     /// </summary>
-    public void ReadCell_ByColumnLetter_ReturnsString()
+    public void ReadDateCell_ReturnsDateTimeValue()
     {
-        string result = _book.ReadCell(0, "A", 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadDateCell(0, "F", 1);
 
-        Assert.That(result, Is.EqualTo("123"));
+        Assert.That(value, Is.EqualTo(new DateTime(2025, 1, 1)));
     }
-
     [Test]
     /// <summary>
-    /// Tests that ReadCell by column index returns the expected string.
+    /// Test that ReadCell by column letter returns the correct string value.
     /// </summary>
-    public void ReadCell_ByColumnIndex_ReturnsString()
+    public void ReadCell_ByLetter_ReturnsString()
     {
-        string result = _book.ReadCell(0, 1, 1);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadCell(0, "G", 1);
 
-        Assert.That(result, Is.EqualTo("123"));
+        Assert.That(value, Is.EqualTo("TextValue"));
     }
-
     [Test]
     /// <summary>
-    /// Tests that the private method ColumnToIndex returns the correct index.
+    /// Test that ReadCell by column index returns the correct string value.
     /// </summary>
-    public void ColumnToIndex_ReturnsCorrectIndex()
+    public void ReadCell_ByIndex_ReturnsString()
     {
-        var method = typeof(Book).GetMethod("ColumnToIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        var book = new Book();
+        var sample = CreateSampleDataSet();
+        SetData(book, sample);
+        var value = book.ReadCell(0, 7, 1);
 
-        Assert.That(method, Is.Not.Null, "The method 'ColumnToIndex' was not found via reflection.");
+        Assert.That(value, Is.EqualTo("TextValue"));
+    }
+    [Test]
+    /// <summary>
+    /// Test that ColumnToIndex computes the correct index for multi-letter columns.
+    /// </summary>
+    public void ColumnToIndex_ComputesCorrectValue()
+    {
+        var method = typeof(Book).GetMethod("ColumnToIndex", BindingFlags.Static | BindingFlags.NonPublic);
+        var result = method!.Invoke(null, ["AB"]);
+        var index = Convert.ToInt32(result);
 
-        var result = method?.Invoke(null, ["B"]);
-
-        Assert.That(result, Is.Not.Null);
-
-        int index = (int)result!;
-
-        Assert.That(index, Is.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(method, Is.Not.Null);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(index, Is.EqualTo(27));
+        });
     }
 }
