@@ -72,7 +72,7 @@ public class ServiceResponseTests
         var _response = ServiceResponse.CreateWarning(206, "Partial result");
 
         Assert.True(_response.Success);
-        Assert.Equal("Partial result", _response.Message);
+        Assert.Equal("Partial result", _response.ErrorMessage);
         Assert.Equal(206, _response.ResponseCode);
     }
 }

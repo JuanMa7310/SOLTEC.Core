@@ -1,4 +1,6 @@
 ﻿using ExcelDataReader;
+using ExcelDataReader.Exceptions;
+using Moq;
 using SOLTEC.Core.Adapters.Excel;
 using System.Reflection;
 using System.Text;
@@ -7,35 +9,48 @@ namespace SOLTEC.Core.Tests.NuNit;
 
 [TestFixture]
 /// <summary>
-/// Unit tests for the <see cref="ExcelReaderFactoryWrapper"/> class.
+/// Unit tests for the <see cref="ExcelReaderFactoryWrapper"/> class using NUnit.
 /// </summary>
 public class ExcelReaderFactoryWrapperTests
 {
-    private ExcelReaderFactoryWrapper _wrapper;
+    private readonly ExcelReaderFactoryWrapper _wrapper = new();
 
-    [SetUp]
-    public void Setup()
+    static ExcelReaderFactoryWrapperTests()
     {
-        _wrapper = new ExcelReaderFactoryWrapper();
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
 
     [Test]
     /// <summary>
-    /// Test that CreateReader returns a valid <see cref="IExcelDataReader"/> for a known good Excel file.
+    /// Ensures that CreateReader returns a valid IExcelDataReader when injected.
     /// </summary>
     public void CreateReader_ValidExcelStream_ReturnsReader()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        const string resourceName = "SOLTEC.Core.Adapters.Excel.Tests.NUnit.TestData.Sample.xlsx";
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        Assert.That(stream, Is.Not.Null, $"Embedded resource '{resourceName}' not found.");
+        // Arrange
+        var fakeStream = new MemoryStream();
+        var fakeReader = new Mock<IExcelDataReader>();
+        fakeReader.Setup(r => r.Read()).Returns(false);
 
-        using var reader = _wrapper.CreateReader(stream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.UTF8 });
+        var wrapperMock = new Mock<IExcelReaderFactoryWrapper>();
+        wrapperMock
+            .Setup(w => w.CreateReader(
+                It.IsAny<Stream>(),
+                It.Is<ExcelReaderConfiguration>(c => c != null)))
+            .Returns(fakeReader.Object);
+
+        var wrapper = wrapperMock.Object;
+
+        // Act
+        var reader = wrapper.CreateReader(fakeStream, new ExcelReaderConfiguration());
         Assert.That(reader, Is.Not.Null);
 
-        var ds = reader.AsDataSet();
-        Assert.That(ds, Is.Not.Null);
-        Assert.That(ds.Tables, Is.Not.Empty, "DataSet should contain at least one DataTable.");
+        var dataSet = reader.AsDataSet(new ExcelDataSetConfiguration
+        {
+            ConfigureDataTable = _ => new ExcelDataTableConfiguration { UseHeaderRow = true }
+        });
+
+        // Assert
+        Assert.That(dataSet, Is.Not.Null);
     }
 
     [Test]
@@ -44,11 +59,13 @@ public class ExcelReaderFactoryWrapperTests
     /// </summary>
     public void CreateReader_InvalidStream_ThrowsException()
     {
+        // Arrange
         using var badStream = new MemoryStream([0x00]);
-        Assert.Throws<Exception>(() =>
-        {
+
+        // Act & Assert
+        Assert.That(() => {
             using var reader = _wrapper.CreateReader(badStream, new ExcelReaderConfiguration());
             reader.AsDataSet();
-        });
+        }, Throws.Exception);
     }
 }

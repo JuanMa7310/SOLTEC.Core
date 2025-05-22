@@ -213,8 +213,18 @@ public class FileManagment
     /// </example>
     public virtual Stream DecodeBase64ToStream(string base64EncodedData)
     {
-        return string.IsNullOrWhiteSpace(base64EncodedData)
-            ? Stream.Null
-            : new MemoryStream(Convert.FromBase64String(base64EncodedData));
+        Stream _result;
+
+        try
+        {
+            var _bytes = Convert.FromBase64String(base64EncodedData);
+            _result = new MemoryStream(_bytes);
+        }
+        catch (FormatException)
+        {
+            _result = new MemoryStream(); // empty stream
+        }
+
+        return _result;
     }
 }

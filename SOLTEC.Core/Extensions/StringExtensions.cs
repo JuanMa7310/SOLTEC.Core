@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace SOLTEC.Core.Extensions;
 
@@ -16,7 +17,7 @@ namespace SOLTEC.Core.Extensions;
 /// Console.WriteLine(f1); // Output: 1234.56
 /// ]]>
 /// </example>
-public static  class StringExtensions
+public static partial class StringExtensions
 {
     /// <summary>
     /// Converts a numeric string that uses '.' or ',' as decimal separator to a <see cref="float"/>.
@@ -41,33 +42,40 @@ public static  class StringExtensions
     public static float ToFloatFlexible(this string input)
     {
         if (string.IsNullOrWhiteSpace(input))
+        {
             throw new ArgumentNullException(nameof(input), "Input string cannot be null or whitespace.");
-
-        // Try parsing with dot as decimal separator (InvariantCulture)
-        if (float.TryParse(
-                input,
-                NumberStyles.Float | NumberStyles.AllowThousands,
-                CultureInfo.InvariantCulture,
-                out var result))
+        }
+        input = input.Trim();
+        // European format case: thousands point + decimal point (ex: 1,234.56)
+        if (EuropeanFormat().IsMatch(input))
+        {
+            input = input.Replace(".", "").Replace(",", ".");
+        }
+        // American format case: thousands comma + decimal point (ex: 1,234.56)
+        else if (AmericanFormat().IsMatch(input))
+        {
+            input = input.Replace(",", "");
+        }
+        // Simple decimal case with comma (ex: 1234.56)
+        else if (SimpleDecimalComma().IsMatch(input))
+        {
+            input = input.Replace(",", ".");
+        }
+        if (float.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
         {
             return result;
         }
-
-        // Try parsing with comma as decimal separator (es-ES style)
-        var nfiComma = new NumberFormatInfo
-        {
-            NumberDecimalSeparator = ",",
-            NumberGroupSeparator = "."
-        };
-        if (float.TryParse(
-                input,
-                NumberStyles.Float | NumberStyles.AllowThousands,
-                nfiComma,
-                out result))
-        {
-            return result;
-        }
-
-        throw new FormatException($"'{input}' is not a valid number format.");
+        throw new FormatException($"Input '{input}' could not be converted to float.");
     }
+
+    // -------------------------
+    // REGEX HELPERS OPTIMIZED
+    // -------------------------
+
+    [GeneratedRegex(@"^\d{1,3}(\.\d{3})*,\d+$")]
+    private static partial Regex EuropeanFormat();
+    [GeneratedRegex(@"^\d{1,3}(,\d{3})*\.\d+$")]
+    private static partial Regex AmericanFormat();
+    [GeneratedRegex(@"^\d+,\d+$")]
+    private static partial Regex SimpleDecimalComma();
 }

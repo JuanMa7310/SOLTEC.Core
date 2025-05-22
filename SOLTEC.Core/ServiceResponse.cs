@@ -50,7 +50,6 @@ public class ServiceResponse
     public ServiceResponse()
     {
         Success = true;
-        Message = null;
         ErrorMessage = null;
     }
 
@@ -214,7 +213,7 @@ public class ServiceResponse
     /// Creates an warning response with optional warning messages.
     /// </summary>
     /// <param name="responseCode">The HTTP status or custom code.</param>
-    /// <param name="errorMessage">The warning message to include.</param>
+    /// <param name="warningMessage">The warning message to include.</param>
     /// <param name="warningMessages">An array of warning messages.</param>
     /// <returns>A new warning <see cref="ServiceResponse"/>.</returns>
     /// <example>
@@ -222,13 +221,13 @@ public class ServiceResponse
     /// var response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
-    public static ServiceResponse CreateWarning(int responseCode, string errorMessage, string[]? warningMessages)
+    public static ServiceResponse CreateWarning(int responseCode, string warningMessage, string[]? warningMessages)
     {
         return new ServiceResponse
         {
-            Success = false,
+            Success = true,
             ResponseCode = responseCode,
-            ErrorMessage = errorMessage,
+            ErrorMessage = warningMessage,
             WarningMessages = warningMessages,
         };
     }

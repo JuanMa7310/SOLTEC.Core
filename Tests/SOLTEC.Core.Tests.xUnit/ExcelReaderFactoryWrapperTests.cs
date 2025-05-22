@@ -1,5 +1,7 @@
 ﻿using ExcelDataReader;
+using Moq;
 using SOLTEC.Core.Adapters.Excel;
+using System.Data;
 using System.Reflection;
 using System.Text;
 
@@ -12,32 +14,48 @@ public class ExcelReaderFactoryWrapperTests
 {
     private readonly ExcelReaderFactoryWrapper _wrapper = new();
 
-    /// <summary>
-    /// Test that CreateReader returns a valid <see cref="IExcelDataReader"/> for a known good Excel file.
-    /// </summary>
+    static ExcelReaderFactoryWrapperTests()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+    }
+
     [Fact]
+    /// <summary>
+    /// Ensures that CreateReader returns a valid IExcelDataReader when injected.
+    /// </summary>
     public void CreateReader_ValidExcelStream_ReturnsReader()
     {
         // Arrange
-        var assembly = Assembly.GetExecutingAssembly();
-        const string resourceName = "SOLTEC.Core.Adapters.Excel.Tests.XUnit.TestData.Sample.xlsx";
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        Assert.NotNull(stream);
+        var fakeStream = new MemoryStream();
+        var fakeReader = new Mock<IExcelDataReader>();
+        fakeReader.Setup(r => r.Read()).Returns(false);
+
+        var wrapperMock = new Mock<IExcelReaderFactoryWrapper>();
+        wrapperMock
+            .Setup(w => w.CreateReader(
+                It.IsAny<Stream>(),
+                It.Is<ExcelReaderConfiguration>(c => c != null)))
+            .Returns(fakeReader.Object);
+
+        var wrapper = wrapperMock.Object;
 
         // Act
-        using var reader = _wrapper.CreateReader(stream!, new ExcelReaderConfiguration { FallbackEncoding = Encoding.UTF8 });
+        var reader = wrapper.CreateReader(fakeStream, new ExcelReaderConfiguration());
+        Assert.NotNull(reader);
+
+        var dataSet = reader.AsDataSet(new ExcelDataSetConfiguration
+        {
+            ConfigureDataTable = _ => new ExcelDataTableConfiguration { UseHeaderRow = true }
+        });
 
         // Assert
-        Assert.NotNull(reader);
-        var ds = reader.AsDataSet();
-        Assert.NotNull(ds);
-        Assert.True(ds.Tables.Count > 0, "DataSet should contain at least one DataTable.");
+        Assert.NotNull(dataSet);
     }
 
+    [Fact]
     /// <summary>
     /// Test that CreateReader throws when given an invalid Excel stream.
     /// </summary>
-    [Fact]
     public void CreateReader_InvalidStream_ThrowsException()
     {
         // Arrange

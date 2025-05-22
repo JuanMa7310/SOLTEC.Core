@@ -87,7 +87,7 @@ public class ServiceResponseTests
         Assert.Multiple(() =>
         {
             Assert.That(_response.Success, Is.True);
-            Assert.That(_response.Message, Is.EqualTo("Partial result"));
+            Assert.That(_response.ErrorMessage, Is.EqualTo("Partial result"));
             Assert.That(_response.ResponseCode, Is.EqualTo(206));
         });
     }

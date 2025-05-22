@@ -1,13 +1,20 @@
 ﻿using SOLTEC.Core.Extensions;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace SOLTEC.Core.Tests.xUnit;
 
 /// <summary>
 /// xUnit tests for <see cref="DateExtensions"/>.
 /// </summary>
-public class DateExtensionsTests
+public partial class DateExtensionsTests
 {
+    // -------------------------
+    /// // REGEX HELPERS OPTIMIZED
+    /// // -------------------------
+    [GeneratedRegex(@"\\d{8}")]
+    private static partial Regex DateFormat();
+    
     [Fact]
     /// <summary>
     /// Tests formatting null DateTime? returns empty string.
@@ -18,7 +25,6 @@ public class DateExtensionsTests
 
         Assert.Equal(string.Empty, _input.ToDateFormat());
     }
-
     [Fact]
     /// <summary>
     /// Tests nullable date formatting with time.
@@ -29,7 +35,6 @@ public class DateExtensionsTests
 
         Assert.Equal("20250521134530", _input.ToDateFormatWithTime());
     }
-
     [Fact]
     /// <summary>
     /// Tests non-nullable date formatting with time.
@@ -40,7 +45,6 @@ public class DateExtensionsTests
 
         Assert.Equal("20250521134530", _input.ToDateFormatWithTime());
     }
-
     [Fact]
     /// <summary>
     /// Tests ISO8601 formatting.
@@ -51,7 +55,6 @@ public class DateExtensionsTests
 
         Assert.Equal("2025-05-21T13:45:30Z", _input.ToDateFormatWithTimeISO8601());
     }
-
     [Fact]
     /// <summary>
     /// Tests ParseExactOrDefault with invalid input.
@@ -62,7 +65,6 @@ public class DateExtensionsTests
 
         Assert.Equal(_default, DateExtensions.ParseExactOrDefault("invalid", "yyyyMMdd", CultureInfo.InvariantCulture, _default));
     }
-
     [Fact]
     /// <summary>
     /// Tests ParsePart with valid input.
@@ -73,7 +75,16 @@ public class DateExtensionsTests
 
         Assert.Equal(new DateTime(2025, 5, 21), _result);
     }
+    [Fact]
+    /// <summary>
+    /// Tests ParsePart with valid input.
+    /// </summary>
+    public void ParsePart_ValidInputRegex_ReturnsDate()
+    {
+        var _result = DateExtensions.ParsePart("X20250521", DateFormat(), "yyyyMMdd", CultureInfo.InvariantCulture, null);
 
+        Assert.Equal(new DateTime(2025, 5, 21), _result);
+    }
     [Fact]
     /// <summary>
     /// Integration test: format and parse cycle returns original date.

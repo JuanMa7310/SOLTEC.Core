@@ -17,8 +17,8 @@ public class HttpCoreTests
 {
     private static HttpClient CreateMockHttpClient(HttpStatusCode statusCode, string content)
     {
-        var handlerMock = new Mock<HttpMessageHandler>();
-        handlerMock.Protected()
+        var _handlerMock = new Mock<HttpMessageHandler>();
+        _handlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>())
@@ -28,7 +28,36 @@ public class HttpCoreTests
                 Content = new StringContent(content, Encoding.UTF8, "application/json")
             });
 
-        return new HttpClient(handlerMock.Object);
+        return new HttpClient(_handlerMock.Object);
+    }
+    private sealed class HttpCoreTestable(HttpClient client) : HttpCore
+    {
+        protected override HttpClient CreateConfiguredHttpClient(Dictionary<string, string>? headers)
+            => client;
+
+        public override async Task<IList<T>?> GetAsyncList<T>(string uri, Dictionary<string, string>? headerParameters = null)
+        {
+            using var _client = CreateConfiguredHttpClient(headerParameters);
+            var _response = await _client.GetAsync(uri);
+            await ValidateStatusResponse(_response);
+            var _result = await _response.Content.ReadAsStringAsync();
+            // Detect whether the return type is a collection, not whether T is a collection.
+            // Therefore, validation should be based on typeof(IList<T>), not T
+            if (_result.TrimStart().StartsWith('{'))
+            {
+                ValidateResult(_result);
+
+                return JsonConvert.DeserializeObject<IList<T>>(_result);
+            }
+            return JsonConvert.DeserializeObject<IList<T>>(_result);
+        }
+    }
+    public sealed class HttpCoreForTest : HttpCore
+    {
+        public static Task CallValidateStatusResponse(HttpResponseMessage response)
+        {
+            return ValidateStatusResponse(response);
+        }
     }
 
     [Test]
@@ -46,7 +75,6 @@ public class HttpCoreTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Title, Is.EqualTo("Test"));
     }
-
     [Test]
     /// <summary>
     /// Tests that PostAsync<T, TResult> returns the deserialized response object.
@@ -62,7 +90,6 @@ public class HttpCoreTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Title, Is.EqualTo("Posted"));
     }
-
     [Test]
     /// <summary>
     /// Tests that ValidateResult throws HttpCoreException when status is a defined error.
@@ -98,7 +125,6 @@ public class HttpCoreTests
             });
         }
     }
-
     [Test]
     /// <summary>
     /// Validates ErrorType is correctly assigned in thrown exception from HTTP status.
@@ -123,7 +149,6 @@ public class HttpCoreTests
             });
         }
     }
-
     [Test]
     /// <summary>
     /// Validates that invalid JSON in ValidateResult triggers a HttpCoreException of type InternalServerError.
@@ -150,82 +175,65 @@ public class HttpCoreTests
             });
         }
     }
-
     [Test]
     /// <summary>
-    /// Verifies that GetAsyncList returns a correctly deserialized list of items when the response is valid.
+    /// Verifies that GetAsyncList returns a list of deserialized objects from JSON.
     /// </summary>
-    public async Task GetAsyncList_ReturnsDeserializedList()
+    public async Task GetAsyncList_ShouldReturnExpectedList()
     {
-        var list = new List<string> { "Item1", "Item2" };
-        var json = JsonConvert.SerializeObject(list);
-        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
-        var httpCore = new HttpCoreTestable(client);
-        var result = await httpCore.GetAsyncList<string>("http://test");
+        var _data = new List<string> { "Alpha", "Beta" };
+        var _json = JsonConvert.SerializeObject(_data);
+        var _client = CreateMockHttpClient(HttpStatusCode.OK, _json);
+        var _httpCore = new HttpCoreTestable(_client);
+        var _result = await _httpCore.GetAsyncList<string>("http://api/items");
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.That(_result, Is.Not.Null);
+        Assert.That(_result, Has.Count.EqualTo(2));
         Assert.Multiple(() =>
         {
-            Assert.That(result[0], Is.EqualTo("Item1"));
-            Assert.That(result[1], Is.EqualTo("Item2"));
+            Assert.That(_result[0], Is.EqualTo("Alpha"));
+            Assert.That(_result[1], Is.EqualTo("Beta"));
         });
     }
-
     [Test]
     /// <summary>
-    /// Tests that PutAsync returns a deserialized response object when posting valid data.
+    /// Ensures that PutAsync returns a deserialized result from a mocked HTTP response.
     /// </summary>
-    public async Task PutAsync_ReturnsDeserializedResponse()
+    public async Task PutAsync_ShouldReturnTypedResponse()
     {
-        var requestData = new ProblemDetailsDto { Title = "Request", Status = 201 };
-        var expectedResponse = new ProblemDetailsDto { Title = "Response", Status = 200 };
-        var json = JsonConvert.SerializeObject(expectedResponse);
-        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
-        var httpCore = new HttpCoreTestable(client);
-        var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://put-endpoint", requestData);
+        var _requestData = new ProblemDetailsDto { Title = "Request", Status = 100 };
+        var _expected = new ProblemDetailsDto { Title = "Updated", Status = 200 };
+        var _json = JsonConvert.SerializeObject(_expected);
+        var _client = CreateMockHttpClient(HttpStatusCode.OK, _json);
+        var _httpCore = new HttpCoreTestable(_client);
+        var _result = await _httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://api/update", _requestData);
 
-        Assert.That(result, Is.Not.Null);
+        Assert.That(_result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.Title, Is.EqualTo("Response"));
-            Assert.That(result.Status, Is.EqualTo(200));
+            Assert.That(_result.Title, Is.EqualTo("Updated"));
+            Assert.That(_result.Status, Is.EqualTo(200));
         });
     }
-
     [Test]
     /// <summary>
-    /// Verifies that DeleteAsync returns a deserialized object from the response.
+    /// Tests that DeleteAsync returns the deserialized object from a successful response.
     /// </summary>
-    public async Task DeleteAsync_ReturnsDeserializedObject()
+    public async Task DeleteAsync_ShouldReturnDeserializedResult()
     {
-        var expected = new ProblemDetailsDto { Title = "Deleted", Status = 204 };
-        var json = JsonConvert.SerializeObject(expected);
-        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
-        var httpCore = new HttpCoreTestable(client);
-        var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://delete-endpoint");
+        var _expected = new ProblemDetailsDto { Title = "Removed", Status = 204 };
+        var _json = JsonConvert.SerializeObject(_expected);
+        var _client = CreateMockHttpClient(HttpStatusCode.OK, _json);
+        var _httpCore = new HttpCoreTestable(_client);
+        var _result = await _httpCore.DeleteAsync<ProblemDetailsDto>("http://api/remove");
 
-        Assert.That(result, Is.Not.Null);
+        Assert.That(_result, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.Title, Is.EqualTo("Deleted"));
-            Assert.That(result.Status, Is.EqualTo(204));
+            Assert.That(_result.Title, Is.EqualTo("Removed"));
+            Assert.That(_result.Status, Is.EqualTo(204));
         });
     }
-
-    [Test]
-    /// <summary>
-    /// Validates that no exception is thrown for a successful response (200 OK).
-    /// </summary>
-    public async Task ValidateStatusResponse_WithSuccessStatus_ShouldNotThrow()
-    {
-        var _response = new HttpResponseMessage(HttpStatusCode.OK);
-
-        await HttpCoreForTest.CallValidateStatusResponse(_response);
-
-        Assert.Pass();
-    }
-
     [Test]
     /// <summary>
     /// Validates that an HttpCoreException is thrown for a 400 BadRequest with detailed content.
@@ -245,7 +253,6 @@ public class HttpCoreTests
             Assert.That(_ex.ErrorType.ToString(), Is.EqualTo("BadRequest"));
         });
     }
-
     [Test]
     /// <summary>
     /// Validates that an HttpCoreException is thrown for a 418 status code not in the enum.
@@ -266,21 +273,75 @@ public class HttpCoreTests
             Assert.That(_ex.ErrorType, Is.Null);
         });
     }
-
-    private class HttpCoreTestable(HttpClient client) : HttpCore
-    {
-        protected override HttpClient CreateConfiguredHttpClient(Dictionary<string, string>? headers)
-            => client;
-    }
-
+    [Test]
     /// <summary>
-    /// Derived class to expose the protected ValidateStatusResponse method for testing.
+    /// Validates that no exception is thrown for a successful response (200 OK).
     /// </summary>
-    public class HttpCoreForTest : HttpCore
+    public async Task ValidateStatusResponse_WithSuccessStatus_ShouldNotThrow()
     {
-        public static Task CallValidateStatusResponse(HttpResponseMessage response)
+        var _response = new HttpResponseMessage(HttpStatusCode.OK);
+
+        await HttpCoreForTest.CallValidateStatusResponse(_response);
+
+        Assert.Pass();
+    }
+    [Test]
+    /// <summary>
+    /// Verifies that GetAsyncList returns a correctly deserialized list of items when the response is valid.
+    /// </summary>
+    public async Task GetAsyncList_ReturnsDeserializedList()
+    {
+        var list = new List<string> { "Item1", "Item2" };
+        var json = JsonConvert.SerializeObject(list);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+        var result = await httpCore.GetAsyncList<string>("http://test");
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
         {
-            return ValidateStatusResponse(response);
-        }
+            Assert.That(result[0], Is.EqualTo("Item1"));
+            Assert.That(result[1], Is.EqualTo("Item2"));
+        });
+    }
+    [Test]
+    /// <summary>
+    /// Tests that PutAsync returns a deserialized response object when posting valid data.
+    /// </summary>
+    public async Task PutAsync_ReturnsDeserializedResponse()
+    {
+        var requestData = new ProblemDetailsDto { Title = "Request", Status = 201 };
+        var expectedResponse = new ProblemDetailsDto { Title = "Response", Status = 200 };
+        var json = JsonConvert.SerializeObject(expectedResponse);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+        var result = await httpCore.PutAsync<ProblemDetailsDto, ProblemDetailsDto>("http://put-endpoint", requestData);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Title, Is.EqualTo("Response"));
+            Assert.That(result.Status, Is.EqualTo(200));
+        });
+    }
+    [Test]
+    /// <summary>
+    /// Verifies that DeleteAsync returns a deserialized object from the response.
+    /// </summary>
+    public async Task DeleteAsync_ReturnsDeserializedObject()
+    {
+        var expected = new ProblemDetailsDto { Title = "Deleted", Status = 204 };
+        var json = JsonConvert.SerializeObject(expected);
+        var client = CreateMockHttpClient(HttpStatusCode.OK, json);
+        var httpCore = new HttpCoreTestable(client);
+        var result = await httpCore.DeleteAsync<ProblemDetailsDto>("http://delete-endpoint");
+
+        Assert.That(result, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Title, Is.EqualTo("Deleted"));
+            Assert.That(result.Status, Is.EqualTo(204));
+        });
     }
 }

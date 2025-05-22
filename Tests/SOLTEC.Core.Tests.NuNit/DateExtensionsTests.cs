@@ -1,5 +1,6 @@
 ﻿using SOLTEC.Core.Extensions;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace SOLTEC.Core.Tests.NuNit;
 
@@ -7,8 +8,14 @@ namespace SOLTEC.Core.Tests.NuNit;
 /// <summary>
 /// NUnit tests for <see cref="DateExtensions"/>.
 /// </summary>
-public class DateExtensionsTests
+public partial class DateExtensionsTests
 {
+    // -------------------------
+    /// // REGEX HELPERS OPTIMIZED
+    /// // -------------------------
+    [GeneratedRegex(@"\\d{8}")]
+    private static partial Regex DateFormat();
+
     [Test]
     /// <summary>
     /// Tests formatting null DateTime? returns empty string.
@@ -18,7 +25,6 @@ public class DateExtensionsTests
         DateTime? _input = null;
         Assert.That(_input.ToDateFormat(), Is.EqualTo(string.Empty));
     }
-
     [Test]
     /// <summary>
     /// Tests nullable date formatting with time.
@@ -28,7 +34,6 @@ public class DateExtensionsTests
         DateTime? _input = new DateTime(2025, 5, 21, 13, 45, 30);
         Assert.That(_input.ToDateFormatWithTime(), Is.EqualTo("20250521134530"));
     }
-
     [Test]
     /// <summary>
     /// Tests non-nullable date formatting with time.
@@ -38,7 +43,6 @@ public class DateExtensionsTests
         var _input = new DateTime(2025, 5, 21, 13, 45, 30);
         Assert.That(_input.ToDateFormatWithTime(), Is.EqualTo("20250521134530"));
     }
-
     [Test]
     /// <summary>
     /// Tests ISO8601 formatting.
@@ -48,7 +52,6 @@ public class DateExtensionsTests
         var _input = new DateTime(2025, 5, 21, 13, 45, 30, DateTimeKind.Utc);
         Assert.That(_input.ToDateFormatWithTimeISO8601(), Is.EqualTo("2025-05-21T13:45:30Z"));
     }
-
     [Test]
     /// <summary>
     /// Tests ParseExactOrDefault with invalid input.
@@ -58,7 +61,6 @@ public class DateExtensionsTests
         var _default = new DateTime(2000, 1, 1);
         Assert.That(DateExtensions.ParseExactOrDefault("invalid", "yyyyMMdd", CultureInfo.InvariantCulture, _default), Is.EqualTo(_default));
     }
-
     [Test]
     /// <summary>
     /// Tests ParsePart with valid input.
@@ -68,7 +70,16 @@ public class DateExtensionsTests
         var _result = DateExtensions.ParsePart("X20250521", "\\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
         Assert.That(_result, Is.EqualTo(new DateTime(2025, 5, 21)));
     }
+    [Test]
+    /// <summary>
+    /// Tests ParsePart with valid input.
+    /// </summary>
+    public void ParsePart_ValidInputRegEx_ReturnsDate()
+    {
+        var _result = DateExtensions.ParsePart("X20250521", DateFormat(), "yyyyMMdd", CultureInfo.InvariantCulture, null);
 
+        Assert.That(_result, Is.EqualTo(new DateTime(2025, 5, 21)));
+    }
     [Test]
     /// <summary>
     /// Integration test: format and parse cycle returns original date.

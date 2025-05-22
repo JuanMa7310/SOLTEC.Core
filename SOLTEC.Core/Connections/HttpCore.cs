@@ -65,7 +65,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<IList<T>>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP POST request with no content.
     /// </summary>
@@ -141,7 +140,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<TResult>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP PUT request with no content.
     /// </summary>
@@ -217,7 +215,6 @@ public class HttpCore
 
         return JsonConvert.DeserializeObject<TResult>(_result);
     }
-
     /// <summary>
     /// Sends an HTTP DELETE request and returns a deserialized response.
     /// </summary>
@@ -279,12 +276,24 @@ public class HttpCore
                                         _errorType);
         }
     }
-
-    private static void ValidateResult(string result)
+    /// <summary>
+    /// Validates the response content by attempting to deserialize it as a ProblemDetailsDto.
+    /// If deserialization succeeds and contains an error status, throws a HttpCoreException.
+    /// </summary>
+    /// <param name="result">The HTTP response content as a string.</param>
+    /// <exception cref="HttpCoreException">Thrown if the response contains a known error structure.</exception>
+    /// <example>
+    /// <![CDATA[
+    /// var response = await client.GetStringAsync("http://api/test");
+    /// ValidateResult(response);
+    /// ]]>
+    /// </example>
+    protected static void ValidateResult(string result)
     {
         if (string.IsNullOrWhiteSpace(result))
+        {
             return;
-
+        }
         try
         {
             var _problem = JsonConvert.DeserializeObject<ProblemDetailsDto>(result);
@@ -311,7 +320,6 @@ public class HttpCore
             );
         }
     }
-
     /// <summary>
     /// Creates a configured HttpClient with optional headers.
     /// </summary>

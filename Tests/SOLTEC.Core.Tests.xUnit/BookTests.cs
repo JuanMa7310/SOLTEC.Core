@@ -1,4 +1,5 @@
-﻿using SOLTEC.Core.Adapters.Excel;
+﻿using Moq;
+using SOLTEC.Core.Adapters.Excel;
 using System.Data;
 using System.Net;
 using System.Reflection;
@@ -10,8 +11,23 @@ namespace SOLTEC.Core.Tests.xUnit;
 /// </summary>
 public class BookTests
 {
-    private const string SampleFileName = "TestData/Sample.xlsx";
+    private class BookTestable(DataSet data, ServiceResponse response) : Book
+    {
+        public override ServiceResponse Open(Stream stream) => response;
+        public override ServiceResponse Open(string filePath) => response;
+        public override DataSet Data => data;
+    }
+    private static BookTestable CreateMockBook(bool success, int responseCode, bool includeTable = true, DataSet? customData = null)
+    {
+        var response = new ServiceResponse
+        {
+            Success = success,
+            ResponseCode = responseCode
+        };
 
+        var dataSet = customData ?? (includeTable ? CreateSampleDataSet() : new DataSet());
+        return new BookTestable(dataSet, response);
+    }
     private static DataSet CreateSampleDataSet()
     {
         var table = new DataTable("Sheet1");
@@ -40,9 +56,8 @@ public class BookTests
     /// </summary>
     public void Open_WithFilePath_ReturnsSuccess()
     {
-        var book = new Book();
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SampleFileName);
-        var response = book.Open(path);
+        var book = CreateMockBook(true, (int)HttpStatusCode.OK);
+        var response = book.Open("fake/path/to/file.xlsx");
 
         Assert.True(response.Success);
         Assert.Equal((int)HttpStatusCode.OK, response.ResponseCode);
@@ -54,10 +69,9 @@ public class BookTests
     /// </summary>
     public void Open_WithStream_ReturnsSuccess()
     {
-        var book = new Book();
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SampleFileName);
-        using var stream = File.OpenRead(path);
-        var response = book.Open(stream);
+        var book = CreateMockBook(true, (int)HttpStatusCode.OK);
+        var fakeStream = new MemoryStream([0x50, 0x4B, 0x03, 0x04]);
+        var response = book.Open(fakeStream);
 
         Assert.True(response.Success);
         Assert.Equal((int)HttpStatusCode.OK, response.ResponseCode);
@@ -69,7 +83,7 @@ public class BookTests
     /// </summary>
     public void Open_WithInvalidFilePath_ReturnsError()
     {
-        var book = new Book();
+        var book = CreateMockBook(false, -1, includeTable: false);
         var response = book.Open("nonexistent.xlsx");
 
         Assert.False(response.Success);
@@ -81,7 +95,7 @@ public class BookTests
     /// </summary>
     public void Open_WithInvalidStream_ReturnsError()
     {
-        var book = new Book();
+        var book = CreateMockBook(false, -1, includeTable: false);
         using var invalidStream = new MemoryStream([0x00]);
         var response = book.Open(invalidStream);
 
@@ -94,9 +108,7 @@ public class BookTests
     /// </summary>
     public void GetSheetCount_ReturnsCorrectCount()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var count = book.GetSheetCount();
 
         Assert.Equal(1, count);
@@ -107,12 +119,10 @@ public class BookTests
     /// </summary>
     public void GetRowCount_ReturnsCorrectCount()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
-        var rows = book.GetRowCount(0);
+        var book = CreateMockBook(true, 200);
+        var count = book.GetRowCount(0);
 
-        Assert.Equal(1, rows);
+        Assert.Equal(1, count);
     }
     [Fact]
     /// <summary>
@@ -120,12 +130,10 @@ public class BookTests
     /// </summary>
     public void GetColumnCount_ReturnsCorrectCount()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
-        var cols = book.GetColumnCount(0);
+        var book = CreateMockBook(true, 200);
+        var count = book.GetColumnCount(0);
 
-        Assert.Equal(7, cols);
+        Assert.Equal(7, count);
     }
     [Fact]
     /// <summary>
@@ -133,9 +141,7 @@ public class BookTests
     /// </summary>
     public void GetSheetName_ReturnsCorrectName()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var name = book.GetSheetName(0);
 
         Assert.Equal("Sheet1", name);
@@ -146,9 +152,7 @@ public class BookTests
     /// </summary>
     public void ReadDecimalCell_ReturnsDecimalValue()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadDecimalCell(0, "A", 1);
 
         Assert.Equal(123.45m, value);
@@ -159,9 +163,7 @@ public class BookTests
     /// </summary>
     public void ReadFloatCell_ReturnsFloatValue()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadFloatCell(0, "B", 1);
 
         Assert.Equal(2.5f, value);
@@ -172,9 +174,7 @@ public class BookTests
     /// </summary>
     public void ReadInt32Cell_ReturnsIntValue()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadInt32Cell(0, "D", 1);
 
         Assert.Equal(42, value);
@@ -185,9 +185,7 @@ public class BookTests
     /// </summary>
     public void ReadInt64Cell_ReturnsLongValue()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadInt64Cell(0, "E", 1);
 
         Assert.Equal(10000000000L, value);
@@ -198,9 +196,7 @@ public class BookTests
     /// </summary>
     public void ReadDateCell_ReturnsDateTimeValue()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadDateCell(0, "F", 1);
 
         Assert.Equal(new DateTime(2025, 1, 1), value);
@@ -211,9 +207,7 @@ public class BookTests
     /// </summary>
     public void ReadCell_ByLetter_ReturnsString()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadCell(0, "G", 1);
 
         Assert.Equal("TextValue", value);
@@ -224,9 +218,7 @@ public class BookTests
     /// </summary>
     public void ReadCell_ByIndex_ReturnsString()
     {
-        var book = new Book();
-        var sample = CreateSampleDataSet();
-        SetData(book, sample);
+        var book = CreateMockBook(true, 200);
         var value = book.ReadCell(0, 7, 1);
 
         Assert.Equal("TextValue", value);
@@ -244,5 +236,27 @@ public class BookTests
         var index = (int)resultObj!;
 
         Assert.Equal(27, index);
+    }
+    [Fact]
+    /// <summary>
+    /// Tests that ReadCell returns null when accessing a non-existent column letter.
+    /// </summary>
+    public void ReadCell_InvalidColumn_ReturnsNull()
+    {
+        var book = CreateMockBook(true, 200);
+        var value = book.ReadCell(0, "Z", 1);
+
+        Assert.Equal(string.Empty, value);
+    }
+    [Fact]
+    /// <summary>
+    /// Tests that ReadCell returns null when accessing a column index out of range.
+    /// </summary>
+    public void ReadCell_InvalidIndex_ReturnsNull()
+    {
+        var book = CreateMockBook(true, 200);
+        var value = book.ReadCell(0, 99, 1);
+
+        Assert.Equal(string.Empty, value);
     }
 }

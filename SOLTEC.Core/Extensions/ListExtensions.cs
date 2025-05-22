@@ -31,11 +31,11 @@ public static class ListExtensions
     /// <example>
     /// <![CDATA[
     /// IList<string> names = null;
-    /// bool isEmpty = names.IsNullOrEmpty(); // true
+    /// bool isEmpty = names.IsNullOrEmpty();   // true
     /// names = new List<string>();
-    /// isEmpty = names.IsNullOrEmpty(); // true
+    /// isEmpty = names.IsNullOrEmpty();        // true
     /// names.Add("Alice");
-    /// isEmpty = names.IsNullOrEmpty(); // false
+    /// isEmpty = names.IsNullOrEmpty();        // false
     /// ]]>
     /// </example>
     public static bool IsNullOrEmpty<T>(this IList<T> collection)

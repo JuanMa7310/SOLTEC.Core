@@ -9,10 +9,10 @@ namespace SOLTEC.Core.Extensions;
 /// <![CDATA[
 /// // Formatting examples
 /// DateTime? nullableDate = new DateTime(2025, 5, 21, 13, 45, 30);
-/// string dateOnly = nullableDate.ToDateFormat();            // "20250521"
-/// string dateTime = nullableDate.ToDateFormatWithTime();     // "20250521134530"
+/// string dateOnly = nullableDate.ToDateFormat();                  // "20250521"
+/// string dateTime = nullableDate.ToDateFormatWithTime();          // "20250521134530"
 /// DateTime date = DateTime.UtcNow;
-/// string iso8601 = date.ToDateFormatWithTimeISO8601();        // "2025-05-21T13:45:30Z"
+/// string iso8601 = date.ToDateFormatWithTimeISO8601();            // "2025-05-21T13:45:30Z"
 ///
 /// // Parsing examples
 /// string input = "OrderDate:20250521";
@@ -29,7 +29,7 @@ public static class DateExtensions
     /// <example>
     /// <![CDATA[
     /// DateTime? date = new DateTime(2025, 5, 21);
-    /// string result = date.ToDateFormat(); // "20250521"
+    /// string result = date.ToDateFormat();            // "20250521"
     /// ]]>
     /// </example>
     public static string ToDateFormat(this DateTime? date)
@@ -45,7 +45,7 @@ public static class DateExtensions
     /// <example>
     /// <![CDATA[
     /// DateTime? date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string result = date.ToDateFormatWithTime(); // "20250521134530"
+    /// string result = date.ToDateFormatWithTime();            // "20250521134530"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTime(this DateTime? date)
@@ -61,7 +61,7 @@ public static class DateExtensions
     /// <example>
     /// <![CDATA[
     /// DateTime date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string result = date.ToDateFormatWithTime(); // "20250521134530"
+    /// string result = date.ToDateFormatWithTime();            // "20250521134530"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTime(this DateTime date)
@@ -77,7 +77,7 @@ public static class DateExtensions
     /// <example>
     /// <![CDATA[
     /// DateTime date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string iso = date.ToDateFormatWithTimeISO8601(); // "2025-05-21T13:45:30Z"
+    /// string iso = date.ToDateFormatWithTimeISO8601();        // "2025-05-21T13:45:30Z"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTimeISO8601(this DateTime date)
@@ -86,63 +86,118 @@ public static class DateExtensions
     }
 
     /// <summary>
-    /// Parses a substring of <paramref name="s"/> matching the specified regex and format.
-    /// Returns <paramref name="defaultValue"/> if parsing fails or no match is found.
+    /// Parses a substring of <paramref name="input"/> matching the specified regex and format.
+    /// Returns <paramref name="styles"/> if parsing fails or no match is found.
     /// </summary>
-    /// <param name="s">The input string to search.</param>
+    /// <param name="input">The input string to search.</param>
     /// <param name="regex">The regular expression pattern to match.</param>
     /// <param name="format">The expected date format of the matched substring.</param>
-    /// <param name="provider">The format provider for parsing.</param>
-    /// <param name="defaultValue">The value to return if parsing fails.</param>
-    /// <returns>A nullable <see cref="DateTime"/> parsed from the input, or <paramref name="defaultValue"/>.</returns>
+    /// <param name="formatProvider">The format provider for parsing.</param>
+    /// <param name="styles">The value to return if parsing fails.</param>
+    /// <returns>A nullable <see cref="DateTime"/> parsed from the input, or <paramref name="styles"/>.</returns>
     /// <example>
     /// <![CDATA[
+    /// // -------------------------
+    /// // REGEX HELPERS OPTIMIZED
+    /// // -------------------------
+    /// [GeneratedRegex(@"\\d{8}")]
+    /// private static partial Regex DateFormat();
+    ///
     /// string input = "Date:20250521";
     /// DateTime? date = DateExtensions.ParsePart(input, "\\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
     /// ]]>
     /// </example>
-    public static DateTime? ParsePart(string s, string regex, string format, IFormatProvider provider, DateTime? defaultValue)
+    public static DateTime? ParsePart(string input, string regex, string format, IFormatProvider formatProvider, DateTime? styles)
     {
+        DateTime? _result;
+
         try
         {
-            var _match = Regex.Match(s, regex);
+            var _match = Regex.Match(input, regex);
             if (_match.Success)
             {
-                return ParseExactOrDefault(_match.Groups[0].ToString(), format, provider, defaultValue);
+                _result = ParseExactOrDefault(_match.Groups[0].ToString(), format, formatProvider, styles);
             }
 
-            return defaultValue;
+            _result = styles;
         }
         catch
         {
-            return defaultValue;
+            _result = styles;
         }
+        return _result;
+    }
+    /// <summary>
+    /// Parses a substring of <paramref name="input"/> matching the specified regex and format.
+    /// Returns <c>null</c> if parsing fails or no match is found.
+    /// </summary>
+    /// <param name="input">The input string to search.</param>
+    /// <param name="regex">The regular expression pattern to match.</param>
+    /// <param name="format">The expected date format of the matched substring.</param>
+    /// <param name="formatProvider">The format provider for parsing.</param>
+    /// <param name="styles">The value to return if parsing fails.</param>
+    /// <returns>A nullable <see cref="DateTime"/> parsed from the input, or <paramref name="styles"/>.</returns>
+    /// <example>
+    /// <![CDATA[
+    /// // -------------------------
+    /// // REGEX HELPERS OPTIMIZED
+    /// // -------------------------
+    /// [GeneratedRegex(@"\\d{8}")]
+    /// private static partial Regex DateFormat();
+    ///
+    /// string input = "Date:20250521";
+    /// DateTime? date = DateExtensions.ParsePart(input, DateFormat(), "yyyyMMdd", CultureInfo.InvariantCulture, null);
+    /// ]]>
+    /// </example>
+    public static DateTime? ParsePart(string input, Regex regex, string format, IFormatProvider formatProvider, DateTime? styles)
+    {
+        DateTime? _result;
+
+        try
+        {
+            if (string.IsNullOrEmpty(input) || regex == null || string.IsNullOrEmpty(format))
+            {
+                _result = default;
+            }
+            var _match = regex!.Match(input);
+            if (_match.Success)
+            {
+                _result = ParseExactOrDefault(_match.Groups[0].ToString(), format, formatProvider, styles);
+            }
+            _result = styles;
+        }
+        catch
+        {
+            _result = styles;
+        }
+
+        return _result;
     }
 
     /// <summary>
-    /// Parses <paramref name="s"/> exactly with the given format and provider.
-    /// Returns <paramref name="defaultValue"/> if parsing fails.
+    /// Parses <paramref name="input"/> exactly with the given format and provider.
+    /// Returns <paramref name="styles"/> if parsing fails.
     /// </summary>
-    /// <param name="s">The date string to parse.</param>
+    /// <param name="input">The date string to parse.</param>
     /// <param name="format">The expected date format.</param>
-    /// <param name="provider">The format provider.</param>
-    /// <param name="defaultValue">The value to return if parsing fails.</param>
-    /// <returns>A nullable <see cref="DateTime"/> parsed from <paramref name="s"/>, or <paramref name="defaultValue"/>.</returns>
+    /// <param name="formatProvideer">The format provider.</param>
+    /// <param name="styles">The value to return if parsing fails.</param>
+    /// <returns>A nullable <see cref="DateTime"/> parsed from <paramref name="input"/>, or <paramref name="styles"/>.</returns>
     /// <example>
     /// <![CDATA[
-    /// string s = "20250521134530";
-    /// DateTime? date = DateExtensions.ParseExactOrDefault(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, null);
+    /// string input = "20250521134530";
+    /// DateTime? date = DateExtensions.ParseExactOrDefault(input, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, null);
     /// ]]>
     /// </example>
-    public static DateTime? ParseExactOrDefault(string s, string format, IFormatProvider provider, DateTime? defaultValue)
+    public static DateTime? ParseExactOrDefault(string input, string format, IFormatProvider formatProvideer, DateTime? styles)
     {
         try
         {
-            return DateTime.ParseExact(s, format, provider);
+            return DateTime.ParseExact(input, format, formatProvideer);
         }
         catch
         {
-            return defaultValue;
+            return styles;
         }
     }
 }

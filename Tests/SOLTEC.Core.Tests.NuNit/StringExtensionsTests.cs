@@ -2,6 +2,10 @@
 
 namespace SOLTEC.Core.Tests.NuNit;
 
+[TestFixture]
+/// <summary>
+/// NUnit tests for <see cref="StringExtensions"/>.
+/// </summary>
 public class StringExtensionsTests
 {
     [Test]

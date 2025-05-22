@@ -25,8 +25,8 @@ public static class IntegerExtensions
     /// </returns>
     /// <example>
     /// <![CDATA[
-    /// int? result1 = IntegerExtensions.ParseOrDefault("100", null);    // 100
-    /// int? result2 = IntegerExtensions.ParseOrDefault("xyz", -1);    // -1
+    /// int? result1 = IntegerExtensions.ParseOrDefault("100", null);   // 100
+    /// int? result2 = IntegerExtensions.ParseOrDefault("xyz", -1);     // -1
     /// ]]>
     /// </example>
     public static int? ParseOrDefault(string s, int? defaultValue)
