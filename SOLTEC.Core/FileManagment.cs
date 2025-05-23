@@ -9,8 +9,8 @@ using System.Text;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var fileManager = new FileManagment();
-/// string name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
+/// var _fileManager = new FileManagment();
+/// string _name = fileManager.ExtractFileNameFromPath(@"C:\docs\file.txt"); // "file"
 /// ]]>
 /// </example>
 public class FileManagment
@@ -22,7 +22,7 @@ public class FileManagment
     /// <returns>The file name without extension, or an empty string if the path is invalid.</returns>
     /// <example>
     /// <![CDATA[
-    /// var name = ExtractFileNameFromPath(@"C:\files\report.pdf"); // "report"
+    /// var _name = ExtractFileNameFromPath(@"C:\files\report.pdf"); // "report"
     /// ]]>
     /// </example>
     public virtual string ExtractFileNameFromPath(string filePath)
@@ -39,7 +39,7 @@ public class FileManagment
     /// <returns>The extension without the dot, or an empty string if the path is invalid.</returns>
     /// <example>
     /// <![CDATA[
-    /// var ext = ExtractExtensionFileFromPath(@"file.json"); // "json"
+    /// var _ext = ExtractExtensionFileFromPath(@"file.json"); // "json"
     /// ]]>
     /// </example>
     public virtual string ExtractExtensionFileFromPath(string filePath)
@@ -87,7 +87,7 @@ public class FileManagment
     /// <returns>Enumerable of matching file paths, or empty list if path not found.</returns>
     /// <example>
     /// <![CDATA[
-    /// var jsonFiles = GetAllFilesByTypeFromPath(@"C:\configs", FileTypeEnum.Json);
+    /// var _jsonFiles = GetAllFilesByTypeFromPath(@"C:\configs", FileTypeEnum.Json);
     /// ]]>
     /// </example>
     public virtual IEnumerable<string> GetAllFilesByTypeFromPath(string directoryPath, FileTypeEnum fileTypeEnum)
@@ -157,7 +157,7 @@ public class FileManagment
     /// <returns>File content or empty string if file doesn't exist.</returns>
     /// <example>
     /// <![CDATA[
-    /// string content = await ReadFileAsync(@"notes.txt");
+    /// string _content = await ReadFileAsync(@"notes.txt");
     /// ]]>
     /// </example>
     public virtual async Task<string> ReadFileAsync(string filePath)
@@ -189,7 +189,7 @@ public class FileManagment
     /// <returns>Base64 string or empty string if file not found.</returns>
     /// <example>
     /// <![CDATA[
-    /// string base64 = await ConvertFileToBase64Async("image.png");
+    /// string _base64 = await ConvertFileToBase64Async("image.png");
     /// ]]>
     /// </example>
     public virtual async Task<string> ConvertFileToBase64Async(string filePath)
@@ -208,7 +208,7 @@ public class FileManagment
     /// <returns>MemoryStream with decoded content, or empty stream if input is invalid.</returns>
     /// <example>
     /// <![CDATA[
-    /// using var stream = DecodeBase64ToStream(encodedText);
+    /// using var _stream = DecodeBase64ToStream(encodedText);
     /// ]]>
     /// </example>
     public virtual Stream DecodeBase64ToStream(string base64EncodedData)

@@ -11,7 +11,7 @@ using System.Net;
 /// using System.Net;
 /// using SOLTEC.Core.Connections.Exceptions;
 /// 
-/// var exception = new SoapCoreException(
+/// var _exception = new SoapCoreException(
 ///     "InvalidInput",
 ///     "Request body is not valid",
 ///     HttpStatusCode.BadRequest,
@@ -31,7 +31,7 @@ public class SoapCoreException : ResultException
     /// <param name="errorMessage">Optional detailed error message.</param>
     /// <example>
     /// <![CDATA[
-    /// var exception = new SoapCoreException(
+    /// var _exception = new SoapCoreException(
     ///     "InvalidInput",
     ///     "Request body is not valid",
     ///     HttpStatusCode.BadRequest,

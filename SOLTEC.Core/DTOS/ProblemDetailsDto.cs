@@ -6,7 +6,7 @@
 /// <example>
 /// Example of usage:
 /// <![CDATA[
-/// var problem = new ProblemDetailsDto
+/// var _problem = new ProblemDetailsDto
 /// {
 ///     Type = "https://example.com/validation-error",
 ///     Title = "One or more validation errors occurred.",

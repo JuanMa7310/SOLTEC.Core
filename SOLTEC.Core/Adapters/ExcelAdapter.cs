@@ -8,8 +8,8 @@ using NPOI.OpenXml4Net.Exceptions;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var adapter = new ExcelAdapter();
-/// var items = adapter.Execute<MyModel>("file.xlsx", true);
+/// var _adapter = new ExcelAdapter();
+/// var _items = _adapter.Execute<MyModel>("file.xlsx", true);
 /// ]]>
 /// </example>
 public class ExcelAdapter : Adapter

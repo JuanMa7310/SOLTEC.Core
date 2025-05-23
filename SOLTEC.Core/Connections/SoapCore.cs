@@ -14,13 +14,13 @@ using System.Xml.Serialization;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var parameters = new Dictionary<string, string>
+/// var _parameters = new Dictionary<string, string>
 /// {
 ///     { "Param1", "Value1" },
 ///     { "Param2", "Value2" }
 /// };
 /// 
-/// var soapCommand = new SoapCommand(
+/// var _soapCommand = new SoapCommand(
 ///     "https://example.com/soap",
 ///     "ActionName",
 ///     "MethodName",
@@ -30,8 +30,8 @@ using System.Xml.Serialization;
 ///     parameters
 /// );
 /// 
-/// var soapCore = new SoapCore();
-/// var response = await soapCore.Post<ResponseType>(soapCommand);
+/// var _soapCore = new SoapCore();
+/// var _response = await _soapCore.Post<ResponseType>(_soapCommand);
 /// ]]>
 /// </example>
 /// <remarks>
@@ -54,8 +54,8 @@ public class SoapCore(HttpClient? httpClient = null)
     /// <returns>The deserialized response object of type T.</returns>
     /// <example>
     /// <![CDATA[
-    /// var soapCore = new SoapCore();
-    /// var result = await soapCore.Post<ResponseType>(soapCommand);
+    /// var _soapCore = new SoapCore();
+    /// var _result = await soapCore.Post<ResponseType>(_soapCommand);
     /// ]]>
     /// </example>
     public async Task<T> Post<T>(SoapCommand command)

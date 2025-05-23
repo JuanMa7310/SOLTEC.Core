@@ -12,9 +12,9 @@ using System.Text.RegularExpressions;
 /// <example>
 /// <![CDATA[
 /// // Example usage:
-/// string s1 = "1,234.56";
-/// float f1 = s1.ToFloatFlexible();
-/// Console.WriteLine(f1); // Output: 1234.56
+/// string _s1 = "1,234.56";
+/// float _f1 = _s1.ToFloatFlexible();
+/// Console.WriteLine(_f1); // Output: 1234.56
 /// ]]>
 /// </example>
 public static partial class StringExtensions
@@ -29,14 +29,14 @@ public static partial class StringExtensions
     /// <example>
     /// <![CDATA[
     /// // Parsing a string with comma as decimal separator:
-    /// string value1 = "1234,56";
-    /// float result1 = value1.ToFloatFlexible();
-    /// // result1 == 1234.56f
+    /// string _value1 = "1234,56";
+    /// float _result1 = _value1.ToFloatFlexible();
+    /// // _result1 == 1234.56f
     ///
     /// // Parsing a string with dot as decimal separator:
-    /// string value2 = "1234.56";
-    /// float result2 = value2.ToFloatFlexible();
-    /// // result2 == 1234.56f
+    /// string _value2 = "1234.56";
+    /// float _result2 = _value2.ToFloatFlexible();
+    /// // _result2 == 1234.56f
     /// ]]>
     /// </example>
     public static float ToFloatFlexible(this string input)

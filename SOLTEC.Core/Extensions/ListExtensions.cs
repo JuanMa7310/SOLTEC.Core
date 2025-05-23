@@ -6,16 +6,16 @@
 /// <example>
 /// <![CDATA[
 /// // Null list returns true
-/// IList<int> numbers = null;
-/// bool result1 = numbers.IsNullOrEmpty(); // true
+/// IList<int> _numbers = null;
+/// bool _result1 = _numbers.IsNullOrEmpty(); // true
 /// 
 /// // Empty list returns true
-/// numbers = new List<int>();
-/// bool result2 = numbers.IsNullOrEmpty(); // true
+/// _numbers = new List<int>();
+/// bool _result2 = _numbers.IsNullOrEmpty(); // true
 /// 
 /// // List with elements returns false
-/// numbers.Add(5);
-/// bool result3 = numbers.IsNullOrEmpty(); // false
+/// _numbers.Add(5);
+/// bool _result3 = _numbers.IsNullOrEmpty(); // false
 /// ]]>
 /// </example>
 public static class ListExtensions
@@ -30,12 +30,12 @@ public static class ListExtensions
     /// </returns>
     /// <example>
     /// <![CDATA[
-    /// IList<string> names = null;
-    /// bool isEmpty = names.IsNullOrEmpty();   // true
-    /// names = new List<string>();
-    /// isEmpty = names.IsNullOrEmpty();        // true
+    /// IList<string> _names = null;
+    /// bool _isEmpty = _names.IsNullOrEmpty();   // true
+    /// _names = new List<string>();
+    /// _isEmpty = _names.IsNullOrEmpty();        // true
     /// names.Add("Alice");
-    /// isEmpty = names.IsNullOrEmpty();        // false
+    /// _isEmpty = _names.IsNullOrEmpty();        // false
     /// ]]>
     /// </example>
     public static bool IsNullOrEmpty<T>(this IList<T> collection)

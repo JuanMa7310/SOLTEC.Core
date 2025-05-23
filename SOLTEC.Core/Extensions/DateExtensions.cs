@@ -8,15 +8,15 @@ using System.Text.RegularExpressions;
 /// <example>
 /// <![CDATA[
 /// // Formatting examples
-/// DateTime? nullableDate = new DateTime(2025, 5, 21, 13, 45, 30);
-/// string dateOnly = nullableDate.ToDateFormat();                  // "20250521"
-/// string dateTime = nullableDate.ToDateFormatWithTime();          // "20250521134530"
-/// DateTime date = DateTime.UtcNow;
-/// string iso8601 = date.ToDateFormatWithTimeISO8601();            // "2025-05-21T13:45:30Z"
+/// DateTime? _nullableDate = new DateTime(2025, 5, 21, 13, 45, 30);
+/// string _dateOnly = _nullableDate.ToDateFormat();                  // "20250521"
+/// string _dateTime = _nullableDate.ToDateFormatWithTime();          // "20250521134530"
+/// DateTime _date = DateTime.UtcNow;
+/// string _iso8601 = _date.ToDateFormatWithTimeISO8601();            // "2025-05-21T13:45:30Z"
 ///
 /// // Parsing examples
-/// string input = "OrderDate:20250521";
-/// DateTime? parsed = DateExtensions.ParsePart(input, @"\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
+/// string _input = "OrderDate:20250521";
+/// DateTime? _parsed = DateExtensions.ParsePart(_input, @"\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
 /// ]]>
 /// </example>
 public static class DateExtensions
@@ -28,8 +28,8 @@ public static class DateExtensions
     /// <returns>A string in "yyyyMMdd" format, or empty if <paramref name="date"/> is null.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime? date = new DateTime(2025, 5, 21);
-    /// string result = date.ToDateFormat();            // "20250521"
+    /// DateTime? _date = new DateTime(2025, 5, 21);
+    /// string _result = _date.ToDateFormat();            // "20250521"
     /// ]]>
     /// </example>
     public static string ToDateFormat(this DateTime? date)
@@ -44,8 +44,8 @@ public static class DateExtensions
     /// <returns>A string in "yyyyMMddHHmmss" format, or empty if <paramref name="date"/> is null.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime? date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string result = date.ToDateFormatWithTime();            // "20250521134530"
+    /// DateTime? _date = new DateTime(2025, 5, 21, 13, 45, 30);
+    /// string _result = _date.ToDateFormatWithTime();            // "20250521134530"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTime(this DateTime? date)
@@ -60,8 +60,8 @@ public static class DateExtensions
     /// <returns>A string in "yyyyMMddHHmmss" format.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string result = date.ToDateFormatWithTime();            // "20250521134530"
+    /// DateTime _date = new DateTime(2025, 5, 21, 13, 45, 30);
+    /// string _result = _date.ToDateFormatWithTime();            // "20250521134530"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTime(this DateTime date)
@@ -76,8 +76,8 @@ public static class DateExtensions
     /// <returns>A string in ISO 8601 format.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime date = new DateTime(2025, 5, 21, 13, 45, 30);
-    /// string iso = date.ToDateFormatWithTimeISO8601();        // "2025-05-21T13:45:30Z"
+    /// DateTime _date = new DateTime(2025, 5, 21, 13, 45, 30);
+    /// string _iso = _date.ToDateFormatWithTimeISO8601();        // "2025-05-21T13:45:30Z"
     /// ]]>
     /// </example>
     public static string ToDateFormatWithTimeISO8601(this DateTime date)
@@ -103,8 +103,8 @@ public static class DateExtensions
     /// [GeneratedRegex(@"\\d{8}")]
     /// private static partial Regex DateFormat();
     ///
-    /// string input = "Date:20250521";
-    /// DateTime? date = DateExtensions.ParsePart(input, "\\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
+    /// string _input = "Date:20250521";
+    /// DateTime? _date = DateExtensions.ParsePart(_input, "\\d{8}", "yyyyMMdd", CultureInfo.InvariantCulture, null);
     /// ]]>
     /// </example>
     public static DateTime? ParsePart(string input, string regex, string format, IFormatProvider formatProvider, DateTime? styles)
@@ -145,8 +145,8 @@ public static class DateExtensions
     /// [GeneratedRegex(@"\\d{8}")]
     /// private static partial Regex DateFormat();
     ///
-    /// string input = "Date:20250521";
-    /// DateTime? date = DateExtensions.ParsePart(input, DateFormat(), "yyyyMMdd", CultureInfo.InvariantCulture, null);
+    /// string _input = "Date:20250521";
+    /// DateTime? _date = DateExtensions.ParsePart(_input, DateFormat(), "yyyyMMdd", CultureInfo.InvariantCulture, null);
     /// ]]>
     /// </example>
     public static DateTime? ParsePart(string input, Regex regex, string format, IFormatProvider formatProvider, DateTime? styles)
@@ -185,8 +185,8 @@ public static class DateExtensions
     /// <returns>A nullable <see cref="DateTime"/> parsed from <paramref name="input"/>, or <paramref name="styles"/>.</returns>
     /// <example>
     /// <![CDATA[
-    /// string input = "20250521134530";
-    /// DateTime? date = DateExtensions.ParseExactOrDefault(input, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, null);
+    /// string _input = "20250521134530";
+    /// DateTime? _date = DateExtensions.ParseExactOrDefault(_input, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, null);
     /// ]]>
     /// </example>
     public static DateTime? ParseExactOrDefault(string input, string format, IFormatProvider formatProvideer, DateTime? styles)

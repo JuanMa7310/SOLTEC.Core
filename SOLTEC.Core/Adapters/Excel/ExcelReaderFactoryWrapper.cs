@@ -7,8 +7,8 @@ using ExcelDataReader;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// IExcelReaderFactoryWrapper factory = new ExcelReaderFactoryWrapper();
-/// using var reader = factory.CreateReader(stream, new ExcelReaderConfiguration());
+/// IExcelReaderFactoryWrapper _factory = new ExcelReaderFactoryWrapper();
+/// using var _reader = _factory.CreateReader(_stream, new ExcelReaderConfiguration());
 /// ]]>
 /// </example>
 public class ExcelReaderFactoryWrapper : IExcelReaderFactoryWrapper

@@ -6,11 +6,11 @@
 /// <example>
 /// <![CDATA[
 /// // Parsing a valid numeric string
-/// int? parsed = IntegerExtensions.ParseOrDefault("123", null); // 123
+/// int? _parsed = IntegerExtensions.ParseOrDefault("123", null); // 123
 /// // Parsing an invalid string returns the provided default
-/// int? defaulted = IntegerExtensions.ParseOrDefault("abc", 42); // 42
+/// int? _defaulted = IntegerExtensions.ParseOrDefault("abc", 42); // 42
 /// // Null input also returns default
-/// int? nullDefault = IntegerExtensions.ParseOrDefault(null, 0); // 0
+/// int? _nullDefault = IntegerExtensions.ParseOrDefault(null, 0); // 0
 /// ]]>
 /// </example>
 public static class IntegerExtensions
@@ -25,8 +25,8 @@ public static class IntegerExtensions
     /// </returns>
     /// <example>
     /// <![CDATA[
-    /// int? result1 = IntegerExtensions.ParseOrDefault("100", null);   // 100
-    /// int? result2 = IntegerExtensions.ParseOrDefault("xyz", -1);     // -1
+    /// int? _result1 = IntegerExtensions.ParseOrDefault("100", null);   // 100
+    /// int? _result2 = IntegerExtensions.ParseOrDefault("xyz", -1);     // -1
     /// ]]>
     /// </example>
     public static int? ParseOrDefault(string s, int? defaultValue)

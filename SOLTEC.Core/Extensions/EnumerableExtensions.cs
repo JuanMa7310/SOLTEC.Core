@@ -9,12 +9,12 @@ using System.Data;
 /// <example>
 /// <![CDATA[
 /// // Assume a class MyEntity { public int Id { get; set; } public string Name { get; set; } }
-/// var list = new List<MyEntity>
+/// var _list = new List<MyEntity>
 /// {
 ///     new MyEntity { Id = 1, Name = "Alice" },
 ///     new MyEntity { Id = 2, Name = "Bob" }
 /// };
-/// DataTable table = list.ToDataTable();
+/// DataTable _table = list.ToDataTable();
 /// ]]>
 /// </example>
 public static class EnumerableExtensions
@@ -31,8 +31,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/> is null.</exception>
     /// <example>
     /// <![CDATA[
-    /// var names = new[] { "Alice", "Bob" };
-    /// DataTable dt = names.ToDataTable();
+    /// var _names = new[] { "Alice", "Bob" };
+    /// DataTable _dt = _names.ToDataTable();
     /// ]]>
     /// </example>
     public static DataTable ToDataTable<T>(this IEnumerable<T> data)
