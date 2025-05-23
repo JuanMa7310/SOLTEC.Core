@@ -11,12 +11,12 @@ using System.Text;
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var book = new Book();
-/// var result = book.Open("path\to\file.xlsx");
-/// if (result.IsSuccess)
+/// var _book = new Book();
+/// var _result = _book.Open("path\to\file.xlsx");
+/// if (_result.IsSuccess)
 /// {
-///     int sheets = book.GetSheetCount();
-///     string cell = book.ReadCell(0, "A", 1);
+///     int _sheets = _book.GetSheetCount();
+///     string _cell = _book.ReadCell(0, "A", 1);
 /// }
 /// ]]>
 /// </example>
@@ -27,9 +27,9 @@ using System.Text;
 /// <param name="readerFactory">The reader factory to use for creating Excel readers.</param>
 /// <example>
 /// <![CDATA[
-/// var fileOpener = new DefaultFileOpener();
-/// var readerFactory = new ExcelReaderFactoryWrapper();
-/// var book = new Book(fileOpener, readerFactory);
+/// var _fileOpener = new DefaultFileOpener();
+/// var _readerFactory = new ExcelReaderFactoryWrapper();
+/// var _book = new Book(_fileOpener, _readerFactory);
 /// ]]>
 /// </example>
 public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFactory)
@@ -40,7 +40,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// </summary>
     /// <example>
     /// <![CDATA[
-    /// var book = new Book();
+    /// var _book = new Book();
     /// ]]>
     /// </example>
     public Book() : this(new DefaultFileOpener(), new ExcelReaderFactoryWrapper())
@@ -52,7 +52,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// </summary>
     /// <example>
     /// <![CDATA[
-    /// book.FilePath = "C:\files\myfile.xlsx";
+    /// _book.FilePath = "C:\files\myfile.xlsx";
     /// ]]>
     /// </example>
     public string FilePath { get; set; } = string.Empty;
@@ -61,7 +61,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// </summary>
     /// <example>
     /// <![CDATA[
-    /// DataSet ds = book.Data;
+    /// DataSet _ds = _book.Data;
     /// ]]>
     /// </example>
     public virtual DataSet Data { get; private set; } = new DataSet();
@@ -73,8 +73,8 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>A service response indicating success or error.</returns>
     /// <example>
     /// <![CDATA[
-    /// var book = new Book();
-    /// var result = book.Open("document.xlsx");
+    /// var _book = new Book();
+    /// var _result = _book.Open("document.xlsx");
     /// ]]>
     /// </example>
     public virtual ServiceResponse Open(string filePath)
@@ -82,8 +82,8 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
         FilePath = filePath;
         try
         {
-            using var stream = fileOpener.Open(FilePath);
-            return Open(stream);
+            using var _stream = fileOpener.Open(FilePath);
+            return Open(_stream);
         }
         catch (Exception ex)
         {
@@ -98,17 +98,17 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>A service response indicating success or error.</returns>
     /// <example>
     /// <![CDATA[
-    /// using var stream = File.OpenRead("document.xlsx");
-    /// var book = new Book();
-    /// var result = book.Open(stream);
+    /// using var _stream = File.OpenRead("document.xlsx");
+    /// var _book = new Book();
+    /// var _result = _book.Open(_stream);
     /// ]]>
     /// </example>
     public virtual ServiceResponse Open(Stream stream)
     {
         try
         {
-            using var reader = readerFactory.CreateReader(stream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.GetEncoding(1252) });
-            Data = reader.AsDataSet();
+            using var _reader = readerFactory.CreateReader(stream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.GetEncoding(1252) });
+            Data = _reader.AsDataSet();
             if (Data == null || Data.Tables.Count == 0)
                 return ServiceResponse.CreateError(5, "Invalid or empty Excel file.");
             return ServiceResponse.CreateSuccess(HttpStatusCode.OK);
@@ -125,7 +125,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The number of worksheets.</returns>
     /// <example>
     /// <![CDATA[
-    /// int sheetCount = book.GetSheetCount();
+    /// int _sheetCount = _book.GetSheetCount();
     /// ]]>
     /// </example>
     public int GetSheetCount() => Data?.Tables.Count ?? 0;
@@ -136,7 +136,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The number of rows in the worksheet.</returns>
     /// <example>
     /// <![CDATA[
-    /// int rows = book.GetRowCount(0);
+    /// int _rows = _book.GetRowCount(0);
     /// ]]>
     /// </example>
     public int GetRowCount(int sheetIndex) => Data.Tables[sheetIndex].Rows.Count;
@@ -147,7 +147,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The number of columns in the worksheet.</returns>
     /// <example>
     /// <![CDATA[
-    /// int columns = book.GetColumnCount(0);
+    /// int _columns = _book.GetColumnCount(0);
     /// ]]>
     /// </example>
     public int GetColumnCount(int sheetIndex) => Data.Tables[sheetIndex].Columns.Count;
@@ -158,7 +158,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The name of the worksheet.</returns>
     /// <example>
     /// <![CDATA[
-    /// string name = book.GetSheetName(0);
+    /// string _name = _book.GetSheetName(0);
     /// ]]>
     /// </example>
     public string GetSheetName(int sheetIndex) => Data.Tables[sheetIndex].TableName;
@@ -171,13 +171,13 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The decimal value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// decimal value = book.ReadDecimalCell(0, "A", 1);
+    /// decimal _value = _book.ReadDecimalCell(0, "A", 1);
     /// ]]>
     /// </example>
     public decimal ReadDecimalCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
-        return decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
+        var _value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return decimal.TryParse(_value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
             ? result
             : 0m;
     }
@@ -190,13 +190,13 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The float value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// float value = book.ReadFloatCell(0, "B", 1);
+    /// float _value = _book.ReadFloatCell(0, "B", 1);
     /// ]]>
     /// </example>
     public float ReadFloatCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
-        return float.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
+        var _value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return float.TryParse(_value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result)
             ? result
             : 0f;
     }
@@ -209,13 +209,13 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The int value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// int value = book.ReadInt32Cell(0, "D", 1);
+    /// int _value = _book.ReadInt32Cell(0, "D", 1);
     /// ]]>
     /// </example>
     public int ReadInt32Cell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
-        return int.TryParse(value, out var result)
+        var _value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return int.TryParse(_value, out var result)
             ? result
             : 0;
     }
@@ -228,13 +228,13 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The long value of the cell, or 0 if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// long value = book.ReadInt64Cell(0, "E", 1);
+    /// long _value = _book.ReadInt64Cell(0, "E", 1);
     /// ]]>
     /// </example>
     public long ReadInt64Cell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
-        return long.TryParse(value, out var result)
+        var _value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return long.TryParse(_value, out var result)
             ? result
             : 0L;
     }
@@ -247,13 +247,13 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>The DateTime value of the cell, or DateTime.MinValue if parsing fails.</returns>
     /// <example>
     /// <![CDATA[
-    /// DateTime date = book.ReadDateCell(0, "F", 1);
+    /// DateTime _date = _book.ReadDateCell(0, "F", 1);
     /// ]]>
     /// </example>
     public DateTime ReadDateCell(int sheetIndex, string columnLetter, int rowIndex)
     {
-        var value = ReadCell(sheetIndex, columnLetter, rowIndex);
-        return DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
+        var _value = ReadCell(sheetIndex, columnLetter, rowIndex);
+        return DateTime.TryParse(_value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
             ? result
             : DateTime.MinValue;
     }
@@ -266,7 +266,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>String value or empty string.</returns>
     /// <example>
     /// <![CDATA[
-    /// string value = book.ReadCell(0, "G", 7);
+    /// string _value = _book.ReadCell(0, "G", 7);
     /// ]]>
     /// </example>
     public string ReadCell(int sheetIndex, string columnLetter, int row)
@@ -290,7 +290,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>String value or empty string.</returns>
     /// <example>
     /// <![CDATA[
-    /// string value = book.ReadCell(0, 8, 7);
+    /// string _value = _book.ReadCell(0, 8, 7);
     /// ]]>
     /// </example>
     public string ReadCell(int sheetIndex, int columnIndex, int row)
@@ -312,7 +312,7 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
     /// <returns>Zero-based column index.</returns>
     /// <example>
     /// <![CDATA[
-    /// int index = Book.ColumnToIndex("C"); // returns 2
+    /// int _index = _book.ColumnToIndex("C"); // returns 2
     /// ]]>
     /// </example>
     private static int ColumnToIndex(string column)
@@ -321,9 +321,9 @@ public class Book(IFileOpener fileOpener, IExcelReaderFactoryWrapper readerFacto
         var _base = Encoding.ASCII.GetBytes("Z")[0] - Encoding.ASCII.GetBytes("A")[0] + 1;
         var _result = 0;
 
-        for (var i = 0; i < _bytes.Length; i++)
+        for (var _positioni = 0; _positioni < _bytes.Length; _positioni++)
         {
-            var _value = _bytes[i] - Encoding.ASCII.GetBytes("A")[0] + 1;
+            var _value = _bytes[_positioni] - Encoding.ASCII.GetBytes("A")[0] + 1;
             _result = _result * _base + _value;
         }
 

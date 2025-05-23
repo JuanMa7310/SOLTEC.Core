@@ -24,7 +24,7 @@ public class ExcelAdapter : Adapter
     /// <returns>An enumerable of mapped objects.</returns>
     /// <example>
     /// <![CDATA[
-    /// var result = new ExcelAdapter().Execute<MyModel>("data.xlsx", true, "Sheet1");
+    /// var _result = new ExcelAdapter().Execute<MyModel>("data.xlsx", true, "Sheet1");
     /// ]]>
     /// </example>
     public virtual IEnumerable<T> Execute<T>(string pathFile, bool headerRow = false, string? sheetName = null)
@@ -59,8 +59,8 @@ public class ExcelAdapter : Adapter
     /// <returns>An enumerable of mapped objects.</returns>
     /// <example>
     /// <![CDATA[
-    /// using var stream = File.OpenRead("data.xlsx");
-    /// var result = new ExcelAdapter().Execute<MyModel>(stream, true);
+    /// using var _stream = File.OpenRead("data.xlsx");
+    /// var _result = new ExcelAdapter().Execute<MyModel>(_stream, true);
     /// ]]>
     /// </example>
     public virtual IEnumerable<T> Execute<T>(Stream stream, bool headerRow = false, string? sheetName = null)

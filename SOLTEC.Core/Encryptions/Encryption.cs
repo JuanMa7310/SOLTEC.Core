@@ -25,15 +25,15 @@ public class Encryption
     /// </example>
     public virtual string GenerateUniqueKey(int maxSize = 10)
     {
-        const string _cchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        const string _chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         var _data = new byte[maxSize];
         using var _rng = RandomNumberGenerator.Create();
         _rng.GetBytes(_data);
         var _result = new StringBuilder(maxSize);
 
-        foreach (var _b in _data)
+        foreach (var _byte in _data)
         {
-            _result.Append(_cchars[_b % _cchars.Length]);
+            _result.Append(_chars[_byte % _chars.Length]);
         }
 
         return _result.ToString();

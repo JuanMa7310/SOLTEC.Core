@@ -214,7 +214,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
+    /// var _response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage, string[]? warningMessages)
