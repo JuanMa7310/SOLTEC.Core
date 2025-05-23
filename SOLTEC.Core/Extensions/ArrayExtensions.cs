@@ -6,10 +6,10 @@
 /// <example>
 /// <![CDATA[
 /// // Adding an item to the end
-/// var original = new[] { 1, 2, 3 };
-/// var extended = original.Add(4);
+/// var _original = new[] { 1, 2, 3 };
+/// var _extended = _original.Add(4);
 /// // Adding an item to the beginning
-/// var prepended = original.Add(0, prepend: true);
+/// var _prepended = _original.Add(0, true);
 /// ]]>
 /// </example>
 public static class ArrayExtensions
@@ -24,9 +24,9 @@ public static class ArrayExtensions
     /// <returns>A new array containing the original elements plus the added item.</returns>
     /// <example>
     /// <![CDATA[
-    /// var original = new[] { "a", "b" };
-    /// var newArr = original.Add("c");
-    /// var prependedArr = original.Add("x", prepend: true);
+    /// var _original = new[] { "a", "b" };
+    /// var _newArr = _original.Add("c");
+    /// var _prependedArr = _original.Add("x", true);
     /// ]]>
     /// </example>
     public static T[] Add<T>(this T[] target, T item, bool prepend = false)

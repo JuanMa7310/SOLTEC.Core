@@ -1,4 +1,6 @@
-﻿using SOLTEC.Core.Connections.Commands;
+﻿namespace SOLTEC.Core.Connections;
+
+using SOLTEC.Core.Connections.Commands;
 using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.Enums;
 using System.Net;
@@ -7,31 +9,29 @@ using System.Security.Authentication;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace SOLTEC.Core.Connections;
-
 /// <summary>
 /// Provides methods to send SOAP requests and handle SOAP responses.
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// var parameters = new Dictionary<string, string>
+/// var _parameters = new Dictionary<string, string>
 /// {
 ///     { "Param1", "Value1" },
 ///     { "Param2", "Value2" }
 /// };
 /// 
-/// var soapCommand = new SoapCommand(
+/// var _soapCommand = new SoapCommand(
 ///     "https://example.com/soap",
 ///     "ActionName",
 ///     "MethodName",
 ///     "http://example.com/namespace",
 ///     "username",
 ///     "password",
-///     parameters
+///     _parameters
 /// );
 /// 
-/// var soapCore = new SoapCore();
-/// var response = await soapCore.Post<ResponseType>(soapCommand);
+/// var _soapCore = new SoapCore();
+/// var _response = await _soapCore.Post<ResponseType>(_soapCommand);
 /// ]]>
 /// </example>
 /// <remarks>
@@ -40,11 +40,11 @@ namespace SOLTEC.Core.Connections;
 /// <param name="httpClient">Optional HttpClient instance. If not provided, a default one will be created.</param>
 public class SoapCore(HttpClient? httpClient = null)
 {
-    private const string gcSoapEnvelopeNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
-    private const string gcContentType = "text/xml";
-    private const string gcSoapActionHeader = "SOAPAction";
+    private const string _gcSoapEnvelopeNamespace = "http://schemas.xmlsoap.org/soap/envelope/";
+    private const string _gcContentType = "text/xml";
+    private const string _gcSoapActionHeader = "SOAPAction";
 
-    private readonly HttpClient gHttpClient = httpClient ?? CreateDefaultHttpClient();
+    private readonly HttpClient _gHttpClient = httpClient ?? CreateDefaultHttpClient();
 
     /// <summary>
     /// Sends a SOAP request using the provided command and returns the deserialized response.
@@ -54,8 +54,8 @@ public class SoapCore(HttpClient? httpClient = null)
     /// <returns>The deserialized response object of type T.</returns>
     /// <example>
     /// <![CDATA[
-    /// var soapCore = new SoapCore();
-    /// var result = await soapCore.Post<ResponseType>(soapCommand);
+    /// var _soapCore = new SoapCore();
+    /// var _result = await soapCore.Post<ResponseType>(_soapCommand);
     /// ]]>
     /// </example>
     public async Task<T> Post<T>(SoapCommand command)
@@ -68,7 +68,7 @@ public class SoapCore(HttpClient? httpClient = null)
 
     private static StringContent CreateContent(string action, string soapEnvelope)
     {
-        var _content = new StringContent(soapEnvelope, Encoding.UTF8, gcContentType);
+        var _content = new StringContent(soapEnvelope, Encoding.UTF8, _gcContentType);
         AddSoapAction(action, _content);
 
         return _content;
@@ -76,11 +76,11 @@ public class SoapCore(HttpClient? httpClient = null)
 
     private async Task<T> TryPost<T>(string url, StringContent content, string username, string password)
     {
-        AuthenticationHeader(username, password, gHttpClient);
+        AuthenticationHeader(username, password, _gHttpClient);
 
         try
         {
-            var _response = await gHttpClient.PostAsync(url, content);
+            var _response = await _gHttpClient.PostAsync(url, content);
             _response.EnsureSuccessStatusCode();
             var _result = await _response.Content.ReadAsStringAsync();
 
@@ -100,7 +100,7 @@ public class SoapCore(HttpClient? httpClient = null)
     private static void AddSoapAction(string action, StringContent content)
     {
         if (string.IsNullOrEmpty(action)) return;
-        content.Headers.Add(gcSoapActionHeader, action);
+        content.Headers.Add(_gcSoapActionHeader, action);
     }
 
     private static string CreateSoapEnvelope(string soapMethod, string soapNamespace, Dictionary<string, string> parameters)
@@ -108,7 +108,7 @@ public class SoapCore(HttpClient? httpClient = null)
         var _soapBody = new StringBuilder();
 
         _soapBody.Append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        _soapBody.AppendFormat("<soap:Envelope xmlns:soap=\"{0}\">", gcSoapEnvelopeNamespace);
+        _soapBody.AppendFormat("<soap:Envelope xmlns:soap=\"{0}\">", _gcSoapEnvelopeNamespace);
         _soapBody.Append("<soap:Body>");
         _soapBody.AppendFormat("<{0} xmlns=\"{1}\">", soapMethod, soapNamespace);
 

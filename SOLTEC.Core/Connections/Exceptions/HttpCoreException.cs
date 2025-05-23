@@ -1,8 +1,8 @@
-﻿using SOLTEC.Core.Enums;
+﻿namespace SOLTEC.Core.Connections.Exceptions;
+
+using SOLTEC.Core.Enums;
 using SOLTEC.Core.Exceptions;
 using System.Net;
-
-namespace SOLTEC.Core.Connections.Exceptions;
 
 /// <summary>
 /// Represents an exception specific to HTTP core operations, extending <see cref="ResultException"/>.

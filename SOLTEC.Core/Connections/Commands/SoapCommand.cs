@@ -13,20 +13,20 @@
 /// <example>
 /// <![CDATA[
 /// // Example of how to create and use a SoapCommand:
-/// var parameters = new Dictionary<string, string>
+/// var _parameters = new Dictionary<string, string>
 /// {
 ///     { "Parameter1", "Value1" },
 ///     { "Parameter2", "Value2" }
 /// };
 /// 
-/// var soapCommand = new SoapCommand(
+/// var _soapCommand = new SoapCommand(
 ///     "https://example.com/soap",
 ///     "ActionName",
 ///     "MethodName",
 ///     "http://example.com/namespace",
 ///     "username",
 ///     "password",
-///     parameters
+///     _parameters
 /// );
 /// ]]>
 /// </example>

@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿namespace SOLTEC.Core;
 
-namespace SOLTEC.Core;
+using System.Net;
 
 /// <summary>
 /// Represents a generic version of <see cref="ServiceResponse"/>, allowing the response to include data of any type.
@@ -9,14 +9,14 @@ namespace SOLTEC.Core;
 /// <example>
 /// Example 1: Creating a successful response with data
 /// <![CDATA[
-/// var data = new User { Id = 1, Name = "John" };
-/// var response = ServiceResponse&lt;User&gt;.CreateSuccess(data, 200);
+/// var _data = new User { Id = 1, Name = "John" };
+/// var _response = ServiceResponse&lt;User&gt;.CreateSuccess(data, 200);
 /// ]]>
 /// </example>
 /// <example>
 /// Example 2: Creating an error response.
 /// <![CDATA[
-/// var response = ServiceResponse&lt;string&gt;.CreateError(400, "Invalid request");
+/// var _response = ServiceResponse&lt;string&gt;.CreateError(400, "Invalid request");
 /// ]]>
 /// </example>
 public class ServiceResponse<T> : ServiceResponse
@@ -51,7 +51,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new successful response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var result = ServiceResponse<string>.CreateSuccess("Done", 200);
+    /// var _result = ServiceResponse<string>.CreateSuccess("Done", 200);
     /// ]]>
     /// </example>
     public static ServiceResponse<T> CreateSuccess(T data, int responseCode) => CreateSuccess(data, responseCode, null);
@@ -63,7 +63,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new successful response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateSuccess("OK", HttpStatusCode.OK);
+    /// var _response = ServiceResponse.CreateSuccess("OK", HttpStatusCode.OK);
     /// ]]>
     /// </example>
     public static ServiceResponse<T> CreateSuccess(T data, HttpStatusCode responseCode) => CreateSuccess(data, responseCode, null);
@@ -76,7 +76,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new successful response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateSuccess("OK", 200, null);
+    /// var _response = ServiceResponse.CreateSuccess("OK", 200, null);
     /// ]]>
     /// </example>
     public static ServiceResponse<T> CreateSuccess(T data, int responseCode, string[]? warningMessages)
@@ -97,7 +97,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new successful response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateSuccess("OK", HttpStatusCode.OK, null);
+    /// var _response = ServiceResponse.CreateSuccess("OK", HttpStatusCode.OK, null);
     /// ]]>
     /// </example>
     public static ServiceResponse<T> CreateSuccess(T data, HttpStatusCode responseCode, string[]? warningMessages)
@@ -118,7 +118,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var error = ServiceResponse<string>.CreateError(404, "Not found");
+    /// var _error = ServiceResponse<string>.CreateError(404, "Not found");
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateError(int responseCode, string errorMessage) => CreateError(responseCode, errorMessage, null);
@@ -130,7 +130,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found");
+    /// var _error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found");
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage) => CreateError((int)responseCode, errorMessage, null);
@@ -143,7 +143,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var error = ServiceResponse<string>.CreateError(404, "Not found", null);
+    /// var _error = ServiceResponse<string>.CreateError(404, "Not found", null);
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateError(int responseCode, string errorMessage, string[]? warningMessages)
@@ -166,7 +166,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found", null);
+    /// var _error = ServiceResponse<string>.CreateError(HttpStatusCode.NotFound, "Not found", null);
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateError(HttpStatusCode responseCode, string errorMessage, string[]? warningMessages)
@@ -189,7 +189,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new warning response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateWarning(206, "Partial result");
+    /// var _response = ServiceResponse.CreateWarning(206, "Partial result");
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage) => CreateWarning(responseCode, errorMessage, null);
@@ -201,7 +201,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new erwarningror response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result");
+    /// var _response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result");
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage) => CreateWarning((int)responseCode, errorMessage, null);
@@ -214,7 +214,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new error response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
+    /// var _response = ServiceResponse.CreateWarning(206, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateWarning(int responseCode, string errorMessage, string[]? warningMessages)
@@ -237,7 +237,7 @@ public class ServiceResponse<T> : ServiceResponse
     /// <returns>A new warning response.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result", new[] { "Partial data", "Rate limit applied" });
+    /// var _response = ServiceResponse.CreateWarning(HttpStatusCode.PartialContent, "Partial result", new[] { "Partial data", "Rate limit applied" });
     /// ]]>
     /// </example>
     public new static ServiceResponse<T> CreateWarning(HttpStatusCode responseCode, string errorMessage, string[]? warningMessgaes) 

@@ -1,14 +1,14 @@
-﻿using ExcelDataReader;
+﻿namespace SOLTEC.Core.Adapters.Excel;
 
-namespace SOLTEC.Core.Adapters.Excel;
+using ExcelDataReader;
 
 /// <summary>
 /// Defines a factory for creating instances of <see cref="IExcelDataReader"/>.
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// IExcelReaderFactoryWrapper factory = new ExcelReaderFactoryWrapper();
-/// using var reader = factory.CreateReader(stream, new ExcelReaderConfiguration());
+/// IExcelReaderFactoryWrapper _factory = new ExcelReaderFactoryWrapper();
+/// using var _reader = _factory.CreateReader(_stream, new ExcelReaderConfiguration());
 /// ]]>
 /// </example>
 public interface IExcelReaderFactoryWrapper

@@ -1,8 +1,8 @@
-﻿using SOLTEC.Core.Enums;
+﻿namespace SOLTEC.Core.Adapters.Exceptions;
+
+using SOLTEC.Core.Enums;
 using SOLTEC.Core.Exceptions;
 using System.Net;
-
-namespace SOLTEC.Core.Adapters.Exceptions;
 
 /// <summary>
 /// Exception thrown when an adapter operation fails with a specific error reason.

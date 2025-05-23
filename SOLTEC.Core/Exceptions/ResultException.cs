@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿namespace SOLTEC.Core.Exceptions;
 
-namespace SOLTEC.Core.Exceptions;
+using System.Net;
 
 /// <summary>
 /// Represents a custom exception that includes additional context such as a key, reason, error message, and HTTP status code.

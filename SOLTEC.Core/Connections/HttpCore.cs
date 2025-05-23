@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿namespace SOLTEC.Core.Connections;
+
+using Newtonsoft.Json;
 using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.DTOS;
 using SOLTEC.Core.Enums;
@@ -6,16 +8,14 @@ using System.Net;
 using System.Security.Authentication;
 using System.Text;
 
-namespace SOLTEC.Core.Connections;
-
 /// <summary>
 /// Provides utility methods for performing HTTP operations (GET, POST, PUT, DELETE) with optional headers and validation.
 /// </summary>
 /// <example>
 /// Example usage:
 /// <![CDATA[
-/// var client = new HttpCore();
-/// var result = await client.GetAsync&lt;MyDto&gt;("https://api.example.com/data");
+/// var _client = new HttpCore();
+/// var _result = await _client.GetAsync&lt;MyDto&gt;("https://api.example.com/data");
 /// ]]>
 /// </example>
 public class HttpCore
@@ -29,7 +29,7 @@ public class HttpCore
     /// <returns>Deserialized object of type <typeparamref name="T"/>.</returns>
     /// <example>
     /// <![CDATA[
-    /// var response = await new HttpCore().GetAsync&lt;User&gt;("https://api.example.com/users/1");
+    /// var _response = await new HttpCore().GetAsync&lt;User&gt;("https://api.example.com/users/1");
     /// ]]>
     /// </example>
     public virtual async Task<T?> GetAsync<T>(string uri, Dictionary<string, string>? headerParameters = null)
@@ -52,6 +52,11 @@ public class HttpCore
     /// <param name="uri">The target URI.</param>
     /// <param name="headerParameters">Optional headers to include in the request.</param>
     /// <returns>A list of <typeparamref name="T"/> objects.</returns>
+    /// <example>
+    /// <![CDATA[
+    /// var _response = await new HttpCore().GetAsync&lt;User&gt;("https://api.example.com/users/1", _newUser);
+    /// ]]>
+    /// </example>
     public virtual async Task<IList<T>?> GetAsyncList<T>(string uri, Dictionary<string, string>? headerParameters = null)
     {
         using var _client = CreateConfiguredHttpClient(headerParameters);
@@ -72,7 +77,7 @@ public class HttpCore
     /// <param name="headerParameters">Optional headers to include in the request.</param>
     /// <example>
     /// <![CDATA[
-    /// var response = await new HttpCore().PostAsync&lt;User&gt;("https://api.example.com/users", newUser);
+    /// var _response = await new HttpCore().PostAsync&lt;User&gt;("https://api.example.com/users", _newUser);
     /// ]]>
     /// </example>
     public virtual async Task PostAsync(string uri, Dictionary<string, string>? headerParameters = null)
@@ -147,7 +152,7 @@ public class HttpCore
     /// <param name="headerParameters">Optional headers to include in the request.</param>
     /// <example>
     /// <![CDATA[
-    /// var response = await new HttpCore().PutAsync&lt;User&gt;("https://api.example.com/users/1", updatedUser);
+    /// var _response = await new HttpCore().PutAsync&lt;User&gt;("https://api.example.com/users/1", _updatedUser);
     /// ]]>
     /// </example>
     public virtual async Task PutAsync(string uri, Dictionary<string, string>? headerParameters = null)
@@ -224,7 +229,7 @@ public class HttpCore
     /// <returns>The deserialized response object.</returns>
     /// <example>
     /// <![CDATA[
-    /// var result = await new HttpCore().DeleteAsync<User>("https://api.example.com/users/1");
+    /// var _result = await new HttpCore().DeleteAsync<User>("https://api.example.com/users/1");
     /// ]]>
     /// </example>
     public virtual async Task<TResult?> DeleteAsync<TResult>(string uri, Dictionary<string, string>? headerParameters = null)
@@ -253,8 +258,8 @@ public class HttpCore
     /// </exception>
     /// <example>
     /// <![CDATA[
-    /// var response = await httpClient.GetAsync("https://api.example.com/resource"); 
-    /// await ValidateStatusResponse(response);
+    /// var _response = await httpClient.GetAsync("https://api.example.com/resource"); 
+    /// await ValidateStatusResponse(_response);
     /// ]]>
     /// </example>
     protected static async Task ValidateStatusResponse(HttpResponseMessage response)
@@ -284,8 +289,8 @@ public class HttpCore
     /// <exception cref="HttpCoreException">Thrown if the response contains a known error structure.</exception>
     /// <example>
     /// <![CDATA[
-    /// var response = await client.GetStringAsync("http://api/test");
-    /// ValidateResult(response);
+    /// var _response = await client.GetStringAsync("http://api/test");
+    /// ValidateResult(_response);
     /// ]]>
     /// </example>
     protected static void ValidateResult(string result)

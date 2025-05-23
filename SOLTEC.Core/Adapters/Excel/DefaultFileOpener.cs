@@ -5,8 +5,8 @@
 /// </summary>
 /// <example>
 /// <![CDATA[
-/// IFileOpener fileOpener = new DefaultFileOpener();
-/// using Stream stream = fileOpener.Open("C:\\data\\report.xlsx");
+/// IFileOpener _fileOpener = new DefaultFileOpener();
+/// using Stream _stream = _fileOpener.Open("C:\\data\\report.xlsx");
 /// ]]>
 /// </example>
 public class DefaultFileOpener : IFileOpener

@@ -9,8 +9,8 @@
 /// <example>
 /// Example usage:
 /// <![CDATA[
-/// FileTypeEnum type = FileTypeEnum.Json;
-/// if (type == FileTypeEnum.Xlsx)
+/// FileTypeEnum _type = FileTypeEnum.Json;
+/// if (_type == FileTypeEnum.Xlsx)
 /// {
 ///     Console.WriteLine("Exporting to Excel format.");
 /// }
