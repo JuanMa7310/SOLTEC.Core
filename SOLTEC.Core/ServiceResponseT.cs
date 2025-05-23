@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿namespace SOLTEC.Core;
 
-namespace SOLTEC.Core;
+using System.Net;
 
 /// <summary>
 /// Represents a generic version of <see cref="ServiceResponse"/>, allowing the response to include data of any type.

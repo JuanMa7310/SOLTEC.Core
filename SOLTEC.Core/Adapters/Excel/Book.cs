@@ -1,10 +1,10 @@
-﻿using ExcelDataReader;
+﻿namespace SOLTEC.Core.Adapters.Excel;
+
+using ExcelDataReader;
 using System.Data;
 using System.Globalization;
 using System.Net;
 using System.Text;
-
-namespace SOLTEC.Core.Adapters.Excel;
 
 /// <summary>
 /// Provides functionality to open and read Excel files.

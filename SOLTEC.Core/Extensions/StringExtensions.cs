@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿namespace SOLTEC.Core.Extensions;
 
-namespace SOLTEC.Core.Extensions;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Provides extension methods for parsing numeric strings to <see cref="float"/>.

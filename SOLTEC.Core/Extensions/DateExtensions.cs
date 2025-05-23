@@ -1,6 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿namespace SOLTEC.Core.Extensions;
 
-namespace SOLTEC.Core.Extensions;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Provides extension methods for formatting and parsing <see cref="DateTime"/> values.

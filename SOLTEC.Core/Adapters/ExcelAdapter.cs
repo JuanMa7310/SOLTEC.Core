@@ -1,7 +1,7 @@
-﻿using Ganss.Excel;
-using NPOI.OpenXml4Net.Exceptions;
+﻿namespace SOLTEC.Core.Adapters;
 
-namespace SOLTEC.Core.Adapters;
+using Ganss.Excel;
+using NPOI.OpenXml4Net.Exceptions;
 
 /// <summary>
 /// Adapter that reads Excel files and maps rows to strongly typed objects using ExcelMapper.

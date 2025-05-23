@@ -1,6 +1,6 @@
-﻿using ExcelDataReader;
+﻿namespace SOLTEC.Core.Adapters.Excel;
 
-namespace SOLTEC.Core.Adapters.Excel;
+using ExcelDataReader;
 
 /// <summary>
 /// Default wrapper around <see cref="ExcelReaderFactory"/> to create Excel readers.

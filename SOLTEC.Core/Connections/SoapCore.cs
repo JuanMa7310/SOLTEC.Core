@@ -1,4 +1,6 @@
-﻿using SOLTEC.Core.Connections.Commands;
+﻿namespace SOLTEC.Core.Connections;
+
+using SOLTEC.Core.Connections.Commands;
 using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.Enums;
 using System.Net;
@@ -6,8 +8,6 @@ using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
 using System.Xml.Serialization;
-
-namespace SOLTEC.Core.Connections;
 
 /// <summary>
 /// Provides methods to send SOAP requests and handle SOAP responses.

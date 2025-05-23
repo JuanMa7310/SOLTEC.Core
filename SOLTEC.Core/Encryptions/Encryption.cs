@@ -1,7 +1,7 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿namespace SOLTEC.Core.Encryptions;
 
-namespace SOLTEC.Core.Encryptions;
+using System.Security.Cryptography;
+using System.Text;
 
 /// <summary>
 /// Provides utility methods for various encryption, hashing, and encoding operations.

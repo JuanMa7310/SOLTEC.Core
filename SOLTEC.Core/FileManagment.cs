@@ -1,7 +1,7 @@
-﻿using SOLTEC.Core.Enums;
-using System.Text;
+﻿namespace SOLTEC.Core;
 
-namespace SOLTEC.Core;
+using SOLTEC.Core.Enums;
+using System.Text;
 
 /// <summary>
 /// Provides common file operations such as reading, writing, copying, moving, deleting,

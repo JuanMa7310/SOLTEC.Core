@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using System.Data;
+﻿namespace SOLTEC.Core.Extensions;
 
-namespace SOLTEC.Core.Extensions;
+using System.ComponentModel;
+using System.Data;
 
 /// <summary>
 /// Provides extension methods for converting collections to DataTable.

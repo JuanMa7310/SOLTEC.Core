@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿namespace SOLTEC.Core.Connections;
+
+using Newtonsoft.Json;
 using SOLTEC.Core.Connections.Exceptions;
 using SOLTEC.Core.DTOS;
 using SOLTEC.Core.Enums;
 using System.Net;
 using System.Security.Authentication;
 using System.Text;
-
-namespace SOLTEC.Core.Connections;
 
 /// <summary>
 /// Provides utility methods for performing HTTP operations (GET, POST, PUT, DELETE) with optional headers and validation.

@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿namespace SOLTEC.Core;
 
-namespace SOLTEC.Core;
+using System.Net;
 
 /// <summary>
 /// Represents a standardized structure for service responses, including success or error information.

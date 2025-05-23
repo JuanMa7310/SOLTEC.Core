@@ -1,7 +1,7 @@
-﻿using SOLTEC.Core.Exceptions;
-using System.Net;
+﻿namespace SOLTEC.Core.Connections.Exceptions;
 
-namespace SOLTEC.Core.Connections.Exceptions;
+using SOLTEC.Core.Exceptions;
+using System.Net;
 
 /// <summary>
 /// Represents an exception specific to SOAP core operations, extending <see cref="ResultException"/>.

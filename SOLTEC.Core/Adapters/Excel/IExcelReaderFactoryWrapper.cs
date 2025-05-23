@@ -1,6 +1,6 @@
-﻿using ExcelDataReader;
+﻿namespace SOLTEC.Core.Adapters.Excel;
 
-namespace SOLTEC.Core.Adapters.Excel;
+using ExcelDataReader;
 
 /// <summary>
 /// Defines a factory for creating instances of <see cref="IExcelDataReader"/>.
